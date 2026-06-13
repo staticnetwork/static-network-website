@@ -49,7 +49,10 @@ export async function ask(question, { secret = false, optional = false } = {}) {
     }
     stdin.on('data', onData)
   })
-  return value.trim()
+  return value
+    .replace(/\u001b\[200~/g, '')
+    .replace(/\u001b\[201~/g, '')
+    .replace(/\s+/g, '')
 }
 
 export async function choose(question, options) {
@@ -137,9 +140,13 @@ export async function offerNetlifyImport() {
     printNetlifyInstructions()
     return
   }
-  const result = spawnSync(process.execPath, [cli, 'env:import', '.env.local'], { stdio: 'inherit' })
+  const result = spawnSync(process.execPath, [cli, 'env:import', '.env.local'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  })
   if (result.status !== 0) {
     console.log('Netlify environment import did not complete.')
+    if (result.stderr) console.log(result.stderr.replace(/sk_[a-zA-Z0-9_-]+/g, '[REDACTED]'))
     printNetlifyInstructions()
     return
   }

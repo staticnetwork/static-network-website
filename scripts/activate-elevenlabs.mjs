@@ -11,7 +11,7 @@ if (await confirm('Have you created or selected an ElevenLabs API key?') !== tru
 const apiKey = await ask('Paste the ElevenLabs API key', { secret: true })
 if (!apiKey) throw new Error('An API key is required.')
 
-const validation = await safeJsonFetch('https://api.elevenlabs.io/v1/user', {
+const validation = await safeJsonFetch('https://api.elevenlabs.io/v2/voices?page_size=1', {
   headers: { 'xi-api-key': apiKey },
 })
 if (!validation.response.ok) throw new Error(`ElevenLabs validation returned ${validation.response.status}. No settings were saved.`)
