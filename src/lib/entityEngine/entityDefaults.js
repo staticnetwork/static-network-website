@@ -2,6 +2,21 @@ export const ENTITY_DNA_VERSION = 2
 
 export const defaultEntityDNA = {
   version: ENTITY_DNA_VERSION,
+  officialDescription: '',
+  visualStyle: 'Photoreal cinematic',
+  faceDescription: 'Defined, charismatic, camera-ready',
+  bodyDescription: 'Athletic',
+  wardrobeDescription: 'Future executive',
+  jewelryDescription: '',
+  tattooDescription: '',
+  logoUsage: '',
+  propPreferences: '',
+  backgroundWorld: 'Underground broadcast command center',
+  colorPalette: 'black, charcoal, white, signal cyan',
+  negativePrompt: 'low detail, duplicate limbs, malformed hands, text, watermark, logo',
+  referenceImageIds: [],
+  officialImages: [],
+  consistencyNotes: 'Preserve facial structure, proportions, skin tone, hair, and signature styling across every frame.',
   identity: {
     name: '',
     handle: '',
@@ -27,6 +42,7 @@ export const defaultEntityDNA = {
   tattoos: [],
   jewelry: [],
   props: [],
+  logos: [],
   voice: {
     energy: 'Confident British-American future broadcaster',
     cadence: 'Measured',
@@ -85,11 +101,11 @@ export const mrStonePreset = {
       materials: ['silk', 'fine wool', 'brushed platinum'],
     },
     tattoos: [
-      { id: 'stone-tattoo-1', placement: 'Right hand', design: 'Minimal geometric origin mark', visibility: 'subtle' },
+      { id: 'stone-tattoo-1', zone: 'right hand', style: 'luxury monogram feel', design: 'Minimal geometric origin mark', opacity: '35%', color: 'black', logoMediaId: '' },
     ],
     jewelry: [
-      { id: 'stone-jewelry-1', type: 'Watch', design: 'Architectural platinum watch', material: 'platinum' },
-      { id: 'stone-jewelry-2', type: 'Ring', design: 'Heavy black signet ring', material: 'onyx' },
+      { id: 'stone-jewelry-1', category: 'watch', style: 'Architectural iced-out watch', material: 'platinum', logoUsage: 'custom Above All AI watch face' },
+      { id: 'stone-jewelry-2', category: 'pendant', style: 'Diamond founder medallion', material: 'white gold', logoUsage: 'Above All AI pendant emblem' },
     ],
     props: [
       { id: 'stone-prop-1', type: 'Visual prop', design: 'Gold 1911 display piece, safely holstered or presented as a non-operational luxury film prop', safety: 'visual-prop-only' },
@@ -108,6 +124,18 @@ export const mrStonePreset = {
       ...defaultEntityDNA.generation,
       style: 'Ultra-photoreal luxury editorial cinema',
     },
+    officialDescription: 'Mr Stone, founder and CEO of Above All AI, transmitting executive authority from the origin of STATIC Network.',
+    visualStyle: 'Ultra-photoreal luxury editorial cinema',
+    faceDescription: 'Strong jaw, calm authority, premium editorial realism',
+    bodyDescription: 'Tall, powerful, tailored',
+    wardrobeDescription: 'Perfectly tailored black double-breasted suit over a black silk shirt',
+    jewelryDescription: 'Custom Above All AI pendant, diamond founder jewelry, platinum architectural watch',
+    tattooDescription: 'Subtle geometric origin mark on the right hand',
+    logoUsage: 'Above All AI emblem as pendant, medallion, ring face, watch face, and approved tattoo decal',
+    propPreferences: 'Gold 1911 as a non-operational cinematic visual prop only',
+    backgroundWorld: 'STATIC broadcast network and Above All AI executive world',
+    colorPalette: 'obsidian black, gunmetal, white, icy cyan',
+    consistencyNotes: 'Preserve Mr Stone facial structure, deep warm-brown skin tone, close-cut hair, powerful build, founder wardrobe, and calm executive presence.',
   },
 }
 
@@ -116,4 +144,3 @@ export const cosmeticCatalog = [
   { id: 'signal-chain', category: 'jewelry', name: 'Signal Chain', rarity: 'Rare', unlock: 'Future marketplace', price: null },
   { id: 'broadcast-visor', category: 'accessory', name: 'Broadcast Visor', rarity: 'Experimental', unlock: 'LABS', price: null },
 ]
-

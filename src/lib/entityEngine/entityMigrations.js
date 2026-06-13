@@ -14,6 +14,7 @@ function mergeDNA(current = {}) {
     tattoos: Array.isArray(current.tattoos) ? current.tattoos : [],
     jewelry: Array.isArray(current.jewelry) ? current.jewelry : [],
     props: Array.isArray(current.props) ? current.props : [],
+    logos: Array.isArray(current.logos) ? current.logos : [],
   }
 }
 
@@ -37,4 +38,3 @@ export function migrateEntityData(entity) {
 export function normalizeEntityDNA(value) {
   return mergeDNA(value)
 }
-

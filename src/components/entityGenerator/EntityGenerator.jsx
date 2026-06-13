@@ -67,6 +67,7 @@ export default function EntityGenerator() {
   const [providers, setProviders] = useState([])
   const [provider, setProvider] = useState('local-preview')
   const [references, setReferences] = useState([])
+  const [logos, setLogos] = useState([])
   const [results, setResults] = useState([])
   const [selected, setSelected] = useState(0)
   const [phase, setPhase] = useState('READY')
@@ -100,7 +101,29 @@ export default function EntityGenerator() {
       records.push({ id: media.id, name: file.name, url: URL.createObjectURL(file) })
     }
     setReferences((items) => [...items, ...records].slice(0, 6))
-    setDNA((value) => inputValue(value, 'generation', 'referenceMediaIds', [...value.generation.referenceMediaIds, ...records.map((item) => item.id)].slice(0, 6)))
+    setDNA((value) => {
+      const ids = [...value.generation.referenceMediaIds, ...records.map((item) => item.id)].slice(0, 6)
+      return { ...inputValue(value, 'generation', 'referenceMediaIds', ids), referenceImageIds: ids }
+    })
+  }
+
+  async function addLogos(event) {
+    const files = [...(event.target.files || [])].slice(0, 4)
+    const records = []
+    for (const file of files) {
+      const media = await saveMedia(file, { type: 'entity-logo-decal', ownerEntityId: current?.id || '' })
+      records.push({ id: media.id, mediaId: media.id, name: file.name, usage: 'tattoo, pendant, medallion, ring face, watch face, or logo plate', url: URL.createObjectURL(file) })
+    }
+    setLogos((items) => [...items, ...records].slice(0, 4))
+    setDNA((value) => ({
+      ...value,
+      logos: [...value.logos, ...records.map((record) => ({
+        id: record.id,
+        mediaId: record.mediaId,
+        name: record.name,
+        usage: record.usage,
+      }))].slice(0, 4),
+    }))
   }
 
   async function generate() {
@@ -142,7 +165,7 @@ export default function EntityGenerator() {
         createdAt: new Date().toISOString(),
       }
       const officialImages = [...(dna.generation.officialImages || []), official]
-      const nextDNA = inputValue(dna, 'generation', 'officialImages', officialImages)
+      const nextDNA = { ...inputValue(dna, 'generation', 'officialImages', officialImages), officialImages }
       nextDNA.generation.defaultImageId = target === 'profile' ? official.id : nextDNA.generation.defaultImageId
       let entity = current
       if (!entity) {
@@ -184,7 +207,7 @@ export default function EntityGenerator() {
       <aside className="entity-generator__controls">
         <div className="generator-console-top">
           <div><LiveIndicator label="ENTITY DNA CORE" /><h2>Direct the identity.</h2></div>
-          <button type="button" onClick={applyMrStone}>Load Mr Stone preset</button>
+          <button type="button" onClick={applyMrStone}>Use Mr Stone Genesis Preset</button>
         </div>
 
         <section>
@@ -217,8 +240,8 @@ export default function EntityGenerator() {
           </div>
         </section>
 
-        <ListEditor title="TATTOOS" items={dna.tattoos} fields={['placement', 'design', 'visibility']} onChange={(tattoos) => setDNA({ ...dna, tattoos })} />
-        <ListEditor title="JEWELRY" items={dna.jewelry} fields={['type', 'design', 'material']} onChange={(jewelry) => setDNA({ ...dna, jewelry })} />
+        <ListEditor title="TATTOOS" items={dna.tattoos} fields={['zone', 'style', 'design', 'opacity', 'color', 'logoMediaId']} onChange={(tattoos) => setDNA({ ...dna, tattoos })} />
+        <ListEditor title="JEWELRY" items={dna.jewelry} fields={['category', 'style', 'material', 'logoUsage']} onChange={(jewelry) => setDNA({ ...dna, jewelry })} />
         <ListEditor title="PROPS" items={dna.props} fields={['type', 'design']} onChange={(props) => setDNA({ ...dna, props })} />
 
         <section className="reference-panel">
@@ -226,6 +249,13 @@ export default function EntityGenerator() {
           <label className="reference-upload">Add up to 6 reference images<input type="file" accept="image/*" multiple onChange={addReferences} /></label>
           <div>{references.map((reference) => <figure key={reference.id}><img src={reference.url} alt="" /><figcaption>{reference.name}</figcaption></figure>)}</div>
           <small>References are stored locally for identity continuity. Real provider upload wiring remains server-side.</small>
+        </section>
+        <section className="reference-panel">
+          <span className="generator-section-code">05 / CUSTOM LOGO + DECAL LIBRARY</span>
+          <label className="reference-upload">Upload logos for tattoos, pendants, medallions, rings, watches, or logo plates<input type="file" accept="image/*" multiple onChange={addLogos} /></label>
+          <div>{logos.map((logo) => <figure key={logo.id}><img src={logo.url} alt="" /><figcaption>{logo.name}</figcaption></figure>)}</div>
+          <Field label="Official logo usage" value={dna.logoUsage} onChange={(logoUsage) => setDNA({ ...dna, logoUsage })} textarea placeholder="Define approved logo placements and treatments." />
+          <small>Logo files are local identity assets now and are prepared for future AI prompt injection and GLB decal placement.</small>
         </section>
       </aside>
 
@@ -265,4 +295,3 @@ export default function EntityGenerator() {
     </div>
   )
 }
-
