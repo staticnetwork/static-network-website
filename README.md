@@ -31,9 +31,15 @@ Netlify uses `public/_redirects` to serve client-side routes from `index.html`.
 
 ## Current product status
 
-The public routes and interface previews are implemented. Forms acknowledge
-interactions locally but do not transmit or store data. Audio, game generation,
-payments, subscriptions, accounts, uploads, publishing, search,
+The public routes and rich interactive demonstrations are implemented. The
+network feed, discovery filtering, broadcast deck, Radio player, PLAY
+generation sequence, Studio creation modes, LIVE reminders, channel worlds,
+marketplace drawers, and profile views run entirely in the browser using local
+mock programming.
+
+The waitlist demonstration stores recent submissions in browser `localStorage`.
+It does not transmit them to an external service. Audio streaming, real
+generation, payments, subscriptions, accounts, uploads, publishing,
 recommendations, and marketplace transactions are intentionally not connected.
 
 See `STATIC_MASTER_CONTEXT.md` for product canon and `src/providers/` for the

@@ -151,10 +151,10 @@ export function SignalCard({ item, index }) {
   )
 }
 
-export function ShellNotice({ children = 'Interface preview. Production systems are not connected yet.' }) {
+export function ShellNotice({ children = 'Interactive network demonstration using simulated programming.' }) {
   return (
     <div className="shell-notice" role="note">
-      <span>PREVIEW MODE</span>
+      <span>NETWORK DEMO</span>
       <p>{children}</p>
     </div>
   )

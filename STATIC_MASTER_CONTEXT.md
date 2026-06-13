@@ -8,7 +8,8 @@ STATIC Network is an AI-native entertainment platform.
 - Tagline: **Watch it. Hear it. Play it. Create it. Own it.**
 - Product idea: one network where an idea can move across music, video, games,
   live experiences, characters, worlds, digital goods, and creator tools.
-- Visual canon: black, white, charcoal, and neon signal green.
+- Visual canon: black, deep charcoal, white, silver, icy cyan, electric blue,
+  and restrained violet depth.
 - Cultural texture: underground broadcast, future pirate radio, transmission
   infrastructure, premium editorial design, and controlled interference.
 
@@ -67,8 +68,11 @@ decisions before launch.
 
 - Fast and legible on mobile first.
 - Strong typography and clear navigation.
+- The homepage should feel like a live network dashboard, not a pitch deck.
+- Local mock programming should make the public experience feel active without
+  pretending that real users, payments, streams, or provider outputs exist.
 - Motion should communicate signal and system state, not distract.
 - Respect `prefers-reduced-motion`.
 - Every public route receives a unique title and description.
 - Interactive previews must identify themselves as previews.
-- Calls to action should lead to a real route or clearly labeled placeholder.
+- Calls to action should lead to a real route or an interactive local demo.

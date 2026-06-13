@@ -70,7 +70,7 @@ export function SiteHeader() {
             <div key={group.label}>
               <p>0{groupIndex + 1} / {group.label}</p>
               {group.links.map(([label, to]) => (
-                <Link key={to} to={to}>
+                <Link className={path === to ? 'is-active' : ''} key={to} to={to}>
                   <span>{label}</span>
                   <ArrowIcon />
                 </Link>
@@ -89,13 +89,11 @@ export function SiteHeader() {
 
 export function BroadcastTicker() {
   const items = [
-    'WATCH IT',
-    'HEAR IT',
-    'PLAY IT',
-    'CREATE IT',
-    'OWN IT',
-    'SIGNAL LIVE',
-    'BUILD THE WORLD',
+    'NOW TRANSMITTING / FREQUENCY ZERO',
+    'STATIC ONE / GLASS SATELLITES',
+    'CHROME DISTRICT / WORLD OPEN',
+    'MEMORY PALACE / PREMIERE 21:00 PT',
+    'CREATOR SIGNALS / 14 ACTIVE',
   ]
   const loop = [...items, ...items]
 

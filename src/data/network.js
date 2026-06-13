@@ -9,7 +9,7 @@ export const platforms = [
     description:
       'A living discovery feed for music, films, games, characters, broadcasts, creator drops, and strange new worlds.',
     status: 'FEED ACTIVE',
-    tone: 'green',
+    tone: 'cyan',
   },
   {
     slug: 'channels',
@@ -21,7 +21,7 @@ export const platforms = [
     description:
       'Persistent creator-owned destinations where audiences can watch, listen, play, collect, and follow an evolving universe.',
     status: 'WORLDS ONLINE',
-    tone: 'lime',
+    tone: 'silver',
   },
   {
     slug: 'radio',
@@ -33,7 +33,7 @@ export const platforms = [
     description:
       'Always-on stations for new music, moods, scenes, creator takeovers, experimental sound, and digital culture.',
     status: 'ON AIR',
-    tone: 'acid',
+    tone: 'blue',
   },
   {
     slug: 'play',
@@ -45,7 +45,7 @@ export const platforms = [
     description:
       'Describe a game or interactive world, remix a template, shape the rules, and share a playable idea.',
     status: 'ENGINE STANDBY',
-    tone: 'green',
+    tone: 'violet',
   },
   {
     slug: 'live',
@@ -57,7 +57,7 @@ export const platforms = [
     description:
       'Creator broadcasts, premieres, watch parties, virtual events, live performances, and audience-controlled moments.',
     status: 'SIGNAL LIVE',
-    tone: 'warning',
+    tone: 'cyan',
   },
   {
     slug: 'originals',
@@ -69,7 +69,7 @@ export const platforms = [
     description:
       'AI-native shows, animation, documentaries, characters, music films, and franchises built to expand across the network.',
     status: 'PREMIERES QUEUED',
-    tone: 'lime',
+    tone: 'silver',
   },
   {
     slug: 'marketplace',
@@ -79,9 +79,9 @@ export const platforms = [
     label: 'Own The Culture',
     headline: 'Take a piece of the world with you.',
     description:
-      'A future marketplace for assets, skins, music packs, templates, memberships, drops, and creator-powered experiences.',
+      'A network marketplace for assets, skins, music packs, templates, memberships, drops, and creator-powered experiences.',
     status: 'MARKET PREVIEW',
-    tone: 'acid',
+    tone: 'blue',
   },
   {
     slug: 'labs',
@@ -91,9 +91,9 @@ export const platforms = [
     label: 'Build What Comes Next',
     headline: 'The experimental layer of the network.',
     description:
-      'Prototype tools, workflows, adapters, and future APIs for building AI-native entertainment systems.',
+      'Experimental tools, workflows, adapters, and future systems for building AI-native entertainment.',
     status: 'RESEARCH ACTIVE',
-    tone: 'green',
+    tone: 'violet',
   },
 ]
 
@@ -113,7 +113,7 @@ export const routeMeta = {
   },
   '/radio': {
     title: 'STATIC Radio | Always Broadcasting',
-    description: 'Preview 24/7 stations for new music, moods, scenes, and digital culture.',
+    description: 'Tune into 24/7 stations for new music, moods, scenes, and digital culture.',
   },
   '/play': {
     title: 'STATIC PLAY | Playable Imagination',
@@ -129,7 +129,7 @@ export const routeMeta = {
   },
   '/marketplace': {
     title: 'STATIC Marketplace | Own The Culture',
-    description: 'Preview creator drops, assets, templates, skins, memberships, and digital experiences.',
+    description: 'Explore creator drops, assets, templates, skins, memberships, and digital experiences.',
   },
   '/labs': {
     title: 'STATIC LABS | Build What Comes Next',
@@ -149,15 +149,15 @@ export const routeMeta = {
   },
   '/studio': {
     title: 'STATIC Studio | Create Across Every Format',
-    description: 'Preview the command center for building music, video, worlds, games, and releases.',
+    description: 'Enter the command center for building music, video, worlds, games, and releases.',
   },
   '/static-plus': {
     title: 'STATIC+ | Go Deeper Into The Network',
-    description: 'Preview enhanced fan access, exclusives, drops, and network-wide benefits.',
+    description: 'Request enhanced fan access, exclusives, drops, and network-wide benefits.',
   },
   '/creator-pro': {
     title: 'Creator Pro | Build The World',
-    description: 'Preview advanced tools and publishing systems for serious STATIC creators.',
+    description: 'Request advanced tools and publishing access for serious STATIC creators.',
   },
   '/discover': {
     title: 'Discover | STATIC Network',
@@ -218,9 +218,9 @@ export const directoryData = {
 }
 
 export const radioStations = [
-  { name: 'STATIC ONE', genre: 'FUTURE / ALT / UNKNOWN', listeners: '12.4K', signal: '98.7', color: 'green' },
-  { name: 'NIGHT//DRIVE', genre: 'SYNTH / SPEED / NEON', listeners: '8.1K', signal: '103.3', color: 'lime' },
-  { name: 'NO SLEEP', genre: 'R&B / AFTERHOURS', listeners: '6.7K', signal: '88.9', color: 'acid' },
+  { name: 'STATIC ONE', genre: 'FUTURE / ALT / UNKNOWN', listeners: '12.4K', signal: '98.7', color: 'cyan' },
+  { name: 'NIGHT//DRIVE', genre: 'SYNTH / SPEED / NEON', listeners: '8.1K', signal: '103.3', color: 'blue' },
+  { name: 'NO SLEEP', genre: 'R&B / AFTERHOURS', listeners: '6.7K', signal: '88.9', color: 'violet' },
   { name: 'GHOST FM', genre: 'AMBIENT / LIMINAL', listeners: '4.9K', signal: '000.0', color: 'ghost' },
 ]
 

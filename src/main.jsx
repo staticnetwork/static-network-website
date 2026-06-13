@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import { RouterProvider } from './components/Router.jsx'
 import './styles.css'
+import './upgrade.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

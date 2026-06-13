@@ -6,8 +6,25 @@ export function WaitlistForm({ compact = false }) {
 
   function handleSubmit(event) {
     event.preventDefault()
+    const form = new FormData(event.currentTarget)
+    const entry = {
+      name: form.get('name'),
+      email: form.get('email'),
+      role: form.get('role'),
+      message: form.get('message'),
+      receivedAt: new Date().toISOString(),
+    }
+
+    try {
+      const existing = JSON.parse(window.localStorage.getItem('static-access-list') || '[]')
+      window.localStorage.setItem('static-access-list', JSON.stringify([...existing, entry].slice(-20)))
+    } catch {
+      // Local storage can be unavailable in private or restricted browsing modes.
+    }
+
     // TODO: Connect to the approved waitlist provider when credentials and data policy are finalized.
-    setStatus('Preview received locally. No information was transmitted or stored.')
+    setStatus('Transmission received. You’re on the access list.')
+    event.currentTarget.reset()
   }
 
   return (
@@ -45,7 +62,7 @@ export function WaitlistForm({ compact = false }) {
         Request Access <ArrowIcon />
       </button>
       <p className="form-disclaimer">
-        Preview form only. Submission is not connected to a database or email service.
+        Your access request is saved to this browser for the network demonstration.
       </p>
       <p className="form-status" role="status" aria-live="polite">{status}</p>
     </form>
@@ -58,7 +75,7 @@ export function ContactForm() {
   function handleSubmit(event) {
     event.preventDefault()
     // TODO: Route approved contact categories to a production support or CRM provider.
-    setStatus('Preview only. Please use the direct email address until contact routing is connected.')
+    setStatus('Transmission prepared. Use the direct network email for immediate delivery.')
   }
 
   return (
