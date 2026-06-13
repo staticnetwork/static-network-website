@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 import { navGroups } from '../data/network'
 import { Link, useRouter } from './Router'
 import { ArrowIcon, LiveIndicator, SignalMark } from './UI'
 
 const desktopNav = [
   ['Discover', '/discover'],
+  ['Feed', '/feed'],
   ['Entities', '/entities'],
   ['Signals', '/signals'],
   ['Channels', '/channels'],
@@ -18,6 +20,7 @@ const desktopNav = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const { path } = useRouter()
+  const { configured, user, profile, signOut } = useAuth()
 
   useEffect(() => {
     setOpen(false)
@@ -46,9 +49,9 @@ export function SiteHeader() {
 
       <div className="header-actions">
         <LiveIndicator />
-        <Link className="button button--small button--signal header-cta" to="/waitlist">
-          Join
-        </Link>
+        {user
+          ? <Link className="button button--small button--signal header-cta header-account" to="/account">{profile?.avatar_url && <img src={profile.avatar_url} alt="" />}Account</Link>
+          : <Link className="button button--small button--signal header-cta" to="/login">Login</Link>}
         <button
           className={`menu-toggle ${open ? 'menu-toggle--open' : ''}`}
           type="button"
@@ -82,7 +85,16 @@ export function SiteHeader() {
         </div>
         <div className="network-menu__footer">
           <span>THE HOME OF AI ENTERTAINMENT</span>
-          <Link to="/waitlist">REQUEST ACCESS <ArrowIcon /></Link>
+          <div className="network-menu__account">
+            {user ? <>
+              <Link to="/account">ACCOUNT <ArrowIcon /></Link>
+              <Link to="/studio">STUDIO <ArrowIcon /></Link>
+              <button type="button" onClick={signOut}>LOGOUT <ArrowIcon /></button>
+            </> : <>
+              <Link to="/login">LOGIN <ArrowIcon /></Link>
+              <Link to="/signup">{configured ? 'SIGN UP' : 'ACCOUNT ACCESS'} <ArrowIcon /></Link>
+            </>}
+          </div>
         </div>
       </div>
     </header>

@@ -3,6 +3,7 @@ import { directoryData, originalSeries, platforms } from '../data/network'
 import { marketDrops } from '../data/media'
 import { ContactForm, WaitlistForm } from '../components/Forms'
 import { EntityActionHub, EntityCard } from '../components/EntitySystem'
+import { EntityAvatar } from '../components/AvatarSystem'
 import {
   BroadcastDeck,
   ChannelGallery,
@@ -26,7 +27,9 @@ import {
   SectionHeading,
   SignalMark,
 } from '../components/UI'
-import { getCurrentEntity, subscribeToNetworkUpdates } from '../lib/staticStore'
+import { getChannelForEntity, getCurrentEntity, subscribeToNetworkUpdates } from '../lib/staticStore'
+import { useAuth } from '../context/AuthContext'
+import { getStorageMode } from '../lib/storage/storageAdapter'
 
 const platformBySlug = Object.fromEntries(platforms.map((platform) => [platform.slug, platform]))
 
@@ -270,7 +273,10 @@ export function DirectoryPage({ type }) {
 
 export function StudioPage() {
   const [entity, setEntity] = useState(() => getCurrentEntity())
+  const { user, profile, configured } = useAuth()
   useEffect(() => subscribeToNetworkUpdates(() => setEntity(getCurrentEntity())), [])
+  const channel = entity ? getChannelForEntity(entity.id) : null
+  const mode = getStorageMode(user)
 
   return (
     <>
@@ -287,8 +293,28 @@ export function StudioPage() {
             </div>
             {entity ? (
               <div className="studio-command-center__entity">
-                <EntityCard entity={entity} />
+                <div className="studio-operator-card">
+                  <EntityAvatar entity={entity} size="profile" />
+                  <div>
+                    <span>ACTIVE ENTITY / {mode.toUpperCase()} MODE</span>
+                    <h3>{entity.name}</h3>
+                    <p>{entity.handle} / {entity.companyBrand || entity.company || 'Independent Entity'}</p>
+                    <dl>
+                      <div><dt>CHANNEL</dt><dd>{channel?.displayName || channel?.name || 'Initializing'}</dd></div>
+                      <div><dt>SIGNAL SCORE</dt><dd>{entity.signalScore}</dd></div>
+                      <div><dt>OPERATOR</dt><dd>{profile?.display_name || user?.email || (configured ? 'Login required for sync' : 'Local creator')}</dd></div>
+                    </dl>
+                  </div>
+                </div>
                 <EntityActionHub entity={entity} compact onEntityChange={setEntity} />
+                <div className="studio-control-grid">
+                  <ButtonLink to="/entities/profile" variant="glass">Edit / View Entity</ButtonLink>
+                  <ButtonLink to="/entities/avatar" variant="glass">Customize Avatar</ButtonLink>
+                  <ButtonLink to="/channel/customize" variant="glass">Customize Channel</ButtonLink>
+                  <ButtonLink to="/feed" variant="glass">Transmit / Open Feed</ButtonLink>
+                  <ButtonLink to={`/channels/${entity.handle.replace('@', '')}`} variant="glass">View Channel</ButtonLink>
+                  <ButtonLink to={user ? '/account' : '/login'} variant="glass">{user ? 'Account / Import' : 'Login For Sync'}</ButtonLink>
+                </div>
               </div>
             ) : (
               <div className="studio-empty-core"><SignalMark animated /><span>MY ENTITY</span><h3>Origin identity not initialized.</h3><p>Creation starts with the Entity, then expands into Signals, video, live, Worlds, Drops, songs, shows, and games.</p></div>

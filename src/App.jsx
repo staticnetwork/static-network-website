@@ -2,12 +2,14 @@ import { useEffect } from 'react'
 import { SiteLayout } from './components/SiteChrome'
 import { useRouter } from './components/Router'
 import HomePage from './pages/HomePage'
+import { AccountPage, AuthPage } from './pages/AccountPages'
 import {
   EntitiesPage,
   EntityChannelPage,
   EntityCreatePage,
   EntityProfilePage,
 } from './pages/EntityPages'
+import { AvatarPage, ChannelCustomizePage, FeedPage } from './pages/NetworkOSPages'
 import {
   ContactPage,
   DirectoryPage,
@@ -38,7 +40,9 @@ function RouteView() {
     case '/':
       return <HomePage />
     case '/signals':
-      return <PlatformPage slug="signals" />
+      return <FeedPage signalsMode />
+    case '/feed':
+      return <FeedPage />
     case '/channels':
       return <PlatformPage slug="channels" />
     case '/channel':
@@ -65,6 +69,16 @@ function RouteView() {
       return <EntityCreatePage />
     case '/entities/profile':
       return <EntityProfilePage />
+    case '/entities/avatar':
+      return <AvatarPage />
+    case '/channel/customize':
+      return <ChannelCustomizePage />
+    case '/login':
+      return <AuthPage mode="login" />
+    case '/signup':
+      return <AuthPage mode="signup" />
+    case '/account':
+      return <AccountPage />
     case '/studio':
       return <StudioPage />
     case '/static-plus':

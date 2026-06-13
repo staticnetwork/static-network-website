@@ -3,6 +3,7 @@ import {
   createEntity,
   getChannelForEntity,
   getDrops,
+  getEntities,
   getEntitySignals,
   getMedia,
   getWorlds,
@@ -13,8 +14,12 @@ import {
   setEntityLive,
   subscribeToNetworkUpdates,
 } from '../lib/staticStore'
+import { avatarCategories, defaultAvatarConfig } from '../lib/avatarConfig'
+import { AvatarControlDeck, EntityAvatar, StoredMedia } from './AvatarSystem'
 import { Link, useRouter } from './Router'
 import { ArrowIcon, LiveIndicator, SignalMark } from './UI'
+
+export { EntityAvatar } from './AvatarSystem'
 
 const roleOptions = ['AI Artist', 'Virtual Host', 'Digital Influencer', 'Game Character', 'Podcast Host', 'Film Character', 'Brand Entity', 'World Narrator', 'CEO / Founder', 'Other']
 const genreOptions = ['Music', 'Film', 'Gaming', 'Comedy', 'Fashion', 'Culture', 'News', 'Sports', 'Luxury', 'Sci-Fi', 'Horror', 'Drama', 'Business', 'Other']
@@ -59,6 +64,7 @@ const initialEntity = {
   merchandiseIdea: '',
   gameConcept: '',
   seriesConcept: '',
+  avatarConfig: defaultAvatarConfig,
 }
 
 const steps = [
@@ -94,24 +100,6 @@ function SelectField({ label, name, value, onChange, options }) {
   )
 }
 
-export function EntityAvatar({ entity, large = false }) {
-  const initials = (entity?.name || 'NEW ENTITY')
-    .split(/\s+/)
-    .map((word) => word[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
-
-  return (
-    <div className={`entity-avatar ${large ? 'entity-avatar--large' : ''}`} aria-hidden="true">
-      <div className="entity-avatar__rings"><i /><i /><i /></div>
-      <SignalMark animated />
-      <b>{initials}</b>
-      <span>{entity?.visualStyle || 'IDENTITY FORMING'}</span>
-    </div>
-  )
-}
-
 export function EntityCard({ entity, preview = false }) {
   return (
     <article className={`entity-card ${preview ? 'entity-card--preview' : ''}`}>
@@ -119,7 +107,7 @@ export function EntityCard({ entity, preview = false }) {
         <LiveIndicator label={entity.live ? 'ENTITY LIVE' : entity.status || 'ENTITY PREVIEW'} />
         <span>{entity.rank || 'RANK PENDING'}</span>
       </div>
-      <EntityAvatar entity={entity} />
+      <EntityAvatar entity={entity} size="medium" />
       <div className="entity-card__identity">
         <span>{entity.role || 'SELECT ARCHETYPE'} / {entity.genre || 'SELECT LANE'}</span>
         <h3>{entity.name || 'YOUR ENTITY'}</h3>
@@ -245,6 +233,13 @@ export function EntityBuilder() {
               <Field label="Entity Bio" name="bio" value={form.bio} onChange={change} type="textarea" required placeholder="Introduce the public identity." />
             </>}
             {step === 2 && <>
+              <div className="entity-field-grid__wide">
+                <AvatarControlDeck
+                  value={form.avatarConfig}
+                  onChange={(avatarConfig) => setForm((current) => ({ ...current, avatarConfig }))}
+                  compact
+                />
+              </div>
               <SelectField label="Visual style" name="visualStyle" value={form.visualStyle} onChange={change} options={visualOptions} />
               <SelectField label="Gender / presentation" name="presentation" value={form.presentation} onChange={change} options={presentationOptions} />
               <SelectField label="Wardrobe style" name="wardrobe" value={form.wardrobe} onChange={change} options={wardrobeOptions} />
@@ -309,6 +304,11 @@ export function LocalSignalMedia({ signal, compact = false }) {
     }
   }, [signal.mediaId])
 
+  const cloudUrl = signal.mediaUrls?.[0] || signal.media_urls?.[0]
+  const cloudType = signal.fileType || signal.postType || signal.type || ''
+  if (cloudUrl && /video/i.test(cloudType)) return <video className="local-signal-media" src={cloudUrl} controls playsInline preload="metadata" />
+  if (cloudUrl && /audio/i.test(cloudType)) return <div className="local-audio"><SignalMark animated /><audio src={cloudUrl} controls preload="metadata" /></div>
+  if (cloudUrl) return <img className="local-signal-media" src={cloudUrl} alt="" />
   if (url && signal.fileType?.startsWith('video/')) return <video className="local-signal-media" src={url} controls playsInline preload="metadata" />
   if (url && signal.fileType?.startsWith('image/')) return <img className="local-signal-media" src={url} alt="" />
   if (url && signal.fileType?.startsWith('audio/')) return <div className="local-audio"><SignalMark animated /><audio src={url} controls preload="metadata" /></div>
@@ -323,13 +323,24 @@ export function LocalSignalMedia({ signal, compact = false }) {
 }
 
 export function LocalSignalCard({ signal, onOpen }) {
+  const entity = getEntities().find((item) => item.id === signal.entityId) || {
+    name: signal.entityName,
+    handle: signal.entityHandle,
+    avatarConfig: signal.avatarConfig,
+    profileImageRef: signal.profileImageRef,
+    profileImageUrl: signal.profileImageUrl,
+  }
+
   return (
     <article className="local-signal-card">
       <button type="button" onClick={() => onOpen?.(signal)}>
         <LocalSignalMedia signal={signal} compact />
         <div className="local-signal-card__body">
           <div><LiveIndicator label="ENTITY SIGNAL" /><span>{signal.visibility}</span></div>
-          <p>{signal.entityName} <span>{signal.entityHandle}</span></p>
+          <div className="local-signal-card__author">
+            <EntityAvatar entity={entity} size="small" pose={signal.avatarPose} />
+            <p>{signal.entityName} <span>{signal.entityHandle}</span></p>
+          </div>
           <h3>{signal.title}</h3>
           <small>{signal.caption}</small>
           <footer><span>{signal.type}</span><span>{signal.tags || 'LOCAL TRANSMISSION'}</span><b>Open signal <ArrowIcon /></b></footer>
@@ -373,7 +384,7 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
     setPublishing(true)
     const form = new FormData(event.currentTarget)
     let media = null
-    if (file) media = await saveMedia(file)
+    if (file) media = await saveMedia(file, { ownerEntityId: entity.id, channelId: getChannelForEntity(entity.id)?.id })
     saveSignal({
       entityId: entity.id,
       entityName: entity.name,
@@ -381,12 +392,18 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
       company: entity.company,
       badge: entity.badge,
       signalScore: entity.signalScore,
+      avatarConfig: entity.avatarConfig,
+      profileImageRef: entity.profileImageRef,
+      avatarPose: form.get('avatarPose'),
       type,
+      postType: type,
       title: form.get('title'),
       caption: form.get('caption'),
+      text: form.get('caption'),
       tags: form.get('tags'),
       visibility: form.get('visibility'),
       mediaId: media?.id || null,
+      mediaRefs: media?.id ? [media.id] : [],
       fileName: media?.fileName || '',
       fileType: media?.fileType || '',
     })
@@ -411,10 +428,13 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
           <label><span>CAPTION / SIGNAL TEXT</span><textarea name="caption" rows="5" required placeholder="What is the Entity transmitting?" /></label>
           <label><span>TAGS</span><input name="tags" placeholder="culture, future, origin" /></label>
           <label><span>VISIBILITY</span><select name="visibility"><option>Public</option><option>Private Beta</option><option>Draft</option></select></label>
+          <label><span>AVATAR POSE</span><select name="avatarPose" defaultValue={entity.avatarConfig?.pose || 'Idle'}>
+            {avatarCategories.pose.pose.map((option) => <option key={option}>{option}</option>)}
+          </select></label>
           {acceptsMedia && <label className="file-field"><span>UPLOAD {type.toUpperCase()}</span><input type="file" accept={`${type.toLowerCase()}/*`} onChange={chooseFile} required /></label>}
           {type === 'Video' && <label className="file-field"><span>OPTIONAL THUMBNAIL</span><input type="file" accept="image/*" /></label>}
           <button className="button button--primary button--wide" type="submit" disabled={publishing}>
-            {publishing ? 'Transmitting...' : 'Publish Signal'} <ArrowIcon />
+            {publishing ? 'Transmitting...' : 'Transmit Signal'} <ArrowIcon />
           </button>
           <p className="form-status" role="status">{status}</p>
         </div>
@@ -423,7 +443,7 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
           {previewUrl && file?.type.startsWith('video/') && <video src={previewUrl} controls playsInline />}
           {previewUrl && file?.type.startsWith('image/') && <img src={previewUrl} alt="Upload preview" />}
           {previewUrl && file?.type.startsWith('audio/') && <audio src={previewUrl} controls />}
-          {!previewUrl && <div><SignalMark animated /><b>{entity.name}</b><small>{type}</small></div>}
+          {!previewUrl && <div><EntityAvatar entity={entity} size="post" /><b>{entity.name}</b><small>{type}</small></div>}
         </div>
       </form>
     </ModalFrame>
@@ -460,7 +480,7 @@ export function LiveEntityMode({ entity, onClose, onEntityChange }) {
     <ModalFrame title="Go Live As Entity" code="LIVE//ENTITY-FILTER" onClose={onClose} wide>
       <div className={`entity-live ${started ? 'is-live' : ''}`}>
         <div className="entity-live__frame">
-          <div className="entity-filter"><EntityAvatar entity={entity} large /><i /><i /></div>
+          <div className="entity-filter"><EntityAvatar entity={entity} size="live" pose="Live Host" /><i /><i /></div>
           <div className="entity-live__status"><LiveIndicator label={started ? 'TRANSMISSION LIVE' : 'BROADCAST STANDBY'} /><span>ENTITY FILTER ACTIVE</span></div>
           <div className="entity-live__identity"><h3>{entity.name}</h3><p>{entity.handle} / {entity.liveFormat || 'Entity broadcast'}</p></div>
         </div>
@@ -552,6 +572,9 @@ export function EntityActionHub({ entity, compact = false, onEntityChange }) {
           </button>
         ))}
         <Link to={`/channels/${entity.handle.replace('@', '')}`}><span>06</span><b>View Channel</b><ArrowIcon /></Link>
+        <Link to="/entities/avatar"><span>07</span><b>Customize Avatar</b><ArrowIcon /></Link>
+        <Link to="/channel/customize"><span>08</span><b>Customize Channel</b><ArrowIcon /></Link>
+        <Link to="/feed"><span>09</span><b>Open Entity Feed</b><ArrowIcon /></Link>
       </div>
       {tool === 'upload' && <UploadSignalModal entity={entity} onClose={() => setTool('')} />}
       {tool === 'first' && <UploadSignalModal entity={entity} firstSignal onClose={() => setTool('')} />}
@@ -564,7 +587,7 @@ export function EntityActionHub({ entity, compact = false, onEntityChange }) {
 
 export function EntityProfile({ initialEntity, channelMode = false }) {
   const [entity, setEntity] = useState(initialEntity)
-  const [tab, setTab] = useState('Signals')
+  const [tab, setTab] = useState(channelMode ? 'Feed' : 'Signals')
   const [, setVersion] = useState(0)
 
   useEffect(() => subscribeToNetworkUpdates(() => setVersion((value) => value + 1)), [])
@@ -574,11 +597,13 @@ export function EntityProfile({ initialEntity, channelMode = false }) {
   const worlds = getWorlds(entity.id)
   const drops = getDrops(entity.id)
   const tabs = channelMode
-    ? ['Signals', 'Videos', 'Music', 'Live', 'Drops', 'Worlds', 'About']
+    ? ['Feed', 'Videos', 'Shorts', 'Live', 'Music', 'Worlds', 'Drops', 'About']
     : ['Signals', 'Channel', 'Videos', 'Music', 'Live', 'Originals', 'Play', 'Marketplace', 'Drops', 'Worlds', 'About']
 
   const visibleSignals = tab === 'Videos'
     ? signals.filter((signal) => signal.type.includes('Video') || signal.fileType?.startsWith('video/'))
+    : tab === 'Shorts'
+      ? signals.filter((signal) => signal.type.includes('Clip') || (signal.fileType?.startsWith('video/') && signal.title?.toLowerCase().includes('short')))
     : tab === 'Music'
       ? signals.filter((signal) => signal.type.includes('Music') || signal.fileType?.startsWith('audio/'))
       : tab === 'Live'
@@ -602,15 +627,31 @@ export function EntityProfile({ initialEntity, channelMode = false }) {
   }
 
   return (
-    <div className={`entity-profile ${channelMode ? 'entity-profile--channel' : ''}`}>
+    <div className={`entity-profile ${channelMode ? 'entity-profile--channel' : ''}`} style={{ '--channel-accent': channel?.theme?.accentColor || '#78e8ff' }}>
+      {channelMode && (
+        <section className={`channel-profile__banner channel-theme--${(channel?.theme?.style || 'broadcast').toLowerCase().replace(/\s+/g, '-')}`}>
+          {channel?.bannerRef && <StoredMedia mediaRef={channel.bannerRef} as={channel.bannerType?.startsWith('video/') ? 'video' : 'img'} alt={`${channel.displayName || entity.name} Channel banner`} />}
+          {!channel?.bannerRef && channel?.bannerUrl && <img src={channel.bannerUrl} alt={`${channel.displayName || entity.name} Channel banner`} />}
+          {!channel?.bannerRef && !channel?.bannerUrl && <div className="channel-profile__generated-banner"><SignalMark animated /><i /><i /><i /></div>}
+          <div className="channel-profile__banner-copy">
+            <span>{channel?.theme?.style || 'Broadcast'} / {channel?.theme?.layoutStyle || 'Media Grid'}</span>
+            <h2>{channel?.theme?.bannerHeadline || channel?.tagline}</h2>
+            <LiveIndicator label={entity.live ? 'TRANSMISSION LIVE' : 'CHANNEL ONLINE'} />
+          </div>
+        </section>
+      )}
       <section className="entity-profile__hero">
-        <div className="entity-profile__visual"><EntityAvatar entity={entity} large /><div className="entity-profile__world-grid" /></div>
+          <div className="entity-profile__visual"><EntityAvatar entity={entity} size="profile" /><div className="entity-profile__world-grid" /></div>
         <div className="entity-profile__identity">
           <div><LiveIndicator label={entity.live ? 'ENTITY LIVE' : entity.status} /><span>{entity.rank}</span><span>{entity.badge}</span></div>
           <p>{entity.role} / {entity.genre}</p>
           <h1>{channelMode ? channel?.name || entity.name : entity.name}</h1>
           <h2>{entity.handle}</h2>
           <blockquote>{channelMode ? channel?.tagline : entity.bio}</blockquote>
+          {channelMode && <div className="button-row channel-profile__actions">
+            <button className="button button--primary" type="button">Follow / Request Access</button>
+            <Link className="button button--glass" to="/channel/customize">Customize Channel</Link>
+          </div>}
           <div className="entity-profile__meta">
             <span><b>{entity.signalScore}</b>SIGNAL SCORE</span>
             <span><b>{entity.company || 'INDEPENDENT'}</b>COMPANY / BRAND</span>

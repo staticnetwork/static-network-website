@@ -7,6 +7,7 @@ Public website and early app-shell preview for
 
 - Vite
 - React
+- Supabase-ready Auth, Postgres, and Storage adapter
 - Dependency-free History API router
 - Netlify static hosting
 
@@ -31,27 +32,33 @@ Netlify uses `public/_redirects` to serve client-side routes from `index.html`.
 
 ## Current product status
 
-The public routes and rich interactive demonstrations are implemented. The
-network feed, discovery filtering, broadcast deck, Radio player, PLAY
-generation sequence, Studio creation modes, LIVE reminders, channel worlds,
-marketplace drawers, and Entity product loop run entirely in the browser.
+The public routes and app shell are implemented. The Entity-only feed, visual
+avatar creator, Channel designer, account screens, discovery filtering,
+broadcast deck, Radio player, PLAY generation sequence, Studio control room,
+LIVE mode, Channel worlds, and marketplace previews are available.
 
-The waitlist demonstration stores recent submissions in browser `localStorage`.
-It does not transmit them to an external service. Audio streaming, real
-generation, payments, subscriptions, accounts, public multi-user publishing,
-recommendations, and marketplace transactions are intentionally not connected.
+Without Supabase environment variables, creator data stays in local browser
+storage. With Supabase configured, email/password authentication, profile
+ownership, local-to-cloud import, and cloud-to-device structured-data sync are
+available. Audio/video streaming infrastructure, real generation, payments,
+subscriptions, production moderation, recommendations, and marketplace
+transactions are intentionally not connected.
 
 ## Entity-first local MVP
 
-- Six-step Entity Builder at `/entities/create`
+- Six-step Entity Builder with layered visual avatar controls
+- Dedicated visual creator at `/entities/avatar`
 - Genesis Entity behavior for the first local Entity
 - Automatic Channel creation at `/channels/:entityHandle`
+- Channel designer at `/channel/customize`
 - Entity profile at `/entities/profile`
-- Signal publishing into the profile, Channel, and `/signals`
+- Entity-only posting, poses, reactions, and comments at `/feed`
+- Signal publishing into the profile, Channel, `/feed`, and `/signals`
 - Video, image, and audio Blob storage in IndexedDB
+- Local account profile and profile-image storage
 - Simulated `Go Live As Entity` mode
 - Local World and Drop builders
-- Entity operations inside STATIC Studio
+- Full Entity operations inside STATIC Studio
 
 Local storage keys:
 
@@ -62,10 +69,27 @@ Local storage keys:
 - `static_drops`
 - `static_current_entity`
 - `static_live`
+- `static_local_account`
 
 Media uses the IndexedDB database `static_network_mvp` and object store
 `static_media`. These local records are an MVP boundary, not a replacement for
-authenticated cloud ownership, moderation, media processing, or backups.
+authenticated cloud media processing, moderation, or backups.
+
+## Supabase-ready account mode
+
+Copy `.env.example` to `.env.local`, add the public Supabase URL and
+publishable key, and follow `SUPABASE_SETUP.md`. Never add a service-role key,
+secret key, database password, or JWT secret to this frontend.
+
+Routes:
+
+- `/login`
+- `/signup`
+- `/account`
+
+After login, structured Entity, Channel, Signal, World, and Drop data is pulled
+into a non-destructive device cache. The account page can import existing local
+Genesis data into the authenticated owner account.
 
 ## Hero trailer
 

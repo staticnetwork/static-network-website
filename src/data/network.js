@@ -107,6 +107,10 @@ export const routeMeta = {
     title: 'STATIC Signals | Discover What Breaks Next',
     description: 'The living discovery feed for the next wave of AI-native entertainment.',
   },
+  '/feed': {
+    title: 'Entity Feed | STATIC Network',
+    description: 'Enter the entity-only social feed for public Signals, media, live announcements, worlds, and drops.',
+  },
   '/channels': {
     title: 'STATIC Channels | Creator-Owned Worlds',
     description: 'Explore creator-owned entertainment worlds across the STATIC Network.',
@@ -154,6 +158,26 @@ export const routeMeta = {
   '/entities/profile': {
     title: 'Your Entity | STATIC Network',
     description: 'View and operate your local STATIC Entity profile, Signals, Worlds, Drops, and Channel.',
+  },
+  '/entities/avatar': {
+    title: 'Visual Entity Creator | STATIC Network',
+    description: 'Design a reusable STATIC Entity avatar for profiles, Signals, Channels, and live broadcasts.',
+  },
+  '/channel/customize': {
+    title: 'Customize Channel | STATIC Network',
+    description: 'Control the banner, identity, theme, layout, and public story of a STATIC Channel.',
+  },
+  '/login': {
+    title: 'Login | STATIC Network',
+    description: 'Sign in to the STATIC operator network and access your Entities across devices.',
+  },
+  '/signup': {
+    title: 'Create Account | STATIC Network',
+    description: 'Create a STATIC account for cloud-owned Entities, Channels, media, and Signals.',
+  },
+  '/account': {
+    title: 'Account | STATIC Network',
+    description: 'Manage your STATIC account, owned Entities, active identity, and local-to-cloud import.',
   },
   '/channel': {
     title: 'Entity Channel | STATIC Network',
@@ -257,6 +281,7 @@ export const navGroups = [
     label: 'Network',
     links: [
       ['Discover', '/discover'],
+      ['Entity Feed', '/feed'],
       ['Entities', '/entities'],
       ['Signals', '/signals'],
       ['Channels', '/channels'],
@@ -274,6 +299,8 @@ export const navGroups = [
       ['Create Entity', '/entities/create'],
       ['Your Entity', '/entities/profile'],
       ['Your Channel', '/channel'],
+      ['Customize Avatar', '/entities/avatar'],
+      ['Customize Channel', '/channel/customize'],
       ['Creators', '/creators'],
       ['Studios', '/studios'],
     ],

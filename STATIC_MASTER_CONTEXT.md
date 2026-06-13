@@ -76,19 +76,32 @@ pretend that backend systems exist.
 
 Local MVP features:
 
-- Entity Builder and Entity Profile
+- Entity Builder, layered visual Avatar Creator, and Entity Profile
 - automatic Entity Channel creation
+- Channel theme, profile image, and banner customization
+- Entity-only Signal feed, poses, reactions, and comments
 - local Entity Signals and media metadata
 - media Blob persistence in IndexedDB
 - simulated Entity live status
 - local World and Drop builders
-- homepage and Studio Entity controls
+- homepage network boot/trailer fallback and Studio operator controls
+
+Cloud-ready account features:
+
+- `/login`, `/signup`, and `/account`
+- Supabase Auth session and profile context when public environment variables exist
+- Postgres schema with Row Level Security policies
+- Storage ownership policies for avatars, banners, media, and thumbnails
+- local-to-cloud Entity network import
+- cloud-to-device structured-data cache after authenticated login
+- local creator mode when Supabase is not configured
 
 Not connected yet:
 
 - generation providers
-- authentication or user accounts
-- authentication, cloud database, or cloud media storage
+- production Supabase project credentials
+- full cloud-first editing and realtime collaboration
+- IndexedDB Blob transfer to cloud storage during legacy import
 - payments, subscriptions, or marketplace transactions
 - public multi-user publishing or real creator analytics
 - live audio/video infrastructure
@@ -97,6 +110,24 @@ Not connected yet:
 All future integrations must be server-side where secrets are involved and must
 include authorization, consent, safety, cost, rate-limit, and data-retention
 decisions before launch.
+
+## Storage And Ownership
+
+Local mode preserves:
+
+- `static_entities`
+- `static_channels`
+- `static_signals`
+- `static_worlds`
+- `static_drops`
+- `static_current_entity`
+- `static_live`
+- `static_local_account`
+- IndexedDB `static_network_mvp/static_media`
+
+Cloud mode is enabled only by public `VITE_SUPABASE_URL` plus
+`VITE_SUPABASE_PUBLISHABLE_KEY` or legacy `VITE_SUPABASE_ANON_KEY`. Private
+admin credentials never belong in the browser.
 
 ## Experience Principles
 
