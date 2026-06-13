@@ -27,4 +27,16 @@ export default [
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z]' }],
     },
   },
+  {
+    files: ['netlify/functions/**/*.js', 'scripts/**/*.mjs'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      globals: globals.node,
+      parserOptions: { sourceType: 'module' },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z]' }],
+    },
+  },
 ]

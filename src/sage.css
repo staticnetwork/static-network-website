@@ -1,0 +1,742 @@
+.sage-arrival {
+  position: fixed;
+  z-index: 800;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1.12fr .88fr;
+  align-items: center;
+  min-width: 320px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 30% 74%, rgba(120, 232, 255, .14), transparent 23%),
+    radial-gradient(circle at 52% 20%, rgba(64, 85, 255, .1), transparent 28%),
+    #020405;
+}
+
+.sage-arrival::before {
+  position: absolute;
+  inset: 0;
+  content: '';
+  opacity: .2;
+  background:
+    linear-gradient(rgba(120, 232, 255, .09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(120, 232, 255, .09) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: radial-gradient(circle at 40% 55%, black, transparent 70%);
+}
+
+.sage-arrival__noise {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  opacity: .025;
+  background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 4px);
+}
+
+.sage-3d-arrival {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  min-height: 600px;
+}
+
+.sage-3d-viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 260px;
+}
+
+.sage-3d-viewport canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sage-3d-arrival__beam {
+  position: absolute;
+  right: 20%;
+  bottom: 14%;
+  left: 20%;
+  height: 68%;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(120, 232, 255, .02), rgba(120, 232, 255, .12));
+  filter: blur(25px);
+  clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+}
+
+.sage-3d-arrival__telemetry {
+  position: absolute;
+  bottom: 35px;
+  left: 35px;
+  display: grid;
+  gap: 5px;
+  color: var(--green);
+  font: .55rem var(--mono);
+  letter-spacing: .1em;
+}
+
+.sage-3d-arrival__telemetry small {
+  color: #5f747d;
+}
+
+.sage-arrival__copy {
+  position: relative;
+  z-index: 8;
+  max-width: 650px;
+  padding: 9vw 7vw 7vw 0;
+}
+
+.sage-arrival__copy > span {
+  color: var(--green);
+  font: .62rem var(--mono);
+  letter-spacing: .14em;
+}
+
+.sage-arrival__copy h1 {
+  margin: 22px 0 26px;
+  font: 500 clamp(4.4rem, 8vw, 9rem)/.82 var(--display);
+  letter-spacing: -.085em;
+}
+
+.sage-arrival__copy h1 em {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(190, 240, 255, .75);
+}
+
+.sage-arrival__copy p {
+  max-width: 590px;
+  color: #a8b5bd;
+  font-size: clamp(.9rem, 1.25vw, 1.08rem);
+  line-height: 1.8;
+}
+
+.sage-arrival__copy strong {
+  color: #e8fbff;
+}
+
+.sage-arrival__copy > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.sage-arrival__skip {
+  padding: 0 12px;
+  border: 0;
+  color: #687981;
+  background: none;
+  font: .57rem var(--mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sage-arrival__status {
+  position: absolute;
+  z-index: 8;
+  right: 30px;
+  bottom: 22px;
+  display: flex;
+  gap: 18px;
+  color: #607078;
+  font: .48rem var(--mono);
+  letter-spacing: .08em;
+}
+
+.sage-arrival__status i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green);
+}
+
+.sage-launcher {
+  position: fixed;
+  z-index: 310;
+  right: 20px;
+  bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 202px;
+  padding: 10px 15px 10px 10px;
+  border: 1px solid rgba(120, 232, 255, .35);
+  color: #eefdff;
+  background: rgba(5, 10, 12, .92);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .5), inset 0 1px rgba(255, 255, 255, .08);
+  backdrop-filter: blur(18px);
+  cursor: pointer;
+}
+
+.sage-launcher > span {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid var(--green);
+  border-radius: 50%;
+  box-shadow: 0 0 20px rgba(120, 232, 255, .16);
+}
+
+.sage-launcher > span i {
+  position: absolute;
+  width: 2px;
+  height: 16px;
+  background: var(--green);
+  animation: sage-bars 1.3s ease-in-out infinite alternate;
+}
+
+.sage-launcher > span i:nth-child(1) { transform: translateX(-6px); animation-delay: -.6s; }
+.sage-launcher > span i:nth-child(3) { transform: translateX(6px); animation-delay: -.3s; }
+.sage-launcher > div {
+  display: grid;
+  gap: 4px;
+  text-align: left;
+}
+.sage-launcher strong {
+  font: 600 .75rem var(--display);
+  letter-spacing: .16em;
+}
+.sage-launcher small {
+  color: #6e858e;
+  font: .44rem var(--mono);
+  letter-spacing: .08em;
+}
+
+.sage-panel {
+  position: fixed;
+  z-index: 300;
+  right: 20px;
+  bottom: 84px;
+  display: flex;
+  flex-direction: column;
+  width: min(510px, calc(100vw - 28px));
+  max-height: min(780px, calc(100vh - 110px));
+  overflow: auto;
+  border: 1px solid rgba(120, 232, 255, .3);
+  background: rgba(5, 8, 10, .97);
+  box-shadow: 0 36px 120px rgba(0, 0, 0, .72);
+  backdrop-filter: blur(24px);
+}
+
+.sage-panel--expanded {
+  position: relative;
+  right: auto;
+  bottom: auto;
+  width: 100%;
+  max-height: none;
+  margin-bottom: 120px;
+}
+
+.sage-panel > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.sage-panel > header > div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 2px 9px;
+}
+
+.sage-panel > header i {
+  grid-row: 1 / 3;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 15px var(--green);
+}
+
+.sage-panel > header span {
+  font: 600 .74rem var(--display);
+  letter-spacing: .15em;
+}
+
+.sage-panel > header small {
+  color: #60717a;
+  font: .43rem var(--mono);
+  letter-spacing: .09em;
+}
+
+.sage-panel > header button {
+  border: 0;
+  color: #84949c;
+  background: none;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.sage-panel__identity {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+  min-height: 185px;
+  border-bottom: 1px solid var(--line);
+  background: radial-gradient(circle at 14% 50%, rgba(120, 232, 255, .1), transparent 36%);
+}
+
+.sage-panel__identity > div:last-child {
+  align-self: center;
+  padding: 18px 18px 18px 0;
+}
+
+.sage-panel__identity span {
+  color: var(--green);
+  font: .48rem var(--mono);
+  letter-spacing: .08em;
+}
+
+.sage-panel__identity h2 {
+  margin: 8px 0;
+  font: 500 1.45rem/1.06 var(--display);
+  letter-spacing: -.04em;
+}
+
+.sage-panel__identity p {
+  margin: 0;
+  color: #89979e;
+  font-size: .73rem;
+  line-height: 1.55;
+}
+
+.sage-transcript {
+  display: grid;
+  gap: 9px;
+  max-height: 240px;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.sage-message {
+  max-width: 88%;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  background: #0a0d0f;
+}
+
+.sage-message--user {
+  justify-self: end;
+  border-color: rgba(255, 255, 255, .17);
+  background: #111416;
+}
+
+.sage-message span {
+  color: var(--green);
+  font: .43rem var(--mono);
+  letter-spacing: .09em;
+}
+
+.sage-message p {
+  margin: 5px 0 0;
+  color: #c2cbd0;
+  font-size: .74rem;
+  line-height: 1.5;
+}
+
+.sage-confirmation {
+  margin: 0 16px 12px;
+  padding: 14px;
+  border: 1px solid rgba(120, 232, 255, .35);
+  background: rgba(120, 232, 255, .06);
+}
+
+.sage-confirmation > span {
+  color: var(--green);
+  font: .48rem var(--mono);
+}
+
+.sage-confirmation p {
+  color: #b9c6cc;
+  font-size: .75rem;
+}
+
+.sage-confirmation > div,
+.sage-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sage-confirmation button,
+.sage-suggestions button,
+.sage-settings button {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  color: #b8c3c8;
+  background: #090c0e;
+  font: .51rem var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sage-confirmation button:first-child {
+  color: #061012;
+  border-color: var(--green);
+  background: var(--green);
+}
+
+.sage-suggestions {
+  padding: 0 16px 12px;
+}
+
+.sage-command-bar {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 7px;
+  padding: 13px 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.sage-command-bar input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  outline: 0;
+  background: #080b0d;
+  font-size: .73rem;
+}
+
+.sage-command-bar input:focus {
+  border-color: var(--green);
+}
+
+.sage-command-bar > button,
+.sage-voice-control > button {
+  height: 42px;
+  padding: 0 13px;
+  border: 1px solid rgba(120, 232, 255, .35);
+  color: var(--green);
+  background: rgba(120, 232, 255, .05);
+  font: .51rem var(--mono);
+  cursor: pointer;
+}
+
+.sage-voice-control {
+  position: relative;
+}
+
+.sage-voice-control > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sage-voice-control > button span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.sage-voice-control > button.is-listening {
+  color: #071011;
+  background: var(--green);
+  animation: sage-listening .8s ease-in-out infinite alternate;
+}
+
+.sage-voice-control small {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 12px);
+  width: 190px;
+  padding: 8px;
+  color: #aab6bc;
+  background: #070a0c;
+  font: .48rem/1.4 var(--mono);
+}
+
+.sage-settings {
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--line);
+  color: #839198;
+  font: .57rem/1.5 var(--mono);
+}
+
+.sage-settings summary {
+  color: #aebbc1;
+  cursor: pointer;
+}
+
+.sage-settings label {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.sage-activity-log {
+  padding: 14px 16px 20px;
+}
+
+.sage-activity-log > div {
+  display: flex;
+  justify-content: space-between;
+  color: #74838a;
+  font: .5rem var(--mono);
+}
+
+.sage-activity-log > article {
+  display: flex;
+  gap: 9px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
+}
+
+.sage-activity-log article i {
+  width: 5px;
+  height: 5px;
+  margin-top: 4px;
+  border-radius: 50%;
+  background: var(--green);
+}
+
+.sage-activity-log article div {
+  display: grid;
+  gap: 2px;
+}
+
+.sage-activity-log strong {
+  color: #aeb9bf;
+  font-size: .62rem;
+  font-weight: 500;
+}
+
+.sage-activity-log small,
+.sage-activity-log p {
+  color: #5d6b72;
+  font-size: .53rem;
+}
+
+.sage-tour {
+  position: fixed;
+  z-index: 700;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(0, 0, 0, .2);
+  box-shadow: inset 0 0 0 5px rgba(120, 232, 255, .55), inset 0 0 100px rgba(120, 232, 255, .1);
+}
+
+.sage-tour__signal {
+  position: absolute;
+  top: 100px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--green);
+  font: .5rem var(--mono);
+}
+
+.sage-tour__signal i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 12px var(--green);
+}
+
+.sage-tour__card {
+  position: absolute;
+  right: 24px;
+  bottom: 25px;
+  width: min(470px, calc(100vw - 32px));
+  padding: 24px;
+  border: 1px solid var(--green);
+  background: rgba(4, 8, 10, .97);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, .75);
+  pointer-events: auto;
+}
+
+.sage-tour__card > span {
+  color: var(--green);
+  font: .54rem var(--mono);
+  letter-spacing: .1em;
+}
+
+.sage-tour__card p {
+  margin: 16px 0;
+  color: #d0d9dd;
+  font: 500 1.22rem/1.45 var(--display);
+}
+
+.sage-tour__card > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+.sage-tour__card button {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  color: #aab8be;
+  background: #090c0e;
+  font: .52rem var(--mono);
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.sage-tour__card button:nth-child(2) {
+  color: #061012;
+  background: var(--green);
+}
+
+.sage-page {
+  min-height: 100vh;
+  padding: calc(var(--header) + 85px) 0 0;
+  background:
+    radial-gradient(circle at 80% 15%, rgba(120, 232, 255, .12), transparent 26%),
+    #030506;
+}
+
+.sage-page__intro {
+  margin-bottom: 45px;
+}
+
+.sage-page__intro > span:not(.live-indicator) {
+  display: block;
+  margin-top: 24px;
+  color: var(--green);
+  font: .56rem var(--mono);
+  letter-spacing: .12em;
+}
+
+.sage-page__intro h1 {
+  margin: 18px 0;
+  font: 500 clamp(4rem, 9vw, 9rem)/.84 var(--display);
+  letter-spacing: -.08em;
+}
+
+.sage-page__intro h1 em {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(190, 241, 255, .7);
+}
+
+.sage-page__intro p {
+  max-width: 690px;
+  color: #8e9da4;
+  line-height: 1.75;
+}
+
+.sage-3d-fallback {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  height: 100%;
+  color: var(--green);
+  font-family: var(--mono);
+}
+
+.sage-3d-fallback small {
+  color: #60717a;
+}
+
+@keyframes sage-bars {
+  to { height: 5px; }
+}
+
+@keyframes sage-listening {
+  to { box-shadow: 0 0 25px rgba(120, 232, 255, .6); }
+}
+
+@media (max-width: 900px) {
+  .sage-arrival {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sage-arrival__copy {
+    padding-right: 5vw;
+  }
+  .sage-arrival__copy h1 {
+    font-size: clamp(3.6rem, 9vw, 6rem);
+  }
+}
+
+@media (max-width: 680px) {
+  .sage-arrival {
+    display: block;
+    overflow-y: auto;
+  }
+  .sage-3d-arrival {
+    height: 54vh;
+    min-height: 390px;
+  }
+  .sage-arrival__copy {
+    margin-top: -48px;
+    padding: 0 22px 90px;
+  }
+  .sage-arrival__copy h1 {
+    margin: 12px 0;
+    font-size: 3.7rem;
+  }
+  .sage-arrival__copy p {
+    font-size: .84rem;
+  }
+  .sage-arrival__copy > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+  .sage-arrival__copy .button {
+    justify-content: center;
+    padding: 13px 10px;
+    font-size: .54rem;
+  }
+  .sage-arrival__status,
+  .sage-3d-arrival__telemetry {
+    display: none;
+  }
+  .sage-launcher {
+    right: 10px;
+    bottom: 10px;
+    min-width: 0;
+    padding-right: 10px;
+  }
+  .sage-launcher > div {
+    display: none;
+  }
+  .sage-panel {
+    right: 7px;
+    bottom: 68px;
+    width: calc(100vw - 14px);
+    max-height: calc(100vh - 82px);
+  }
+  .sage-panel__identity {
+    grid-template-columns: 110px 1fr;
+  }
+  .sage-command-bar {
+    grid-template-columns: 1fr auto;
+  }
+  .sage-voice-control {
+    grid-column: 1 / -1;
+  }
+  .sage-voice-control > button {
+    justify-content: center;
+    width: 100%;
+  }
+  .sage-tour__signal {
+    top: 86px;
+    right: 14px;
+  }
+  .sage-tour__card {
+    right: 8px;
+    bottom: 8px;
+    width: calc(100vw - 16px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sage-launcher > span i,
+  .sage-voice-control > button.is-listening {
+    animation: none;
+  }
+}
+

@@ -1,5 +1,15 @@
 # STATIC Network
 
+The public website now includes the Entity Generator, versioned Entity DNA, secure Netlify provider adapters, provider status diagnostics, and S.A.G.E., a global 3D voice-ready concierge.
+
+Key routes:
+
+- `/entities/generate` - Entity DNA and visual generator
+- `/sage` - expanded S.A.G.E. control center
+- `/provider-status` - non-billable provider configuration checks
+
+See `PROVIDER_SETUP.md`, `ACTIVATE_PROVIDERS.md`, `ENTITY_VISUAL_PIPELINE.md`, and `SAGE_AI_OS_ROADMAP.md` for activation and production roadmaps.
+
 Public website and early app-shell preview for
 [thestaticnetwork.com](https://thestaticnetwork.com).
 

@@ -3,6 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import { navGroups } from '../data/network'
 import { Link, useRouter } from './Router'
 import { ArrowIcon, LiveIndicator, SignalMark } from './UI'
+import SageSystem from './sage/SageSystem'
 
 const desktopNav = [
   ['Discover', '/discover'],
@@ -168,6 +169,7 @@ export function SiteLayout({ children }) {
   return (
     <div className="site-shell">
       <a className="skip-link" href="#main">Skip to content</a>
+      <SageSystem />
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />

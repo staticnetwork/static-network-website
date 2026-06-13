@@ -43,7 +43,6 @@ export default function HomePage() {
   return (
     <>
       <RouteSEO path="/" />
-      <NetworkBoot />
       <section className="home-hero home-hero--network">
         <div className="home-hero__media" role="img" aria-label="A figure entering a luminous portal surrounded by future entertainment worlds" />
         <video className="home-hero__trailer" autoPlay muted loop playsInline preload="metadata" poster="/media/static-hero-fallback.png" aria-hidden="true">
@@ -71,7 +70,7 @@ export default function HomePage() {
           </p>
           <div className="button-row">
             <ButtonLink to="/discover">Enter The Network <ArrowIcon /></ButtonLink>
-            <ButtonLink to={entity ? '/entities/profile' : '/entities/create'} variant="glass">{entity ? 'View Your Entity' : 'Create An Entity'}</ButtonLink>
+            <ButtonLink to={entity ? '/entities/profile' : '/entities/generate'} variant="glass">{entity ? 'View Your Entity' : 'Generate An Entity'}</ButtonLink>
           </div>
         </div>
         <div className="hero-telemetry">
@@ -97,7 +96,7 @@ export default function HomePage() {
               <span>01 CREATE IDENTITY</span><i /><span>02 LAUNCH CHANNEL</span><i /><span>03 TRANSMIT SIGNALS</span>
             </div>
             <div className="button-row">
-              <ButtonLink to={entity ? '/entities/profile' : '/entities/create'}>{entity ? 'View Your Entity' : 'Create The First Entity'} <ArrowIcon /></ButtonLink>
+              <ButtonLink to={entity ? '/entities/profile' : '/entities/generate'}>{entity ? 'View Your Entity' : 'Generate The First Entity'} <ArrowIcon /></ButtonLink>
               <ButtonLink to="/entities" variant="glass">Explore Entity Network</ButtonLink>
             </div>
           </div>
@@ -253,56 +252,5 @@ export default function HomePage() {
         </div>
       </section>
     </>
-  )
-}
-
-function NetworkBoot() {
-  const [visible, setVisible] = useState(() => {
-    try {
-      return window.sessionStorage.getItem('static_boot_seen') !== 'true'
-    } catch {
-      return true
-    }
-  })
-
-  useEffect(() => {
-    if (!visible) return undefined
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const timer = window.setTimeout(() => {
-      setVisible(false)
-      try {
-        window.sessionStorage.setItem('static_boot_seen', 'true')
-      } catch {
-        // Session storage can be unavailable in privacy-restricted browsers.
-      }
-    }, reduced ? 120 : 1850)
-    return () => window.clearTimeout(timer)
-  }, [visible])
-
-  function close() {
-    setVisible(false)
-    try {
-      window.sessionStorage.setItem('static_boot_seen', 'true')
-    } catch {
-      // The homepage still opens normally without session persistence.
-    }
-  }
-
-  if (!visible) return null
-
-  return (
-    <div className="network-boot-overlay" role="status" aria-label="STATIC Network starting">
-      <div className="network-boot-overlay__grid" />
-      <SignalMark animated />
-      <div className="network-boot-overlay__sequence">
-        <span>SIGNAL ACQUIRED</span>
-        <span>ENTITY ONLINE</span>
-        <span>TRANSMISSION LIVE</span>
-        <span>WORLD RENDERING</span>
-      </div>
-      <h2>STATIC<br />NETWORK</h2>
-      <div className="network-boot-overlay__meter"><i /></div>
-      <button type="button" onClick={close}>SKIP INTRO</button>
-    </div>
   )
 }

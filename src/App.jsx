@@ -2,6 +2,9 @@ import { useEffect } from 'react'
 import { SiteLayout } from './components/SiteChrome'
 import { useRouter } from './components/Router'
 import HomePage from './pages/HomePage'
+import EntityGeneratorPage from './pages/EntityGeneratorPage'
+import ProviderStatusPage from './pages/ProviderStatusPage'
+import SagePage from './pages/SagePage'
 import { AccountPage, AuthPage } from './pages/AccountPages'
 import {
   EntitiesPage,
@@ -67,6 +70,8 @@ function RouteView() {
       return <EntitiesPage />
     case '/entities/create':
       return <EntityCreatePage />
+    case '/entities/generate':
+      return <EntityGeneratorPage />
     case '/entities/profile':
       return <EntityProfilePage />
     case '/entities/avatar':
@@ -95,6 +100,10 @@ function RouteView() {
       return <LegalPage type="terms" />
     case '/privacy':
       return <LegalPage type="privacy" />
+    case '/provider-status':
+      return <ProviderStatusPage />
+    case '/sage':
+      return <SagePage />
     default:
       return <NotFoundPage />
   }

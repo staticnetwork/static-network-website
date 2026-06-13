@@ -30,7 +30,8 @@ export function EntitiesPage() {
         status={entities.length ? `${entities.length} LOCAL ENTITIES` : 'ORIGIN SLOT OPEN'}
       >
         <div className="button-row">
-          <ButtonLink to="/entities/create">Create An Entity <ArrowIcon /></ButtonLink>
+          <ButtonLink to="/entities/generate">Generate An Entity <ArrowIcon /></ButtonLink>
+          <ButtonLink to="/entities/create" variant="glass">Manual Builder</ButtonLink>
           {entities.length > 0 && <ButtonLink to="/entities/profile" variant="glass">View Your Entity</ButtonLink>}
         </div>
       </PageHero>
@@ -57,7 +58,7 @@ export function EntitiesPage() {
         <div className="page-frame">
           <div className="section-row">
             <SectionHeading eyebrow="NETWORK ENTITIES" title="One identity. Every format." copy="These network examples demonstrate how Entities can perform, host, narrate, compete, release, and evolve across entertainment worlds." />
-            <ButtonLink to="/entities/create" variant="glass">{entities.length ? 'Create Another Entity' : 'Claim Rank #001'} <ArrowIcon /></ButtonLink>
+            <ButtonLink to="/entities/generate" variant="glass">{entities.length ? 'Generate Another Entity' : 'Claim Rank #001'} <ArrowIcon /></ButtonLink>
           </div>
           <div className="network-entity-grid">
             {directoryData.entities.map((entity, index) => (
@@ -84,6 +85,7 @@ export function EntityCreatePage() {
           <div><LiveIndicator label="ENTITY CORE ONLINE" /><span>CREATE//IDENTITY//WORLD</span></div>
           <h1>Create the Entity.<br /><em>Build the world.</em></h1>
           <p>Your public identity begins here. The Entity becomes the performer, creator, host, artist, gamer, influencer, founder, or character audiences meet across STATIC.</p>
+          <Link className="button button--primary" to="/entities/generate">Use the Visual Entity Generator <ArrowIcon /></Link>
         </div>
       </section>
       <section className="section entity-create-page">
@@ -126,7 +128,7 @@ function EntityMissing({ mode }) {
       <RouteSEO path={mode === 'channel' ? '/channel' : '/entities/profile'} />
       <section className="entity-missing">
         <div className="broadcast-grid" />
-        <div><SignalMark animated /><LiveIndicator label="ORIGIN SLOT OPEN" /><h1>No Entity is transmitting yet.</h1><p>Create the first public identity and STATIC will initialize its Channel automatically.</p><ButtonLink to="/entities/create">Create The First Entity <ArrowIcon /></ButtonLink></div>
+        <div><SignalMark animated /><LiveIndicator label="ORIGIN SLOT OPEN" /><h1>No Entity is transmitting yet.</h1><p>Create the first public identity and STATIC will initialize its Channel automatically.</p><ButtonLink to="/entities/generate">Generate The First Entity <ArrowIcon /></ButtonLink></div>
       </section>
     </>
   )

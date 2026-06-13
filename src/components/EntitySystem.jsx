@@ -12,6 +12,7 @@ import {
   saveSignal,
   saveWorld,
   setEntityLive,
+  setCurrentEntity,
   subscribeToNetworkUpdates,
 } from '../lib/staticStore'
 import { avatarCategories, defaultAvatarConfig } from '../lib/avatarConfig'
@@ -575,6 +576,8 @@ export function EntityActionHub({ entity, compact = false, onEntityChange }) {
         <Link to="/entities/avatar"><span>07</span><b>Customize Avatar</b><ArrowIcon /></Link>
         <Link to="/channel/customize"><span>08</span><b>Customize Channel</b><ArrowIcon /></Link>
         <Link to="/feed"><span>09</span><b>Open Entity Feed</b><ArrowIcon /></Link>
+        <button type="button" onClick={() => setCurrentEntity(entity.id)}><span>10</span><b>Set As Default Entity</b><ArrowIcon /></button>
+        <Link to="/entities/generate"><span>11</span><b>Generate Official Images</b><ArrowIcon /></Link>
       </div>
       {tool === 'upload' && <UploadSignalModal entity={entity} onClose={() => setTool('')} />}
       {tool === 'first' && <UploadSignalModal entity={entity} firstSignal onClose={() => setTool('')} />}

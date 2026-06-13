@@ -1,5 +1,13 @@
 # STATIC Network Master Context
 
+## June 2026 operating-layer update
+
+STATIC now includes a provider-safe integration boundary, versioned Entity DNA and visual generation workflow, a GLB-ready Three.js Entity pipeline, and S.A.G.E., the Sentient Agentic Generative Engine.
+
+S.A.G.E. is STATIC's global concierge and operating layer. The current implementation supports a procedural 3D arrival, browser speech, push-to-talk where supported, route-aware local intents, explicit confirmation for sensitive actions, Signal and Entity prefills, a guided tour, and an activity log. Production character GLB assets and external providers are not yet activated.
+
+Provider secrets are server-only Netlify variables. Only public Supabase configuration may use `VITE_`. Paid generation is never automatic.
+
 ## Brand
 
 STATIC Network is an AI-native entertainment platform.

@@ -35,9 +35,31 @@ export function EntityComposer({ onTransmitted }) {
   const [preview, setPreview] = useState('')
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState('')
+  const [draftText, setDraftText] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem('static_sage_signal_draft') || '{}').text || ''
+    } catch {
+      return ''
+    }
+  })
   const entity = entities.find((item) => item.id === entityId) || current
 
   useEffect(() => () => preview && URL.revokeObjectURL(preview), [preview])
+
+  useEffect(() => {
+    function loadSageDraft() {
+      try {
+        const draft = JSON.parse(localStorage.getItem('static_sage_signal_draft') || '{}')
+        if (draft.text) setDraftText(draft.text)
+        if (draft.entityId) setEntityId(draft.entityId)
+      } catch {
+        // Ignore malformed local assistant drafts.
+      }
+    }
+    window.addEventListener('static:sage-prefill', loadSageDraft)
+    loadSageDraft()
+    return () => window.removeEventListener('static:sage-prefill', loadSageDraft)
+  }, [])
 
   function chooseFile(event) {
     const next = event.target.files?.[0] || null
@@ -86,6 +108,8 @@ export function EntityComposer({ onTransmitted }) {
       if (preview) URL.revokeObjectURL(preview)
       setPreview('')
       setPostType('Text')
+      setDraftText('')
+      localStorage.removeItem('static_sage_signal_draft')
       setStatus('Signal transmitted.')
       onTransmitted?.(signal)
     } catch (error) {
@@ -115,7 +139,7 @@ export function EntityComposer({ onTransmitted }) {
         {entities.length > 1 && <label><span>ACTIVE ENTITY</span><select value={entityId} onChange={(event) => setEntityId(event.target.value)}>{entities.map((item) => <option value={item.id} key={item.id}>{item.name}</option>)}</select></label>}
       </div>
       <div className="feed-composer__prompt">
-        <textarea name="text" rows="4" required placeholder="What is your Entity transmitting?" />
+        <textarea name="text" rows="4" required value={draftText} onChange={(event) => setDraftText(event.target.value)} placeholder="What is your Entity transmitting?" />
         {preview && file?.type.startsWith('image/') && <img src={preview} alt="Signal upload preview" />}
         {preview && file?.type.startsWith('video/') && <video src={preview} controls playsInline />}
         {preview && file?.type.startsWith('audio/') && <audio src={preview} controls />}

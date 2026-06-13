@@ -155,6 +155,18 @@ export const routeMeta = {
     title: 'Create An Entity | STATIC Network',
     description: 'Build a public-facing digital Entity and automatically launch its STATIC Channel.',
   },
+  '/entities/generate': {
+    title: 'Entity Generator | STATIC Network',
+    description: 'Create consistent Entity visuals from structured identity DNA and approved AI image providers.',
+  },
+  '/sage': {
+    title: 'S.A.G.E. | STATIC Network',
+    description: 'Meet the 3D voice-ready concierge and operating layer inside STATIC Network.',
+  },
+  '/provider-status': {
+    title: 'Provider Status | STATIC Network',
+    description: 'Review secure server-side provider configuration without exposing credentials.',
+  },
   '/entities/profile': {
     title: 'Your Entity | STATIC Network',
     description: 'View and operate your local STATIC Entity profile, Signals, Worlds, Drops, and Channel.',
@@ -297,6 +309,7 @@ export const navGroups = [
     label: 'Entity Network',
     links: [
       ['Create Entity', '/entities/create'],
+      ['Generate Entity', '/entities/generate'],
       ['Your Entity', '/entities/profile'],
       ['Your Channel', '/channel'],
       ['Customize Avatar', '/entities/avatar'],
@@ -311,6 +324,8 @@ export const navGroups = [
       ['STATIC Studio', '/studio'],
       ['STATIC+', '/static-plus'],
       ['Creator Pro', '/creator-pro'],
+      ['S.A.G.E.', '/sage'],
+      ['Provider Status', '/provider-status'],
     ],
   },
 ]

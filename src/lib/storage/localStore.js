@@ -1,4 +1,5 @@
 import { normalizeAvatarConfig } from '../avatarConfig'
+import { migrateEntityData } from '../entityEngine/entityMigrations'
 
 const KEYS = {
   entities: 'static_entities',
@@ -50,7 +51,7 @@ export function normalizeHandle(value) {
 
 export function normalizeEntity(entity) {
   if (!entity) return null
-  return {
+  return migrateEntityData({
     ...entity,
     companyBrand: entity.companyBrand || entity.company || '',
     titlePosition: entity.titlePosition || entity.title || '',
@@ -67,7 +68,7 @@ export function normalizeEntity(entity) {
       bannerHeadline: entity.channelTagline || 'A new world is transmitting.',
       ...(entity.channelTheme || {}),
     },
-  }
+  })
 }
 
 export function getEntities() {
