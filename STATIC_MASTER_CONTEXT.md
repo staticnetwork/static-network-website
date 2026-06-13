@@ -10,6 +10,8 @@ The official S.A.G.E. visual and talking state require an owner-approved image, 
 
 Provider secrets are server-only Netlify variables. Only public Supabase configuration may use `VITE_`. Paid generation is never automatic and always requires explicit confirmation.
 
+Netlify production deploys cost 15 account credits each. Follow `NETLIFY_CREDIT_POLICY.md`: test locally, use draft deploys where needed, batch changes, and obtain owner approval immediately before any production release.
+
 ## Brand
 
 STATIC Network is an AI-native entertainment platform.
