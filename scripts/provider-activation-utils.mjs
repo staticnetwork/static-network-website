@@ -50,8 +50,8 @@ export async function ask(question, { secret = false, optional = false } = {}) {
     stdin.on('data', onData)
   })
   return value
-    .replace(/\u001b\[200~/g, '')
-    .replace(/\u001b\[201~/g, '')
+    .replaceAll(`${String.fromCharCode(27)}[200~`, '')
+    .replaceAll(`${String.fromCharCode(27)}[201~`, '')
     .replace(/\s+/g, '')
 }
 

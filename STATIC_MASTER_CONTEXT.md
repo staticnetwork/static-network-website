@@ -8,6 +8,14 @@ S.A.G.E. is STATIC's concierge and operating layer. Text guidance can operate in
 
 The official S.A.G.E. visual and talking state require an owner-approved image, connected ElevenLabs voice, public media storage, and a real talking-avatar result. No layer may report completion before its provider validates and its output can be reviewed.
 
+Current official foundation:
+
+- Visual: owner-approved Google Gemini 3.1 Flash Image candidate 2, stored at `/assets/sage/official-sage-foundation.jpg`.
+- Active slots: `officialSageFullBody` and `officialSageIdleStill`.
+- Voice: ElevenLabs Lily, labeled `Lily - British Executive Female`.
+- Spoken pronunciation: on-screen `S.A.G.E.` is normalized to spoken `Sage`.
+- Talking/lip-sync video: not active until a real provider result is returned and approved.
+
 Provider secrets are server-only Netlify variables. Only public Supabase configuration may use `VITE_`. Paid generation is never automatic and always requires explicit confirmation.
 
 Netlify production deploys cost 15 account credits each. Follow `NETLIFY_CREDIT_POLICY.md`: test locally, use draft deploys where needed, batch changes, and obtain owner approval immediately before any production release.

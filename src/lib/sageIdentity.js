@@ -20,16 +20,44 @@ export const officialSageSlots = [
   ['officialSageTourVideo', 'Tour video'],
 ]
 
+const approvedFoundationAsset = {
+  approved: true,
+  approvedAt: '2026-06-13T23:16:00.000Z',
+  publicUrl: '/assets/sage/official-sage-foundation.jpg',
+  storage: 'project-asset',
+  source: 'google-gemini-3.1-flash-image-owner-approved-candidate-2',
+  mimeType: 'image/jpeg',
+  fileName: 'official-sage-foundation.jpg',
+  model: 'gemini-3.1-flash-image',
+}
+
 const initialIdentity = {
   prompt: officialSagePrompt,
   negativePrompt: officialSageNegativePrompt,
-  assets: {},
-  updatedAt: '',
+  assets: {
+    officialSageFullBody: {
+      ...approvedFoundationAsset,
+      slot: 'officialSageFullBody',
+    },
+    officialSageIdleStill: {
+      ...approvedFoundationAsset,
+      slot: 'officialSageIdleStill',
+    },
+  },
+  updatedAt: approvedFoundationAsset.approvedAt,
 }
 
 export function getSageIdentity() {
   try {
-    return { ...initialIdentity, ...JSON.parse(window.localStorage.getItem(IDENTITY_KEY) || '{}') }
+    const stored = JSON.parse(window.localStorage.getItem(IDENTITY_KEY) || '{}')
+    return {
+      ...initialIdentity,
+      ...stored,
+      assets: {
+        ...initialIdentity.assets,
+        ...(stored.assets || {}),
+      },
+    }
   } catch {
     return initialIdentity
   }

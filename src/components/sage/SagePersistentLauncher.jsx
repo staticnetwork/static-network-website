@@ -8,6 +8,8 @@ export default function SagePersistentLauncher() {
   const [identity, setIdentity] = useState(getSageIdentity)
   useEffect(() => subscribeToSageIdentity(() => setIdentity(getSageIdentity())), [])
   const launcherAsset = identity.assets?.officialSageLauncherImage
+    || identity.assets?.officialSagePortrait
+    || identity.assets?.officialSageIdleStill
   return (
     <button className={`sage-launcher ${sage.open ? 'is-open' : ''}`} type="button" onClick={() => sage.setOpen(!sage.open)} aria-label="Open S.A.G.E. assistant">
       {launcherAsset

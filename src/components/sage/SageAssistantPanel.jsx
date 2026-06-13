@@ -14,7 +14,10 @@ export default function SageAssistantPanel({ expanded = false }) {
   const [identity, setIdentity] = useState(getSageIdentity)
   useEffect(() => subscribeToSageIdentity(() => setIdentity(getSageIdentity())), [])
   if (!expanded && !sage.open) return null
-  const panelAsset = identity.assets?.officialSagePanelImage || identity.assets?.officialSagePortrait
+  const panelAsset = identity.assets?.officialSagePanelImage
+    || identity.assets?.officialSagePortrait
+    || identity.assets?.officialSageIdleStill
+    || identity.assets?.officialSageFullBody
   return (
     <aside className={`sage-panel ${expanded ? 'sage-panel--expanded' : ''}`} aria-label="S.A.G.E. assistant">
       <header>
