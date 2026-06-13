@@ -1,14 +1,16 @@
 # STATIC Network
 
-The public website now includes the Entity Generator, versioned Entity DNA, secure Netlify provider adapters, provider status diagnostics, and S.A.G.E., a global 3D voice-ready concierge.
+STATIC is configured as a private-beta website plus an internal owner workspace. Public visitors receive a premium request-access experience; unfinished tools remain behind authentication or local development access.
 
 Key routes:
 
 - `/entities/generate` - Entity DNA and visual generator
-- `/sage` - expanded S.A.G.E. control center
+- `/sage` - internal text/provider-aware S.A.G.E. control center
+- `/sage-identity` - owner-only official visual generation and approval
+- `/sage-lab` - owner-only ElevenLabs and talking-avatar lab
 - `/provider-status` - non-billable provider configuration checks
 
-See `PROVIDER_SETUP.md`, `ACTIVATE_PROVIDERS.md`, `ENTITY_VISUAL_PIPELINE.md`, and `SAGE_AI_OS_ROADMAP.md` for activation and production roadmaps.
+See `PHASE_3_REALTIME_SAGE_PLAN.md`, `ENTITY_TRANSFORMATION_PIPELINE.md`, `SAGE_MEMORY_PLAN.md`, and `SAGE_PERSONA_FRAMEWORK.md`.
 
 Public website and early app-shell preview for
 [thestaticnetwork.com](https://thestaticnetwork.com).
@@ -30,6 +32,17 @@ npm install
 npm run dev
 ```
 
+Provider activation:
+
+```bash
+npm run activate-elevenlabs
+npm run activate-image-provider
+npm run activate-talking-avatar
+npm run activate-core-providers
+```
+
+These scripts validate credentials without generation, then ask again before any credit-consuming test. Secrets are written only to ignored `.env.local` and can be imported into a linked Netlify site.
+
 ## Quality checks
 
 ```bash
@@ -42,15 +55,12 @@ Netlify uses `public/_redirects` to serve client-side routes from `index.html`.
 
 ## Current product status
 
-The public routes and app shell are implemented. The Entity-only feed, visual
-avatar creator, Channel designer, account screens, discovery filtering,
-broadcast deck, Radio player, PLAY generation sequence, Studio control room,
-LIVE mode, Channel worlds, and marketplace previews are available.
+Public users can request private-beta access. Internal authenticated/development users can reach the network shell. Owner-only S.A.G.E. routes expose real provider states and block generation when credentials, paid confirmation, public media URLs, or provider adapters are absent.
 
 Without Supabase environment variables, creator data stays in local browser
 storage. With Supabase configured, email/password authentication, profile
 ownership, local-to-cloud import, and cloud-to-device structured-data sync are
-available. Audio/video streaming infrastructure, real generation, payments,
+available. Realtime audio/video infrastructure, production provider credentials, payments,
 subscriptions, production moderation, recommendations, and marketplace
 transactions are intentionally not connected.
 

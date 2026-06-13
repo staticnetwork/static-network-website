@@ -1,12 +1,14 @@
 # STATIC Network Master Context
 
-## June 2026 operating-layer update
+## June 2026 private-beta rule
 
-STATIC now includes a provider-safe integration boundary, versioned Entity DNA and visual generation workflow, a GLB-ready Three.js Entity pipeline, and S.A.G.E., the Sentient Agentic Generative Engine.
+STATIC remains private beta until the platform is visually and functionally strong enough for public exploration. With `VITE_STATIC_BETA_MODE=true`, unauthenticated visitors see the premium beta gate and access request flow. Internal routes require local development access or authentication. Owner routes require local development or an authenticated `owner` role.
 
-S.A.G.E. is STATIC's global concierge and operating layer. The current implementation supports a procedural 3D arrival, browser speech, push-to-talk where supported, route-aware local intents, explicit confirmation for sensitive actions, Signal and Entity prefills, a guided tour, and an activity log. Production character GLB assets and external providers are not yet activated.
+S.A.G.E. is STATIC's concierge and operating layer. Text guidance can operate internally. ElevenLabs is the only accepted premium speech path; when it is absent S.A.G.E. is muted and labeled text-only. Procedural character art, browser text-to-speech, and unfinished creation tools are not public product features.
 
-Provider secrets are server-only Netlify variables. Only public Supabase configuration may use `VITE_`. Paid generation is never automatic.
+The official S.A.G.E. visual and talking state require an owner-approved image, connected ElevenLabs voice, public media storage, and a real talking-avatar result. No layer may report completion before its provider validates and its output can be reviewed.
+
+Provider secrets are server-only Netlify variables. Only public Supabase configuration may use `VITE_`. Paid generation is never automatic and always requires explicit confirmation.
 
 ## Brand
 
@@ -79,12 +81,12 @@ The score communicates network-origin status, not organic followers.
 
 ## Product Boundaries
 
-The current website is a public experience and app-shell preview. It must not
-pretend that backend systems exist.
+The current website is a private-beta experience and internal app shell. It
+must not pretend that unactivated providers or backend systems exist.
 
-Local MVP features:
+Internal local features:
 
-- Entity Builder, layered visual Avatar Creator, and Entity Profile
+- Entity Builder, visual tools, and Entity Profile behind beta/dev access
 - automatic Entity Channel creation
 - Channel theme, profile image, and banner customization
 - Entity-only Signal feed, poses, reactions, and comments
@@ -92,7 +94,7 @@ Local MVP features:
 - media Blob persistence in IndexedDB
 - simulated Entity live status
 - local World and Drop builders
-- homepage network boot/trailer fallback and Studio operator controls
+- owner-only S.A.G.E. identity and talking-avatar labs
 
 Cloud-ready account features:
 
@@ -104,15 +106,15 @@ Cloud-ready account features:
 - cloud-to-device structured-data cache after authenticated login
 - local creator mode when Supabase is not configured
 
-Not connected yet:
+Not connected until owner activation:
 
-- generation providers
+- production provider credentials
 - production Supabase project credentials
 - full cloud-first editing and realtime collaboration
 - IndexedDB Blob transfer to cloud storage during legacy import
 - payments, subscriptions, or marketplace transactions
 - public multi-user publishing or real creator analytics
-- live audio/video infrastructure
+- realtime talking-avatar infrastructure
 - recommendations, search indexing, moderation, or admin tooling
 
 All future integrations must be server-side where secrets are involved and must
@@ -149,3 +151,5 @@ admin credentials never belong in the browser.
 - Every public route receives a unique title and description.
 - Interactive previews must identify themselves as previews.
 - Calls to action should lead to a real route or an interactive local demo.
+- Core S.A.G.E. and Entity transformation may not use "preview" as a substitute for a working provider output.
+- Public visitors must never see procedural S.A.G.E., browser voice, or low-quality internal builders.

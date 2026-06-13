@@ -1,13 +1,13 @@
 const KEY = 'static_sage_voice_settings'
 
 export const defaultSageVoiceSettings = {
-  enabled: true,
-  spokenResponses: true,
+  enabled: false,
+  spokenResponses: false,
   muted: false,
   pushToTalkOnly: true,
   wakePhraseEnabled: false,
-  voice: 'British Executive',
-  provider: 'browser',
+  voice: 'British Executive Female',
+  provider: 'elevenlabs',
 }
 
 export function getSageVoiceSettings() {
@@ -22,4 +22,3 @@ export function saveSageVoiceSettings(settings) {
   localStorage.setItem(KEY, JSON.stringify(settings))
   return settings
 }
-

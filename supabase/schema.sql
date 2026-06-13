@@ -3,6 +3,18 @@
 
 create extension if not exists pgcrypto;
 
+create table if not exists public.beta_access_requests (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  email text not null,
+  creator_type text not null,
+  build_goal text not null,
+  social_link text,
+  source text not null default 'public-beta-gate',
+  status text not null default 'requested',
+  created_at timestamptz not null default now()
+);
+
 create table if not exists public.profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   display_name text,
@@ -149,6 +161,7 @@ create trigger on_auth_user_created
   for each row execute procedure public.handle_new_user();
 
 alter table public.profiles enable row level security;
+alter table public.beta_access_requests enable row level security;
 alter table public.entities enable row level security;
 alter table public.channels enable row level security;
 alter table public.signals enable row level security;
@@ -158,6 +171,7 @@ alter table public.drops enable row level security;
 alter table public.comments enable row level security;
 
 create policy "Public profiles are readable" on public.profiles for select using (true);
+create policy "Anyone can request beta access" on public.beta_access_requests for insert to anon, authenticated with check (true);
 create policy "Users manage own profile" on public.profiles for all using (auth.uid() = id) with check (auth.uid() = id);
 
 create policy "Entities are publicly readable" on public.entities for select using (true);

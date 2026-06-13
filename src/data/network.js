@@ -161,7 +161,15 @@ export const routeMeta = {
   },
   '/sage': {
     title: 'S.A.G.E. | STATIC Network',
-    description: 'Meet the 3D voice-ready concierge and operating layer inside STATIC Network.',
+    description: 'Meet the provider-aware concierge and operating layer inside STATIC Network.',
+  },
+  '/sage-identity': {
+    title: 'S.A.G.E. Identity | STATIC Network',
+    description: 'Owner workspace for generating and approving official S.A.G.E. visual assets.',
+  },
+  '/sage-lab': {
+    title: 'S.A.G.E. Lab | STATIC Network',
+    description: 'Owner lab for real ElevenLabs voice and synchronized talking-avatar tests.',
   },
   '/provider-status': {
     title: 'Provider Status | STATIC Network',

@@ -1,10 +1,15 @@
 import { useEffect } from 'react'
 import { SiteLayout } from './components/SiteChrome'
 import { useRouter } from './components/Router'
+import { SignalMark } from './components/UI'
+import { useAuth } from './context/AuthContext'
+import { hasStaticInternalAccess, hasStaticOwnerAccess, staticBetaMode } from './lib/betaAccess'
+import BetaGatePage from './pages/BetaGatePage'
 import HomePage from './pages/HomePage'
 import EntityGeneratorPage from './pages/EntityGeneratorPage'
 import ProviderStatusPage from './pages/ProviderStatusPage'
 import SagePage from './pages/SagePage'
+import { OwnerOnlyPage, SageIdentityPage, SageLabPage } from './pages/SageOwnerPages'
 import { AccountPage, AuthPage } from './pages/AccountPages'
 import {
   EntitiesPage,
@@ -28,7 +33,7 @@ import {
   WaitlistPage,
 } from './pages/PlatformPages'
 
-function RouteView() {
+function RouteView({ ownerAccess }) {
   const { path } = useRouter()
 
   useEffect(() => {
@@ -104,15 +109,28 @@ function RouteView() {
       return <ProviderStatusPage />
     case '/sage':
       return <SagePage />
+    case '/sage-identity':
+      return <OwnerOnlyPage allowed={ownerAccess}><SageIdentityPage /></OwnerOnlyPage>
+    case '/sage-lab':
+      return <OwnerOnlyPage allowed={ownerAccess}><SageLabPage /></OwnerOnlyPage>
     default:
       return <NotFoundPage />
   }
 }
 
 export default function App() {
+  const { path } = useRouter()
+  const { user, loading } = useAuth()
+  const internalAccess = hasStaticInternalAccess(user)
+  const ownerAccess = hasStaticOwnerAccess(user)
+  const publicUtilityPaths = new Set(['/contact', '/terms', '/privacy', '/login', '/signup'])
+
+  if (staticBetaMode && loading) return <div className="beta-loading"><SignalMark animated /><span>CHECKING ACCESS</span></div>
+  if (staticBetaMode && !internalAccess && !publicUtilityPaths.has(path)) return <BetaGatePage requestedPath={path} />
+
   return (
-    <SiteLayout>
-      <RouteView />
+    <SiteLayout assistantEnabled={internalAccess}>
+      <RouteView ownerAccess={ownerAccess} />
     </SiteLayout>
   )
 }

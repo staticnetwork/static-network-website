@@ -1,5 +1,47 @@
 import { useState } from 'react'
+import { saveBetaRequest } from '../lib/betaRequests'
 import { ArrowIcon } from './UI'
+
+export function BetaRequestForm() {
+  const [status, setStatus] = useState('')
+  const [busy, setBusy] = useState(false)
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+    setBusy(true)
+    setStatus('')
+    const form = new FormData(event.currentTarget)
+    const result = await saveBetaRequest({
+      name: form.get('name'),
+      email: form.get('email'),
+      creatorType: form.get('creatorType'),
+      buildGoal: form.get('buildGoal'),
+      socialLink: form.get('socialLink'),
+    })
+    setBusy(false)
+    if (!result.localSaved && !result.cloudSaved) {
+      setStatus('Your request could not be saved in this browser. Please contact the STATIC team directly.')
+      return
+    }
+    setStatus(result.cloudSaved ? 'Request received by the private beta team.' : 'Request saved on this device. Cloud intake activates when the private beta backend connects.')
+    event.currentTarget.reset()
+  }
+
+  return (
+    <form className="beta-request-form" onSubmit={handleSubmit}>
+      <div className="form-header"><span>FOUNDING ACCESS</span><span>BETA//001</span></div>
+      <div className="field-grid">
+        <label><span>Name</span><input name="name" autoComplete="name" required /></label>
+        <label><span>Email</span><input name="email" type="email" autoComplete="email" required /></label>
+      </div>
+      <label><span>Creator type</span><select name="creatorType" defaultValue="creator" required><option value="creator">Creator / Artist</option><option value="studio">Studio / Production Team</option><option value="developer">Developer / AI Builder</option><option value="brand">Brand / Partner</option><option value="fan">Fan / Early Explorer</option><option value="other">Other</option></select></label>
+      <label><span>What do you want to build?</span><textarea name="buildGoal" rows="5" required placeholder="Tell us what you want to create, launch, or discover inside STATIC." /></label>
+      <label><span>Social or portfolio link <em>Optional</em></span><input name="socialLink" type="url" placeholder="https://" /></label>
+      <button className="button button--signal button--wide" type="submit" disabled={busy}>{busy ? 'Sending Request...' : 'Join The Private Beta'} <ArrowIcon /></button>
+      <p className="form-status" role="status" aria-live="polite">{status}</p>
+    </form>
+  )
+}
 
 export function WaitlistForm({ compact = false }) {
   const [status, setStatus] = useState('')

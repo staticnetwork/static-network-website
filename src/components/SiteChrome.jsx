@@ -165,11 +165,11 @@ export function SiteFooter() {
   )
 }
 
-export function SiteLayout({ children }) {
+export function SiteLayout({ children, assistantEnabled = true }) {
   return (
     <div className="site-shell">
       <a className="skip-link" href="#main">Skip to content</a>
-      <SageSystem />
+      {assistantEnabled && <SageSystem />}
       <SiteHeader />
       <main id="main">{children}</main>
       <SiteFooter />

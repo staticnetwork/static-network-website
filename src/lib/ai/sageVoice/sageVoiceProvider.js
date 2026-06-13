@@ -1,16 +1,26 @@
-import { speakWithBrowser, stopBrowserSpeech } from './browserSpeechProvider'
+import { speakWithElevenLabs } from './elevenLabsSageVoiceProvider'
 import { getSageVoiceSettings } from './sageVoiceSettings'
+
+let activeAudio = null
 
 export async function speakAsSage(text, callbacks = {}) {
   const settings = getSageVoiceSettings()
-  if (!settings.enabled || !settings.spokenResponses || settings.muted) return false
+  if (!callbacks.connected || !settings.enabled || !settings.spokenResponses || settings.muted) return false
   callbacks.onState?.('speaking')
-  const result = await speakWithBrowser(text, { onStart: callbacks.onStart })
-  callbacks.onState?.('idle')
-  return result
+  try {
+    activeAudio = await speakWithElevenLabs(text, true)
+    activeAudio.addEventListener('ended', () => callbacks.onState?.('idle'), { once: true })
+    return true
+  } catch {
+    callbacks.onState?.('idle')
+    return false
+  }
 }
 
 export function stopSageVoice() {
-  stopBrowserSpeech()
+  if (activeAudio) {
+    activeAudio.pause()
+    activeAudio.currentTime = 0
+  }
+  activeAudio = null
 }
-

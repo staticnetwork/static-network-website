@@ -25,10 +25,18 @@ export function SageProvider({ children }) {
   const [activity, setActivity] = useState([])
   const [pending, setPending] = useState(null)
   const [voiceState, setVoiceState] = useState('idle')
+  const [voiceConnected, setVoiceConnected] = useState(false)
   const [voiceSettings, setVoiceSettings] = useState(getSageVoiceSettings)
   const [entity, setEntity] = useState(() => getCurrentEntity())
 
   useEffect(() => subscribeToNetworkUpdates(() => setEntity(getCurrentEntity())), [])
+
+  useEffect(() => {
+    fetch('/.netlify/functions/test-elevenlabs')
+      .then((response) => response.json())
+      .then((data) => setVoiceConnected(Boolean(data.validated && data.voiceIdsConfigured)))
+      .catch(() => setVoiceConnected(false))
+  }, [])
 
   function log(label, detail = '') {
     setActivity((items) => [{ id: `${Date.now()}-${Math.random()}`, label, detail, at: new Date().toISOString() }, ...items].slice(0, 30))
@@ -36,7 +44,7 @@ export function SageProvider({ children }) {
 
   async function say(text, aloud = true) {
     setMessages((items) => [...items, { role: 'sage', text }])
-    if (aloud) await speakAsSage(text, { onState: setVoiceState })
+    if (aloud) await speakAsSage(text, { connected: voiceConnected, onState: setVoiceState })
   }
 
   function updateVoiceSettings(next) {
@@ -139,6 +147,7 @@ export function SageProvider({ children }) {
     updateVoiceSettings,
     user,
     voiceSettings,
+    voiceConnected,
     voiceState,
     welcome,
   }

@@ -10,6 +10,8 @@ import './entity.css'
 import './network-os.css'
 import './entity-generator.css'
 import './sage.css'
+import './sage-owner.css'
+import './beta-gate.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

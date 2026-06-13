@@ -8,6 +8,10 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "activate-elevenlabs": "node scripts/activate-elevenlabs.mjs",
+    "activate-image-provider": "node scripts/activate-image-provider.mjs",
+    "activate-talking-avatar": "node scripts/activate-talking-avatar.mjs",
+    "activate-core-providers": "node scripts/activate-core-providers.mjs",
     "providers:validate": "node scripts/validate-providers.mjs"
   },
   "dependencies": {

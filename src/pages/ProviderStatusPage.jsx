@@ -7,6 +7,7 @@ const providers = [
   ['Google AI', 'test-google-ai', 'Primary Entity image generation'],
   ['OpenAI', 'test-openai', 'S.A.G.E. reasoning and alternate images'],
   ['ElevenLabs', 'test-elevenlabs', 'S.A.G.E. and Entity voice'],
+  ['Talking avatar', 'test-talking-avatar', 'S.A.G.E. lip-sync video provider'],
   ['Runway', 'test-runway', 'Entity video adapter'],
   ['LiveKit', 'create-livekit-token', 'Secure live-room tokens'],
   ['Cloudflare R2', 'upload-media', 'Media storage'],
@@ -65,10 +66,9 @@ export default function ProviderStatusPage() {
               )
             })}
           </div>
-          <p className="provider-status-note">Generation remains in preview mode until a provider validates and the user explicitly confirms a paid request.</p>
+          <p className="provider-status-note">Generation remains blocked until a provider validates and the owner explicitly confirms any request that may consume credits.</p>
         </div>
       </section>
     </>
   )
 }
-
