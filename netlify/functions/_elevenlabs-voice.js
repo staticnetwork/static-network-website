@@ -1,5 +1,11 @@
 import { base64FromBuffer, hasEnv, json, parseBody, rateLimit, requirePaidConfirmation, requirePost, safeFetch } from './_provider-utils.js'
 
+export function normalizeSagePronunciation(text) {
+  return text
+    .replace(/\bS\s*\.\s*A\s*\.\s*G\s*\.\s*E\b/gi, 'Sage')
+    .replace(/\bSAGE\b/gi, 'Sage')
+}
+
 export async function voiceHandler(event, voiceEnv, providerLabel) {
   const methodError = requirePost(event)
   if (methodError) return methodError
@@ -11,7 +17,7 @@ export async function voiceHandler(event, voiceEnv, providerLabel) {
   if (!hasEnv(['ELEVENLABS_API_KEY', voiceEnv])) {
     return json(503, { ok: false, provider: 'ElevenLabs', configured: false, error: `${providerLabel} voice is not configured.` })
   }
-  const text = String(body.text || '').trim().slice(0, 1800)
+  const text = normalizeSagePronunciation(String(body.text || '').trim().slice(0, 1800))
   if (!text) return json(400, { ok: false, error: 'Text is required.' })
   try {
     const response = await safeFetch(`https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(process.env[voiceEnv])}`, {
@@ -29,4 +35,3 @@ export async function voiceHandler(event, voiceEnv, providerLabel) {
     return json(502, { ok: false, provider: 'ElevenLabs', configured: true, error: error.message || 'Voice generation failed.' })
   }
 }
-
