@@ -5,12 +5,14 @@ import { ArrowIcon, LiveIndicator, SignalMark } from './UI'
 
 const desktopNav = [
   ['Discover', '/discover'],
+  ['Entities', '/entities'],
   ['Signals', '/signals'],
   ['Channels', '/channels'],
   ['Radio', '/radio'],
   ['Play', '/play'],
   ['Live', '/live'],
   ['Studio', '/studio'],
+  ['Marketplace', '/marketplace'],
 ]
 
 export function SiteHeader() {
@@ -89,11 +91,12 @@ export function SiteHeader() {
 
 export function BroadcastTicker() {
   const items = [
+    'ENTITY ONLINE / PUBLIC IDENTITY ACTIVE',
     'NOW TRANSMITTING / FREQUENCY ZERO',
     'STATIC ONE / GLASS SATELLITES',
     'CHROME DISTRICT / WORLD OPEN',
     'MEMORY PALACE / PREMIERE 21:00 PT',
-    'CREATOR SIGNALS / 14 ACTIVE',
+    'ENTITY CHANNELS / SIGNAL LIVE',
   ]
   const loop = [...items, ...items]
 

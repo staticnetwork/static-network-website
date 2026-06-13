@@ -11,6 +11,8 @@ import {
 } from '../data/media'
 import { Link } from './Router'
 import { ArrowIcon, LiveIndicator, PlayIcon, Reveal, SignalMark } from './UI'
+import { LocalSignalCard, LocalSignalMedia } from './EntitySystem'
+import { getSignals, subscribeToNetworkUpdates } from '../lib/staticStore'
 
 function useRotatingIndex(length, delay = 5200, paused = false) {
   const [index, setIndex] = useState(0)
@@ -93,11 +95,24 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
   const [category, setCategory] = useState(initialCategory)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState(null)
-  const categories = ['All', 'Signals', 'Channels', 'Radio', 'Play', 'Live', 'Originals', 'Marketplace']
+  const [localSignals, setLocalSignals] = useState(() => getSignals())
+  const categories = ['All', 'Entities', 'Signals', 'Channels', 'Radio', 'Play', 'Live', 'Originals', 'Marketplace']
+
+  useEffect(() => subscribeToNetworkUpdates(() => setLocalSignals(getSignals())), [])
 
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase()
-    const filtered = signalFeed.filter((item) => {
+    const local = localSignals
+      .filter((item) => item.visibility !== 'Draft')
+      .map((item) => ({
+        ...item,
+        local: true,
+        category: 'Entities',
+        creator: item.entityName,
+        handle: item.entityHandle,
+        description: item.caption,
+      }))
+    const filtered = [...local, ...signalFeed].filter((item) => {
       const matchesCategory =
         category === 'All' ||
         item.category === category ||
@@ -109,7 +124,7 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
       return matchesCategory && matchesSearch
     })
     return typeof limit === 'number' ? filtered.slice(0, limit) : filtered
-  }, [category, limit, search])
+  }, [category, limit, localSignals, search])
 
   return (
     <div className="live-feed">
@@ -138,7 +153,11 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
 
       <div className="live-feed__grid">
         {visible.map((item, index) => (
-          <Reveal as="article" className={`feed-card feed-card--${item.accent}`} delay={(index % 4) * 55} key={item.id}>
+          item.local ? (
+            <Reveal delay={(index % 4) * 55} key={item.id}>
+              <LocalSignalCard signal={item} onOpen={setSelected} />
+            </Reveal>
+          ) : <Reveal as="article" className={`feed-card feed-card--${item.accent}`} delay={(index % 4) * 55} key={item.id}>
             <button className="feed-card__open" type="button" onClick={() => setSelected(item)} aria-label={`Open signal ${item.title}`}>
               <MediaVisual className={item.visual} label={item.duration}>
                 <span className={`feed-status ${item.status === 'Live Now' ? 'feed-status--live' : ''}`}>{item.status}</span>
@@ -173,15 +192,22 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
           <button className="signal-modal__backdrop" type="button" onClick={() => setSelected(null)} aria-label="Close signal" />
           <article>
             <button className="signal-modal__close" type="button" onClick={() => setSelected(null)} aria-label="Close">×</button>
-            <MediaVisual className={selected.visual} label={selected.duration}>
-              <span className="signal-modal__play"><PlayIcon /></span>
-            </MediaVisual>
+            {selected.local ? <LocalSignalMedia signal={selected} /> : (
+              <MediaVisual className={selected.visual} label={selected.duration}>
+                <span className="signal-modal__play"><PlayIcon /></span>
+              </MediaVisual>
+            )}
             <div className="signal-modal__body">
-              <LiveIndicator label={selected.status} />
+              <LiveIndicator label={selected.local ? 'ENTITY SIGNAL' : selected.status} />
               <h2>{selected.title}</h2>
               <p>{selected.description}</p>
-              <div><span>{selected.creator}</span><span>{selected.stats.views} views</span><span>{selected.stats.reactions} reactions</span></div>
-              <Link className="button button--primary" to="/waitlist">Follow this signal <ArrowIcon /></Link>
+              <div>
+                <span>{selected.creator}</span>
+                {selected.local ? <><span>{selected.visibility}</span><span>Signal Score {selected.signalScore}</span></> : <><span>{selected.stats.views} views</span><span>{selected.stats.reactions} reactions</span></>}
+              </div>
+              <Link className="button button--primary" to={selected.local ? `/channels/${selected.entityHandle.replace('@', '')}` : '/waitlist'}>
+                {selected.local ? 'Open Entity Channel' : 'Follow this signal'} <ArrowIcon />
+              </Link>
             </div>
           </article>
         </div>
@@ -372,7 +398,7 @@ export function StudioCreator({ mini = false }) {
         </form>
         <div className={`studio-output ${mode.visual} ${phase === 'transmitting' ? 'is-loading' : ''}`}>
           <div className="studio-output__scan" />
-          <div className="studio-output__meta"><span>OUTPUT//{mode.id.toUpperCase()}</span><span>{phase === 'complete' ? 'NEW VERSION' : 'DEMO ASSET'}</span></div>
+          <div className="studio-output__meta"><span>OUTPUT//{mode.id.toUpperCase()}</span><span>{phase === 'complete' ? 'NEW VERSION' : 'PREVIEW MODE'}</span></div>
           <div className="studio-output__art"><i /><b /><SignalMark animated={phase === 'transmitting'} /></div>
           <div className="studio-output__copy">
             <span>{style.toUpperCase()} / {mode.label.toUpperCase()}</span>

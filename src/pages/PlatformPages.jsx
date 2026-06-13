@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { directoryData, originalSeries, platforms } from '../data/network'
 import { marketDrops } from '../data/media'
 import { ContactForm, WaitlistForm } from '../components/Forms'
+import { EntityActionHub, EntityCard } from '../components/EntitySystem'
 import {
   BroadcastDeck,
   ChannelGallery,
@@ -25,6 +26,7 @@ import {
   SectionHeading,
   SignalMark,
 } from '../components/UI'
+import { getCurrentEntity, subscribeToNetworkUpdates } from '../lib/staticStore'
 
 const platformBySlug = Object.fromEntries(platforms.map((platform) => [platform.slug, platform]))
 
@@ -94,6 +96,8 @@ function LabsConsole() {
 
 export function PlatformPage({ slug }) {
   const platform = platformBySlug[slug]
+  const [entity, setEntity] = useState(() => getCurrentEntity())
+  useEffect(() => subscribeToNetworkUpdates(() => setEntity(getCurrentEntity())), [])
   const content = {
     signals: {
       title: 'Live discovery, without the dead scroll.',
@@ -134,6 +138,19 @@ export function PlatformPage({ slug }) {
       {slug === 'live' && <div className="page-frame route-broadcast-deck"><BroadcastDeck compact /></div>}
       <section className="section page-content page-content--active">
         <div className="page-frame">
+          {slug === 'channels' && (
+            <div className="local-channel-launch">
+              <div>
+                <LiveIndicator label={entity ? 'ENTITY CHANNEL ONLINE' : 'ORIGIN CHANNEL AVAILABLE'} />
+                <h2>{entity ? 'Your Entity owns this destination.' : 'Create the Entity. Launch the Channel.'}</h2>
+                <p>{entity ? 'Open the public-facing world where your Entity’s Signals, video, music, live status, Drops, and Worlds connect.' : 'Every Entity automatically receives a Channel that becomes the center of its entertainment world.'}</p>
+                <ButtonLink to={entity ? `/channels/${entity.handle.replace('@', '')}` : '/entities/create'}>
+                  {entity ? 'Open Your Channel' : 'Create Entity + Channel'} <ArrowIcon />
+                </ButtonLink>
+              </div>
+              {entity && <EntityCard entity={entity} />}
+            </div>
+          )}
           <div className="section-row">
             <SectionHeading eyebrow={`${platform.name} / NETWORK MODE`} title={content.title} copy={content.copy} />
             <DemoStatus detail={`${platform.status} / Simulated public programming`} />
@@ -252,15 +269,34 @@ export function DirectoryPage({ type }) {
 }
 
 export function StudioPage() {
+  const [entity, setEntity] = useState(() => getCurrentEntity())
+  useEffect(() => subscribeToNetworkUpdates(() => setEntity(getCurrentEntity())), [])
+
   return (
     <>
       <RouteSEO path="/studio" />
       <PageHero compact code="APP//STUDIO" eyebrow="STATIC STUDIO" title="One command center. Every format." copy="Move between song, video, character, game, world, and drop inside a single creator workspace." status="WORKSPACE ACTIVE" />
       <section className="section studio-page studio-page--active">
         <div className="page-frame">
+          <div className="studio-command-center">
+            <div className="studio-command-center__intro">
+              <LiveIndicator label={entity ? 'ENTITY WORKSPACE ACTIVE' : 'ENTITY CORE READY'} />
+              <h2>{entity ? `${entity.name} controls the signal.` : 'Begin with the public identity.'}</h2>
+              <p>Humans build backstage. The Entity publishes, performs, hosts, releases, goes live, and becomes the face of the world.</p>
+              {!entity && <ButtonLink to="/entities/create">Create Entity <ArrowIcon /></ButtonLink>}
+            </div>
+            {entity ? (
+              <div className="studio-command-center__entity">
+                <EntityCard entity={entity} />
+                <EntityActionHub entity={entity} compact onEntityChange={setEntity} />
+              </div>
+            ) : (
+              <div className="studio-empty-core"><SignalMark animated /><span>MY ENTITY</span><h3>Origin identity not initialized.</h3><p>Creation starts with the Entity, then expands into Signals, video, live, Worlds, Drops, songs, shows, and games.</p></div>
+            )}
+          </div>
           <div className="section-row">
-            <SectionHeading eyebrow="CREATOR OS" title="Create across the network." copy="Choose a format, shape the prompt, select a style signal, and generate a simulated output." />
-            <DemoStatus label="STUDIO DEMO" detail="Six interactive creation modes" />
+            <SectionHeading eyebrow="CREATOR OS" title="Expand the Entity across every format." copy="Shape songs, video, characters, games, worlds, and drops from the same backstage command center." />
+            <DemoStatus label="STUDIO MODE" detail="Six interactive creation modes" />
           </div>
           <StudioCreator />
         </div>

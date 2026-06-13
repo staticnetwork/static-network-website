@@ -3,6 +3,12 @@ import { SiteLayout } from './components/SiteChrome'
 import { useRouter } from './components/Router'
 import HomePage from './pages/HomePage'
 import {
+  EntitiesPage,
+  EntityChannelPage,
+  EntityCreatePage,
+  EntityProfilePage,
+} from './pages/EntityPages'
+import {
   ContactPage,
   DirectoryPage,
   DiscoverPage,
@@ -24,6 +30,10 @@ function RouteView() {
     document.documentElement.dataset.route = path.slice(1) || 'home'
   }, [path])
 
+  if (path.startsWith('/channels/')) {
+    return <EntityChannelPage handle={decodeURIComponent(path.replace('/channels/', ''))} />
+  }
+
   switch (path) {
     case '/':
       return <HomePage />
@@ -31,6 +41,8 @@ function RouteView() {
       return <PlatformPage slug="signals" />
     case '/channels':
       return <PlatformPage slug="channels" />
+    case '/channel':
+      return <EntityChannelPage />
     case '/radio':
       return <RadioPage />
     case '/play':
@@ -48,7 +60,11 @@ function RouteView() {
     case '/studios':
       return <DirectoryPage type="studios" />
     case '/entities':
-      return <DirectoryPage type="entities" />
+      return <EntitiesPage />
+    case '/entities/create':
+      return <EntityCreatePage />
+    case '/entities/profile':
+      return <EntityProfilePage />
     case '/studio':
       return <StudioPage />
     case '/static-plus':

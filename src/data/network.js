@@ -144,8 +144,20 @@ export const routeMeta = {
     description: 'Explore independent studios building the next generation of entertainment worlds.',
   },
   '/entities': {
-    title: 'Entities | STATIC Network',
-    description: 'Meet persistent characters, virtual performers, and living digital identities.',
+    title: 'Entities | Create The Public Identity',
+    description: 'Create digital performers, hosts, artists, gamers, founders, influencers, and characters that live across STATIC.',
+  },
+  '/entities/create': {
+    title: 'Create An Entity | STATIC Network',
+    description: 'Build a public-facing digital Entity and automatically launch its STATIC Channel.',
+  },
+  '/entities/profile': {
+    title: 'Your Entity | STATIC Network',
+    description: 'View and operate your local STATIC Entity profile, Signals, Worlds, Drops, and Channel.',
+  },
+  '/channel': {
+    title: 'Entity Channel | STATIC Network',
+    description: 'Enter the locally created entertainment world behind a STATIC Entity.',
   },
   '/studio': {
     title: 'STATIC Studio | Create Across Every Format',
@@ -245,6 +257,7 @@ export const navGroups = [
     label: 'Network',
     links: [
       ['Discover', '/discover'],
+      ['Entities', '/entities'],
       ['Signals', '/signals'],
       ['Channels', '/channels'],
       ['Radio', '/radio'],
@@ -256,11 +269,13 @@ export const navGroups = [
     ],
   },
   {
-    label: 'Community',
+    label: 'Entity Network',
     links: [
+      ['Create Entity', '/entities/create'],
+      ['Your Entity', '/entities/profile'],
+      ['Your Channel', '/channel'],
       ['Creators', '/creators'],
       ['Studios', '/studios'],
-      ['Entities', '/entities'],
     ],
   },
   {

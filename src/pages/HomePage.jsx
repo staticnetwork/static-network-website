@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react'
 import { platforms } from '../data/network'
 import { channelWorlds, marketDrops } from '../data/media'
 import { WaitlistForm } from '../components/Forms'
+import { EntityActionHub, EntityCard } from '../components/EntitySystem'
 import {
   BroadcastDeck,
   ChannelGallery,
@@ -21,20 +23,39 @@ import {
   SectionHeading,
   SignalMark,
 } from '../components/UI'
+import { getCurrentEntity, subscribeToNetworkUpdates } from '../lib/staticStore'
 
 export default function HomePage() {
+  const [entity, setEntity] = useState(() => getCurrentEntity())
+
+  useEffect(() => subscribeToNetworkUpdates(() => setEntity(getCurrentEntity())), [])
+
+  const entityPreview = entity || {
+    name: 'YOUR ENTITY',
+    handle: '@origin.signal',
+    role: 'PUBLIC IDENTITY',
+    genre: 'EVERY FORMAT',
+    company: 'YOUR WORLD',
+    channelTagline: 'One identity across the entire network.',
+    visualStyle: 'Cinematic',
+  }
+
   return (
     <>
       <RouteSEO path="/" />
       <section className="home-hero home-hero--network">
         <div className="home-hero__media" role="img" aria-label="A figure entering a luminous portal surrounded by future entertainment worlds" />
+        <video className="home-hero__trailer" autoPlay muted loop playsInline preload="metadata" poster="/media/static-hero-fallback.png" aria-hidden="true">
+          <source src="/media/static-network-trailer.webm" type="video/webm" />
+          <source src="/media/static-network-trailer.mp4" type="video/mp4" />
+        </video>
         <div className="home-hero__veil" />
         <div className="broadcast-grid" />
         <div className="scanlines" />
         <HeroMediaWall />
         <div className="page-frame home-hero__content">
           <div className="network-boot">
-            <span>STATIC OS</span><i /><span>NETWORK ONLINE</span><i /><span>NODE 001</span>
+            <span>STATIC OS</span><i /><span>ENTITY ONLINE</span><i /><span>WORLD RENDERING</span>
           </div>
           <div className="hero-channel">
             <LiveIndicator label="NOW TRANSMITTING" />
@@ -49,7 +70,7 @@ export default function HomePage() {
           </p>
           <div className="button-row">
             <ButtonLink to="/discover">Enter The Network <ArrowIcon /></ButtonLink>
-            <ButtonLink to="/waitlist" variant="glass">Request Access</ButtonLink>
+            <ButtonLink to={entity ? '/entities/profile' : '/entities/create'} variant="glass">{entity ? 'View Your Entity' : 'Create An Entity'}</ButtonLink>
           </div>
         </div>
         <div className="hero-telemetry">
@@ -64,13 +85,36 @@ export default function HomePage() {
         <BroadcastDeck />
       </div>
 
+      <section className="section home-entity-engine">
+        <div className="page-frame">
+          <div className="home-entity-engine__copy">
+            <LiveIndicator label={entity ? 'YOUR ENTITY ONLINE' : 'ORIGIN SLOT OPEN'} />
+            <p className="eyebrow"><span />ENTITY-FIRST SOCIAL ENTERTAINMENT</p>
+            <h2>Create The Entity.<br /><em>Build The World.</em></h2>
+            <p>On STATIC, your public identity begins with an Entity: a digital performer, creator, host, artist, gamer, influencer, founder, or character built to live across Signals, Channels, Radio, Live, Originals, PLAY, and Marketplace.</p>
+            <div className="entity-engine-flow">
+              <span>01 CREATE IDENTITY</span><i /><span>02 LAUNCH CHANNEL</span><i /><span>03 TRANSMIT SIGNALS</span>
+            </div>
+            <div className="button-row">
+              <ButtonLink to={entity ? '/entities/profile' : '/entities/create'}>{entity ? 'View Your Entity' : 'Create The First Entity'} <ArrowIcon /></ButtonLink>
+              <ButtonLink to="/entities" variant="glass">Explore Entity Network</ButtonLink>
+            </div>
+          </div>
+          <div className="home-entity-engine__visual">
+            <div className="entity-network-labels"><span>ENTITY ONLINE</span><span>LIVE FEED</span><span>CHANNEL ACTIVE</span></div>
+            <EntityCard entity={entityPreview} preview={!entity} />
+          </div>
+          {entity && <div className="home-entity-engine__actions"><EntityActionHub entity={entity} compact onEntityChange={setEntity} /></div>}
+        </div>
+      </section>
+
       <section className="section network-feed-section">
         <div className="page-frame">
           <div className="section-row">
             <SectionHeading
               eyebrow="LIVE SIGNAL FEED"
-              title="The network is moving."
-              copy="Drops, worlds, broadcasts, characters, films, and playable ideas arriving from across STATIC."
+              title="Entities are transmitting."
+              copy="Entity posts, uploads, drops, worlds, broadcasts, films, and playable ideas arriving across STATIC."
             />
             <ButtonLink to="/signals" variant="glass">Open Full Feed <ArrowIcon /></ButtonLink>
           </div>
@@ -157,8 +201,8 @@ export default function HomePage() {
           <div className="section-row">
             <SectionHeading
               eyebrow="CREATOR-OWNED WORLDS"
-              title="Not profiles. Destinations."
-              copy={`${channelWorlds.length} demo channels are transmitting across music, games, film, entities, and studio worlds.`}
+              title="The Entity gets the Channel."
+              copy={`${channelWorlds.length} network worlds demonstrate how one public identity can carry music, games, film, live programming, drops, and story.`}
             />
             <ButtonLink to="/channels" variant="glass">Explore Channels <ArrowIcon /></ButtonLink>
           </div>
