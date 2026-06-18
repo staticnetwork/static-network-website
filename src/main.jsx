@@ -12,6 +12,8 @@ import './entity-generator.css'
 import './sage.css'
 import './sage-owner.css'
 import './beta-gate.css'
+import './styles/portal.css'
+import './styles/district.css'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -12,7 +12,23 @@ import {
 import { Link } from './Router'
 import { ArrowIcon, LiveIndicator, PlayIcon, Reveal, SignalMark } from './UI'
 import { LocalSignalCard, LocalSignalMedia } from './EntitySystem'
-import { getSignals, subscribeToNetworkUpdates } from '../lib/staticStore'
+import {
+  getCatalogAction,
+  getCurrentEntity,
+  getEntities,
+  getDrops,
+  getFollows,
+  getProjects,
+  getReminders,
+  getSignals,
+  saveProject,
+  saveWorld,
+  subscribeToNetworkUpdates,
+} from '../lib/staticStore'
+import { getPublicCloudSignals } from '../lib/storage/supabaseStore'
+import { isSupabaseConfigured } from '../lib/supabaseClient'
+import { useAuth } from '../context/AuthContext'
+import { recordRadioStationPlay, toggleSocialCatalogAction, toggleSocialReminder } from '../lib/socialActions'
 
 function useRotatingIndex(length, delay = 5200, paused = false) {
   const [index, setIndex] = useState(0)
@@ -33,6 +49,15 @@ export function MediaVisual({ className, label, children }) {
       <div className="media-visual__noise" aria-hidden="true" />
       {label && <span className="media-visual__code">{label}</span>}
       {children}
+    </div>
+  )
+}
+
+function PreviewModeStrip({ title = 'Preview mode', detail }) {
+  return (
+    <div className="preview-mode-strip">
+      <span>{title}</span>
+      <p>{detail}</p>
     </div>
   )
 }
@@ -91,14 +116,66 @@ export function BroadcastDeck({ compact = false }) {
   )
 }
 
-export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'All' }) {
+function dedupeSignals(items) {
+  const seen = new Set()
+  return items.filter((item) => {
+    const key = item.cloudId || item.localId || item.id
+    if (!key || seen.has(key)) return false
+    seen.add(key)
+    return true
+  })
+}
+
+function isFollowedSignal(item, follows) {
+  const keys = new Set(Object.keys(follows || {}))
+  const followedHandles = new Set(Object.values(follows || {}).map((follow) => String(follow.handle || '').replace('@', '').toLowerCase()).filter(Boolean))
+  const handle = String(item.entityHandle || item.handle || '').replace('@', '').toLowerCase()
+  return Boolean(
+    keys.has(`entity:${item.entityId}`) ||
+    keys.has(`channel:${item.channelId}`) ||
+    followedHandles.has(handle)
+  )
+}
+
+export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'All', followedOnly = false }) {
   const [category, setCategory] = useState(initialCategory)
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState(null)
   const [localSignals, setLocalSignals] = useState(() => getSignals())
+  const [follows, setFollows] = useState(() => getFollows())
+  const [cloudSignals, setCloudSignals] = useState([])
+  const [cloudStatus, setCloudStatus] = useState('checking')
   const categories = ['All', 'Entities', 'Signals', 'Channels', 'Radio', 'Play', 'Live', 'Originals', 'Marketplace']
 
-  useEffect(() => subscribeToNetworkUpdates(() => setLocalSignals(getSignals())), [])
+  useEffect(() => subscribeToNetworkUpdates(() => {
+    setLocalSignals(getSignals())
+    setFollows(getFollows())
+  }), [])
+
+  useEffect(() => {
+    let active = true
+    if (!isSupabaseConfigured) {
+      setCloudStatus('local')
+      return () => {
+        active = false
+      }
+    }
+    setCloudStatus('checking')
+    getPublicCloudSignals(50)
+      .then((items) => {
+        if (!active) return
+        setCloudSignals(items)
+        setCloudStatus(items.length ? 'online' : 'quiet')
+      })
+      .catch(() => {
+        if (!active) return
+        setCloudSignals([])
+        setCloudStatus('local')
+      })
+    return () => {
+      active = false
+    }
+  }, [])
 
   const visible = useMemo(() => {
     const query = search.trim().toLowerCase()
@@ -112,19 +189,31 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
         handle: item.entityHandle,
         description: item.caption,
       }))
-    const filtered = [...local, ...signalFeed].filter((item) => {
+    const filtered = dedupeSignals([...local, ...cloudSignals, ...signalFeed]).filter((item) => {
       const matchesCategory =
         category === 'All' ||
         item.category === category ||
         (category === 'Channels' && ['Entities', 'Signals'].includes(item.category)) ||
-        (category === 'Marketplace' && item.type.includes('Drop'))
+        (category === 'Marketplace' && String(item.type || '').includes('Drop'))
       const matchesSearch =
         !query ||
         `${item.creator} ${item.title} ${item.type} ${item.description}`.toLowerCase().includes(query)
-      return matchesCategory && matchesSearch
+      const matchesFollow = !followedOnly || isFollowedSignal(item, follows)
+      return matchesCategory && matchesSearch && matchesFollow
     })
     return typeof limit === 'number' ? filtered.slice(0, limit) : filtered
-  }, [category, limit, localSignals, search])
+  }, [category, cloudSignals, followedOnly, follows, limit, localSignals, search])
+
+  const selectedRoute = selected?.local && selected?.entityHandle && !selected?.publicCloud
+    ? `/channels/${selected.entityHandle.replace('@', '')}`
+    : selected?.publicCloud
+      ? '/my-signal'
+      : '/waitlist'
+  const selectedCta = selected?.local && !selected?.publicCloud
+    ? 'Open Entity Channel'
+    : selected?.publicCloud
+      ? 'Open My Signal'
+      : 'Follow this venue'
 
   return (
     <div className="live-feed">
@@ -151,6 +240,22 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
         </div>
       )}
 
+      {(searchable || followedOnly) && (
+        <div className="cloud-feed-strip">
+          <span>{followedOnly ? 'MY SIGNAL' : 'PUBLIC CLOUD INDEX'}</span>
+          <p>
+            {followedOnly
+              ? `${Object.keys(follows).length} followed venues shaping this pulse.`
+              : cloudStatus === 'online'
+                ? `${cloudSignals.length} public cloud Signals synced into discovery.`
+                : cloudStatus === 'quiet'
+                  ? 'Cloud is connected. Public Signals will appear here as creators transmit.'
+                  : 'Local preview programming remains visible while the cloud index warms up.'}
+          </p>
+          <Link to={followedOnly ? '/discover' : '/my-signal'}>{followedOnly ? 'Find more venues' : 'Open My Signal'} <ArrowIcon /></Link>
+        </div>
+      )}
+
       <div className="live-feed__grid">
         {visible.map((item, index) => (
           item.local ? (
@@ -158,7 +263,7 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
               <LocalSignalCard signal={item} onOpen={setSelected} />
             </Reveal>
           ) : <Reveal as="article" className={`feed-card feed-card--${item.accent}`} delay={(index % 4) * 55} key={item.id}>
-            <button className="feed-card__open" type="button" onClick={() => setSelected(item)} aria-label={`Open signal ${item.title}`}>
+            <button className="feed-card__open" type="button" onClick={() => setSelected(item)} aria-label={`Open district card ${item.title}`}>
               <MediaVisual className={item.visual} label={item.duration}>
                 <span className={`feed-status ${item.status === 'Live Now' ? 'feed-status--live' : ''}`}>{item.status}</span>
                 <span className="feed-card__play"><PlayIcon /></span>
@@ -176,7 +281,7 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
                 <span>◉ {item.stats.views}</span>
                 <span>◇ {item.stats.reactions}</span>
                 <span>↻ {item.stats.remixes}</span>
-                <b>Open Signal <ArrowIcon /></b>
+                <b>Open Card <ArrowIcon /></b>
               </div>
             </button>
           </Reveal>
@@ -184,7 +289,12 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
       </div>
 
       {visible.length === 0 && (
-        <div className="empty-signal"><SignalMark animated /><h3>No signal on this frequency.</h3><p>Try another network filter or search phrase.</p></div>
+        <div className="empty-signal">
+          <SignalMark animated />
+          <h3>{followedOnly ? 'Your signal is waiting on a follow.' : 'No signal on this frequency.'}</h3>
+          <p>{followedOnly ? 'Follow Entity Channels or creator venues and they will appear in this personal pulse.' : 'Try another network filter or search phrase.'}</p>
+          {followedOnly && <Link className="button button--primary" to="/discover">Discover venues <ArrowIcon /></Link>}
+        </div>
       )}
 
       {selected && (
@@ -205,8 +315,8 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
                 <span>{selected.creator}</span>
                 {selected.local ? <><span>{selected.visibility}</span><span>Signal Score {selected.signalScore}</span></> : <><span>{selected.stats.views} views</span><span>{selected.stats.reactions} reactions</span></>}
               </div>
-              <Link className="button button--primary" to={selected.local ? `/channels/${selected.entityHandle.replace('@', '')}` : '/waitlist'}>
-                {selected.local ? 'Open Entity Channel' : 'Follow this signal'} <ArrowIcon />
+              <Link className="button button--primary" to={selectedRoute}>
+                {selectedCta} <ArrowIcon />
               </Link>
             </div>
           </article>
@@ -217,9 +327,12 @@ export function LiveSignalFeed({ limit, searchable = false, initialCategory = 'A
 }
 
 export function RadioPlayer({ mini = false }) {
+  const { user } = useAuth()
   const [stationIndex, setStationIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(28)
+  const [reminders, setReminders] = useState(() => getReminders())
+  const sessionId = useRef(`radio-${Date.now()}-${Math.random().toString(36).slice(2)}`)
   const station = radioProgramming[stationIndex]
 
   useEffect(() => {
@@ -227,10 +340,41 @@ export function RadioPlayer({ mini = false }) {
     const timer = window.setInterval(() => setProgress((value) => (value >= 100 ? 0 : value + 0.35)), 160)
     return () => window.clearInterval(timer)
   }, [playing])
+  useEffect(() => subscribeToNetworkUpdates(() => setReminders(getReminders())), [])
 
   function selectStation(index) {
+    const nextStation = radioProgramming[index]
     setStationIndex(index)
     setProgress(12 + index * 11)
+    recordRadioStationPlay(user, nextStation, 'tune', {
+      sessionId: sessionId.current,
+      progress: 12 + index * 11,
+    }).catch(() => null)
+  }
+
+  function togglePlayback() {
+    const nextPlaying = !playing
+    setPlaying(nextPlaying)
+    recordRadioStationPlay(user, station, nextPlaying ? 'play' : 'pause', {
+      sessionId: sessionId.current,
+      progress,
+      secondsListened: Math.floor(progress * 2.17),
+    }).catch(() => null)
+  }
+
+  async function toggleStationReminder() {
+    await toggleSocialReminder(user, `radio-${station.id}`, {
+      kind: 'radio',
+      title: station.name,
+      detail: `${station.track} / ${station.artist}`,
+      frequency: station.frequency,
+      route: '/radio',
+    }).catch(() => null)
+    await recordRadioStationPlay(user, station, 'save', {
+      sessionId: sessionId.current,
+      progress,
+    }).catch(() => null)
+    setReminders(getReminders())
   }
 
   return (
@@ -247,7 +391,7 @@ export function RadioPlayer({ mini = false }) {
           {Array.from({ length: mini ? 26 : 42 }, (_, index) => <i style={{ '--wave': `${15 + ((index * 23) % 74)}%` }} key={index} />)}
         </div>
         <div className="radio-controls">
-          <button type="button" onClick={() => setPlaying((value) => !value)} aria-label={playing ? 'Pause station demo' : 'Play station demo'}>
+          <button type="button" onClick={togglePlayback} aria-label={playing ? 'Pause station preview' : 'Play station preview'}>
             {playing ? 'Ⅱ' : <PlayIcon />}
           </button>
           <div><i style={{ width: `${progress}%` }} /></div>
@@ -264,7 +408,13 @@ export function RadioPlayer({ mini = false }) {
             <em>{item.listeners}</em>
           </button>
         ))}
-        <div className="radio-player__next"><span>UP NEXT</span><p>{station.next}</p></div>
+        <div className="radio-player__next">
+          <span>UP NEXT</span>
+          <p>{station.next}</p>
+          <button className={reminders[`radio-${station.id}`] ? 'reminder-button is-set' : 'reminder-button'} type="button" onClick={toggleStationReminder}>
+            {reminders[`radio-${station.id}`] ? 'Station saved' : 'Save station'}
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -275,8 +425,11 @@ export function PlayGenerator({ compact = false }) {
   const [prompt, setPrompt] = useState('A rain-soaked street racing world where the city changes every lap.')
   const [step, setStep] = useState(-1)
   const [generatedPrompt, setGeneratedPrompt] = useState('')
+  const [savedProject, setSavedProject] = useState(null)
+  const [projects, setProjects] = useState(() => getProjects({ type: 'play' }).slice(0, 4))
 
   useEffect(() => () => timers.current.forEach((timer) => window.clearTimeout(timer)), [])
+  useEffect(() => subscribeToNetworkUpdates(() => setProjects(getProjects({ type: 'play' }).slice(0, 4))), [])
 
   function generate(event) {
     event.preventDefault()
@@ -284,6 +437,7 @@ export function PlayGenerator({ compact = false }) {
     timers.current.forEach((timer) => window.clearTimeout(timer))
     timers.current = []
     setGeneratedPrompt('')
+    setSavedProject(null)
     setStep(0)
 
     generationSteps.slice(1).forEach((_, index) => {
@@ -297,6 +451,36 @@ export function PlayGenerator({ compact = false }) {
 
     // TODO: Replace this deterministic sequence with an authenticated server
     // job that streams real generation progress and returns a playable build.
+  }
+
+  function saveGeneratedWorld() {
+    if (!generatedPrompt) return
+    const entity = getCurrentEntity()
+    const title = makeWorldTitle(generatedPrompt)
+    const project = saveProject({
+      type: 'play',
+      title,
+      prompt: generatedPrompt,
+      style: 'Playable world',
+      outputType: 'STATIC PLAY',
+      status: 'Playable concept saved',
+      route: '/play',
+      entityId: entity?.id || '',
+      entityName: entity?.name || '',
+    })
+    if (entity) {
+      saveWorld({
+        entityId: entity.id,
+        title,
+        setting: generatedPrompt,
+        mood: 'Playable / remixable',
+        visualStyle: entity.visualStyle || 'Cinematic',
+        contentTypes: 'Game world, live session, Signal, creator drop',
+        projectId: project.id,
+      })
+    }
+    setSavedProject(project)
+    setProjects(getProjects({ type: 'play' }).slice(0, 4))
   }
 
   const busy = step >= 0 && step < generationSteps.length - 1
@@ -315,10 +499,14 @@ export function PlayGenerator({ compact = false }) {
             <h3>{makeWorldTitle(generatedPrompt)}</h3>
             <p>{generatedPrompt}</p>
             <div><span>EXPLORATION</span><span>DYNAMIC RULES</span><span>REMIXABLE</span></div>
+            <button className="button button--glass" type="button" onClick={saveGeneratedWorld}>
+              {savedProject ? 'Saved To Studio' : 'Save Playable Concept'} <ArrowIcon />
+            </button>
           </div>
         )}
       </div>
       <form onSubmit={generate}>
+        <PreviewModeStrip detail="This composer runs a local preview sequence and saves the concept. No game-generation API, paid render, or multiplayer backend is called." />
         <label>
           <span>WHAT WOULD YOU LIKE TO PLAY TODAY?</span>
           <textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} rows={compact ? 3 : 4} />
@@ -335,6 +523,16 @@ export function PlayGenerator({ compact = false }) {
           ))}
         </div>
       </form>
+      <div className="play-project-rail">
+        <div className="console-topbar"><span>SAVED PLAY WORLDS</span><span>{projects.length} SYNC READY</span></div>
+        {projects.length ? projects.map((project) => (
+          <article key={project.id}>
+            <span>{project.outputType || 'STATIC PLAY'}</span>
+            <h3>{project.title}</h3>
+            <p>{project.prompt}</p>
+          </article>
+        )) : <p>No playable worlds saved yet. Generate one and press Save Playable Concept.</p>}
+      </div>
     </div>
   )
 }
@@ -349,23 +547,58 @@ export function StudioCreator({ mini = false }) {
   const [prompt, setPrompt] = useState(studioModes[0].prompt)
   const [style, setStyle] = useState(studioModes[0].style[0])
   const [phase, setPhase] = useState('ready')
+  const [lastProject, setLastProject] = useState(null)
+  const [projects, setProjects] = useState(() => getProjects().slice(0, 5))
   const timerRef = useRef(null)
   const mode = studioModes[modeIndex]
 
   useEffect(() => () => window.clearTimeout(timerRef.current), [])
+  useEffect(() => subscribeToNetworkUpdates(() => setProjects(getProjects().slice(0, 5))), [])
 
   function chooseMode(index) {
     setModeIndex(index)
     setPrompt(studioModes[index].prompt)
     setStyle(studioModes[index].style[0])
     setPhase('ready')
+    setLastProject(null)
   }
 
   function generate(event) {
     event.preventDefault()
     setPhase('transmitting')
+    setLastProject(null)
     window.clearTimeout(timerRef.current)
-    timerRef.current = window.setTimeout(() => setPhase('complete'), 1700)
+    const entity = getCurrentEntity()
+    const projectInput = {
+      type: mode.id,
+      title: makeWorldTitle(prompt),
+      prompt,
+      style,
+      outputType: mode.label,
+      status: 'Studio concept saved',
+      route: '/studio',
+      entityId: entity?.id || '',
+      entityName: entity?.name || '',
+      meta: mode.meta,
+      visual: mode.visual,
+    }
+    timerRef.current = window.setTimeout(() => {
+      setPhase('complete')
+      const project = saveProject(projectInput)
+      if (mode.id === 'world' && entity) {
+        saveWorld({
+          entityId: entity.id,
+          title: project.title,
+          setting: prompt,
+          mood: style,
+          visualStyle: entity.visualStyle || 'Cinematic',
+          contentTypes: 'Series, game, live room, drops',
+          projectId: project.id,
+        })
+      }
+      setLastProject(project)
+      setProjects(getProjects().slice(0, 5))
+    }, 1700)
     // TODO: Send this request to the selected server-side provider adapter,
     // then store approved outputs in the creator project workspace.
   }
@@ -383,6 +616,7 @@ export function StudioCreator({ mini = false }) {
           </button>
         ))}
       </div>
+      <PreviewModeStrip detail="Studio generation currently creates approved-preview project records only. Real provider jobs stay blocked until a server adapter and owner approval are added." />
       <div className="studio-creator__body">
         <form onSubmit={generate}>
           <label><span>CREATION PROMPT</span><textarea value={prompt} onChange={(event) => setPrompt(event.target.value)} rows={mini ? 3 : 5} /></label>
@@ -403,9 +637,20 @@ export function StudioCreator({ mini = false }) {
           <div className="studio-output__copy">
             <span>{style.toUpperCase()} / {mode.label.toUpperCase()}</span>
             <h3>{phase === 'complete' ? makeWorldTitle(prompt) : mode.output}</h3>
-            <p>{mode.meta}</p>
+            <p>{lastProject ? `Saved as ${lastProject.status}. Backend generation still TODO.` : mode.meta}</p>
           </div>
         </div>
+      </div>
+      <div className="studio-project-ledger">
+        <div className="console-topbar"><span>PROJECT LEDGER</span><span>{projects.length} SYNC READY</span></div>
+        {projects.length ? projects.map((project) => (
+          <article key={project.id}>
+            <span>{project.outputType || project.type}</span>
+            <h3>{project.title}</h3>
+            <p>{project.entityName ? `${project.entityName} / ` : ''}{project.prompt}</p>
+            <small>{project.status}</small>
+          </article>
+        )) : <p>Generated Studio concepts will save here as local projects.</p>}
       </div>
     </div>
   )
@@ -443,17 +688,48 @@ export function ChannelGallery({ limit }) {
 }
 
 export function LiveBroadcasts() {
-  const [reminders, setReminders] = useState(() => new Set())
+  const { user } = useAuth()
+  const [reminders, setReminders] = useState(() => getReminders())
+  const [localLiveEntity, setLocalLiveEntity] = useState(() => {
+    const entity = getCurrentEntity()
+    return entity?.live ? entity : null
+  })
   const [active, setActive] = useState(0)
-  const event = liveEvents[active]
+  const events = useMemo(() => {
+    const localEvent = localLiveEntity ? [{
+      id: `entity-live-${localLiveEntity.id}`,
+      title: `${localLiveEntity.name.toUpperCase()} IS LIVE`,
+      creator: localLiveEntity.name,
+      format: localLiveEntity.liveFormat || 'Entity broadcast',
+      time: 'LIVE NOW',
+      viewers: 'Local room open',
+      visual: 'event--zero',
+      live: true,
+      local: true,
+    }] : []
+    return [...localEvent, ...liveEvents]
+  }, [localLiveEntity])
+  const event = events[Math.min(active, events.length - 1)]
 
-  function toggleReminder(id) {
-    setReminders((current) => {
-      const next = new Set(current)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
+  useEffect(() => subscribeToNetworkUpdates(() => {
+    const entity = getCurrentEntity()
+    setLocalLiveEntity(entity?.live ? entity : null)
+    setReminders(getReminders())
+  }), [])
+
+  useEffect(() => {
+    if (active >= events.length) setActive(0)
+  }, [active, events.length])
+
+  async function toggleReminder(id) {
+    const selected = events.find((item) => item.id === id)
+    await toggleSocialReminder(user, id, {
+      kind: 'live',
+      title: selected?.title || id,
+      detail: selected ? `${selected.creator} / ${selected.format}` : '',
+      route: '/live',
+    }).catch(() => null)
+    setReminders(getReminders())
   }
 
   return (
@@ -474,14 +750,14 @@ export function LiveBroadcasts() {
         </div>
       </div>
       <div className="event-rail">
-        {liveEvents.map((item, index) => (
+        {events.map((item, index) => (
           <article className={index === active ? 'is-active' : ''} key={item.id}>
             <button className="event-rail__select" type="button" onClick={() => setActive(index)}>
               <span>0{index + 1}</span><div><b>{item.title}</b><small>{item.creator} / {item.format}</small></div><em>{item.time}</em>
             </button>
             {!item.live && (
-              <button className={`reminder-button ${reminders.has(item.id) ? 'is-set' : ''}`} type="button" onClick={() => toggleReminder(item.id)}>
-                {reminders.has(item.id) ? 'Reminder set' : 'Set reminder'}
+              <button className={`reminder-button ${reminders[item.id] ? 'is-set' : ''}`} type="button" onClick={() => toggleReminder(item.id)}>
+                {reminders[item.id] ? 'Reminder set' : 'Set reminder'}
               </button>
             )}
           </article>
@@ -492,10 +768,47 @@ export function LiveBroadcasts() {
 }
 
 export function MarketplaceBrowser({ limit }) {
+  const { user } = useAuth()
   const [filter, setFilter] = useState('All')
   const [selected, setSelected] = useState(null)
-  const categories = ['All', 'Worlds', 'Music Packs', 'Skins', 'Templates', 'Character Packs', 'Memberships']
-  const visible = (filter === 'All' ? marketDrops : marketDrops.filter((drop) => drop.category === filter)).slice(0, limit || marketDrops.length)
+  const [localDrops, setLocalDrops] = useState(() => getDrops())
+  const [catalogActions, setCatalogActions] = useState(() => ({}))
+  const categories = ['All', 'Worlds', 'Music Packs', 'Skins', 'Templates', 'Character Packs', 'Memberships', 'Creator Drops']
+  const entities = getEntities()
+  const localMarketDrops = localDrops.map((drop) => {
+    const entity = entities.find((item) => item.id === drop.entityId)
+    return {
+      ...drop,
+      id: drop.id,
+      name: drop.name,
+      creator: entity?.name || 'Your Entity',
+      category: 'Creator Drops',
+      price: 'ACCESS',
+      edition: drop.type || 'Local drop',
+      visual: 'drop--signal',
+      detail: drop.description,
+      local: true,
+    }
+  })
+  const allDrops = [...localMarketDrops, ...marketDrops]
+  const visible = (filter === 'All' ? allDrops : allDrops.filter((drop) => drop.category === filter)).slice(0, limit || allDrops.length)
+
+  useEffect(() => subscribeToNetworkUpdates(() => {
+    setLocalDrops(getDrops())
+    setCatalogActions({})
+  }), [])
+
+  async function toggleDropAction(drop, action) {
+    const next = await toggleSocialCatalogAction(user, drop, action)
+      .then((result) => result.local)
+      .catch(() => getCatalogAction(drop.id))
+    const dropId = drop.id
+    setCatalogActions((current) => ({ ...current, [dropId]: next }))
+  }
+
+  function actionFor(dropId) {
+    return catalogActions[dropId] || getCatalogAction(dropId)
+  }
 
   return (
     <div className="market-browser">
@@ -516,7 +829,24 @@ export function MarketplaceBrowser({ limit }) {
         <div className="drop-drawer">
           <button type="button" onClick={() => setSelected(null)} aria-label="Close drop">×</button>
           <MediaVisual className={selected.visual} label={selected.edition} />
-          <div><span>{selected.category}</span><h2>{selected.name}</h2><p>{selected.detail}</p><strong>{selected.price}</strong><Link className="button button--primary" to="/waitlist">Request drop access <ArrowIcon /></Link></div>
+          <div>
+            <span>{selected.category}</span>
+            <h2>{selected.name}</h2>
+            <p>{selected.detail}</p>
+            <strong>{selected.price}</strong>
+            <div className="drop-action-stack">
+              <button className={actionFor(selected.id).saved ? 'button button--primary' : 'button button--glass'} type="button" onClick={() => toggleDropAction(selected, 'saved')}>
+                {actionFor(selected.id).saved ? 'Saved To Inventory' : 'Save To Inventory'}
+              </button>
+              <button className={actionFor(selected.id).requested ? 'button button--primary' : 'button button--glass'} type="button" onClick={() => toggleDropAction(selected, 'requested')}>
+                {actionFor(selected.id).requested ? 'Access Requested' : 'Request Drop Access'}
+              </button>
+              <button className={actionFor(selected.id).followed ? 'button button--primary' : 'button button--glass'} type="button" onClick={() => toggleDropAction(selected, 'followed')}>
+                {actionFor(selected.id).followed ? 'Venue Followed' : 'Follow Creator Venue'}
+              </button>
+            </div>
+            <small>{user ? 'Signed-in intent can sync to Supabase. Payments and transactions are still intentionally blocked.' : 'No payment or transaction is wired in this preview. Sign in to sync intent beyond this device.'}</small>
+          </div>
         </div>
       )}
     </div>

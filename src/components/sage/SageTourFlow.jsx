@@ -3,9 +3,11 @@ import { useSage } from '../../context/SageContext'
 import { useRouter } from '../Router'
 
 const steps = [
-  { route: '/', label: 'WHAT STATIC IS', text: 'STATIC is the home of AI entertainment: one network to watch, hear, play, create, broadcast, and own.' },
+  { route: '/', label: 'ARRIVAL DISTRICT', text: 'The Arrival District is the front door: a public world map where visitors preview venues, request access, and choose where to enter.' },
+  { route: '/discover', label: 'NETWORK COMMAND', text: 'Discover is the index layer: watch, follow, create, play, broadcast, and return through one connected entertainment loop.' },
   { route: '/entities', label: 'ENTITIES', text: 'Everything begins with an Entity. Your Entity becomes your public identity across the network.' },
   { route: '/signals', label: 'SIGNALS', text: 'Signals are how Entities post, publish, premiere, and broadcast every media format.' },
+  { route: '/my-signal', label: 'MY SIGNAL', text: 'My Signal is the personal pulse: followed venues and Entities gathered into one return feed.' },
   { route: '/channels', label: 'CHANNELS', text: 'Your Channel is the media home for your identity, audience, releases, and world.' },
   { route: '/studio', label: 'STUDIO', text: 'Studio is your creator control room for shaping everything behind the public signal.' },
   { route: '/feed', label: 'FEED', text: 'The Feed is where Entity transmissions become social entertainment.' },
@@ -50,4 +52,3 @@ export default function SageTourFlow() {
     </div>
   )
 }
-

@@ -4,11 +4,11 @@ export const platforms = [
     number: '01',
     name: 'STATIC Signals',
     shortName: 'Signals',
-    label: 'Discovery Feed',
-    headline: 'Catch the signal before it becomes the culture.',
+    label: 'Discovery Boulevard',
+    headline: 'Catch the signal before it hits the street.',
     description:
-      'A living discovery feed for music, films, games, characters, broadcasts, creator drops, and strange new worlds.',
-    status: 'FEED ACTIVE',
+      'A living boulevard for music, films, games, characters, broadcasts, creator drops, and strange new worlds moving through the district.',
+    status: 'BOULEVARD LIVE',
     tone: 'cyan',
   },
   {
@@ -16,11 +16,11 @@ export const platforms = [
     number: '02',
     name: 'STATIC Channels',
     shortName: 'Channels',
-    label: 'Creator-Owned Worlds',
-    headline: 'Every creator deserves a world, not just a profile.',
+    label: 'Creator Venues',
+    headline: 'Every creator gets a venue, not just a profile.',
     description:
-      'Persistent creator-owned destinations where audiences can watch, listen, play, collect, and follow an evolving universe.',
-    status: 'WORLDS ONLINE',
+      'Persistent creator-owned destinations where audiences can watch, listen, play, collect, and follow an evolving world.',
+    status: 'VENUES ONLINE',
     tone: 'silver',
   },
   {
@@ -28,10 +28,10 @@ export const platforms = [
     number: '03',
     name: 'STATIC Radio',
     shortName: 'Radio',
-    label: 'Always Broadcasting',
-    headline: 'The network never goes silent.',
+    label: 'Rooftop Frequency',
+    headline: 'The district never goes silent.',
     description:
-      'Always-on stations for new music, moods, scenes, creator takeovers, experimental sound, and digital culture.',
+      'Always-on stations for new music, moods, scenes, creator takeovers, after-hours sound, and digital culture.',
     status: 'ON AIR',
     tone: 'blue',
   },
@@ -40,10 +40,10 @@ export const platforms = [
     number: '04',
     name: 'STATIC PLAY',
     shortName: 'Play',
-    label: 'Playable Imagination',
+    label: 'Arcade Worlds',
     headline: 'What would you like to play today?',
     description:
-      'Describe a game or interactive world, remix a template, shape the rules, and share a playable idea.',
+      'Describe a game or interactive world, remix a template, shape the rules, and light up a playable idea.',
     status: 'ENGINE STANDBY',
     tone: 'violet',
   },
@@ -52,11 +52,11 @@ export const platforms = [
     number: '05',
     name: 'STATIC LIVE',
     shortName: 'Live',
-    label: 'Broadcast Together',
-    headline: 'Go live from inside the world.',
+    label: 'Broadcast Arena',
+    headline: 'Go live from inside the venue.',
     description:
       'Creator broadcasts, premieres, watch parties, virtual events, live performances, and audience-controlled moments.',
-    status: 'SIGNAL LIVE',
+    status: 'ARENA LIVE',
     tone: 'cyan',
   },
   {
@@ -64,7 +64,7 @@ export const platforms = [
     number: '06',
     name: 'STATIC Originals',
     shortName: 'Originals',
-    label: 'New-Format Stories',
+    label: 'Premiere House',
     headline: 'Stories that refuse to stay in one format.',
     description:
       'AI-native shows, animation, documentaries, characters, music films, and franchises built to expand across the network.',
@@ -76,10 +76,10 @@ export const platforms = [
     number: '07',
     name: 'STATIC Marketplace',
     shortName: 'Marketplace',
-    label: 'Own The Culture',
+    label: 'Asset Boulevard',
     headline: 'Take a piece of the world with you.',
     description:
-      'A network marketplace for assets, skins, music packs, templates, memberships, drops, and creator-powered experiences.',
+      'A district marketplace for assets, skins, music packs, templates, memberships, drops, and creator-powered experiences.',
     status: 'MARKET PREVIEW',
     tone: 'blue',
   },
@@ -88,8 +88,8 @@ export const platforms = [
     number: '08',
     name: 'STATIC LABS',
     shortName: 'Labs',
-    label: 'Build What Comes Next',
-    headline: 'The experimental layer of the network.',
+    label: 'Future Works',
+    headline: 'Future systems beneath the district.',
     description:
       'Experimental tools, workflows, adapters, and future systems for building AI-native entertainment.',
     status: 'RESEARCH ACTIVE',
@@ -99,40 +99,44 @@ export const platforms = [
 
 export const routeMeta = {
   '/': {
-    title: 'STATIC Network | The Home of AI Entertainment',
+    title: 'STATIC Network | Arrival District',
     description:
-      'Watch it. Hear it. Play it. Create it. Own it. Enter the AI-native entertainment network.',
+      'Arrive. Connect. Live. Enter the AI-native entertainment district.',
   },
   '/signals': {
-    title: 'STATIC Signals | Discover What Breaks Next',
-    description: 'The living discovery feed for the next wave of AI-native entertainment.',
+    title: 'STATIC Signals | Discovery Boulevard',
+    description: 'The living discovery boulevard for the next wave of AI-native entertainment.',
+  },
+  '/my-signal': {
+    title: 'My Signal | STATIC Network',
+    description: 'Your followed STATIC venues, Entities, Channels, and creator transmissions in one personal pulse.',
   },
   '/feed': {
     title: 'Entity Feed | STATIC Network',
     description: 'Enter the entity-only social feed for public Signals, media, live announcements, worlds, and drops.',
   },
   '/channels': {
-    title: 'STATIC Channels | Creator-Owned Worlds',
-    description: 'Explore creator-owned entertainment worlds across the STATIC Network.',
+    title: 'STATIC Channels | Creator Venues',
+    description: 'Explore creator-owned entertainment venues across the STATIC district.',
   },
   '/radio': {
-    title: 'STATIC Radio | Always Broadcasting',
-    description: 'Tune into 24/7 stations for new music, moods, scenes, and digital culture.',
+    title: 'STATIC Radio | Rooftop Frequency',
+    description: 'Tune into 24/7 district stations for new music, moods, scenes, and digital culture.',
   },
   '/play': {
     title: 'STATIC PLAY | Playable Imagination',
     description: 'Describe, remix, share, and play AI-generated games and interactive worlds.',
   },
   '/live': {
-    title: 'STATIC LIVE | Broadcast Together',
-    description: 'Enter live premieres, creator broadcasts, events, performances, and watch parties.',
+    title: 'STATIC LIVE | Broadcast Arena',
+    description: 'Enter live premieres, creator broadcasts, events, performances, and watch parties inside the district.',
   },
   '/originals': {
     title: 'STATIC Originals | Stories Without Limits',
     description: 'Discover shows, films, animation, documentaries, and expanding digital franchises.',
   },
   '/marketplace': {
-    title: 'STATIC Marketplace | Own The Culture',
+    title: 'STATIC Marketplace | Asset Boulevard',
     description: 'Explore creator drops, assets, templates, skins, memberships, and digital experiences.',
   },
   '/labs': {
@@ -177,7 +181,7 @@ export const routeMeta = {
   },
   '/entities/profile': {
     title: 'Your Entity | STATIC Network',
-    description: 'View and operate your local STATIC Entity profile, Signals, Worlds, Drops, and Channel.',
+    description: 'View and operate your STATIC Entity profile, Signals, Worlds, Drops, and Channel.',
   },
   '/entities/avatar': {
     title: 'Visual Entity Creator | STATIC Network',
@@ -197,11 +201,11 @@ export const routeMeta = {
   },
   '/account': {
     title: 'Account | STATIC Network',
-    description: 'Manage your STATIC account, owned Entities, active identity, and local-to-cloud import.',
+    description: 'Manage your STATIC account, owned Entities, active identity, and access settings.',
   },
   '/channel': {
     title: 'Entity Channel | STATIC Network',
-    description: 'Enter the locally created entertainment world behind a STATIC Entity.',
+    description: 'Enter the entertainment world behind a STATIC Entity.',
   },
   '/studio': {
     title: 'STATIC Studio | Create Across Every Format',
@@ -216,11 +220,11 @@ export const routeMeta = {
     description: 'Request advanced tools and publishing access for serious STATIC creators.',
   },
   '/discover': {
-    title: 'Discover | STATIC Network',
-    description: 'Explore trending signals, live broadcasts, worlds, games, music, and originals.',
+    title: 'Discover | STATIC Arrival District',
+    description: 'Explore trending signals, live broadcasts, venues, games, music, and originals.',
   },
   '/waitlist': {
-    title: 'Join The Signal | STATIC Network',
+    title: 'Request District Access | STATIC Network',
     description: 'Request early access to STATIC Network for creators, fans, studios, and partners.',
   },
   '/contact': {
@@ -300,7 +304,9 @@ export const navGroups = [
   {
     label: 'Network',
     links: [
+      ['Arrival District', '/'],
       ['Discover', '/discover'],
+      ['My Signal', '/my-signal'],
       ['Entity Feed', '/feed'],
       ['Entities', '/entities'],
       ['Signals', '/signals'],

@@ -44,40 +44,36 @@ export default function HomePage() {
     <>
       <RouteSEO path="/" />
       <section className="home-hero home-hero--network">
-        <div className="home-hero__media" role="img" aria-label="A figure entering a luminous portal surrounded by future entertainment worlds" />
-        <video className="home-hero__trailer" autoPlay muted loop playsInline preload="metadata" poster="/media/static-hero-fallback.png" aria-hidden="true">
-          <source src="/media/static-network-trailer.webm" type="video/webm" />
-          <source src="/media/static-network-trailer.mp4" type="video/mp4" />
-        </video>
+        <div className="home-hero__media" role="img" aria-label="A cinematic STATIC entertainment district at night with venues, creators, billboards, and fans arriving" />
         <div className="home-hero__veil" />
         <div className="broadcast-grid" />
         <div className="scanlines" />
         <HeroMediaWall />
         <div className="page-frame home-hero__content">
           <div className="network-boot">
-            <span>STATIC OS</span><i /><span>ENTITY ONLINE</span><i /><span>WORLD RENDERING</span>
+            <span>ARRIVAL DISTRICT</span><i /><span>CLUBSTATIC LIVE</span><i /><span>ROOFTOP ACCESS</span>
           </div>
           <div className="hero-channel">
-            <LiveIndicator label="NOW TRANSMITTING" />
-            <span>AI-NATIVE ENTERTAINMENT NETWORK</span>
+            <LiveIndicator label="DISTRICT LIVE" />
+            <span>AI-NATIVE ENTERTAINMENT DISTRICT</span>
           </div>
-          <p className="hero-kicker">STATIC NETWORK / PUBLIC SIGNAL</p>
-          <h1>The Home of<br /><em>AI Entertainment</em></h1>
-          <p className="hero-tagline">Watch it. Hear it. Play it. Create it. Own it.</p>
+          <p className="hero-kicker">STATIC NETWORK / ARRIVE CONNECT LIVE</p>
+          <h1>Arrive.<br /><em>Connect. Live.</em></h1>
+          <p className="hero-tagline">The Home of AI Entertainment</p>
           <p className="hero-copy">
-            One living network for music, shows, games, broadcasts, creators,
-            characters, worlds, and the audiences entering them.
+            A city-scale entertainment district where creators, fans, Entities,
+            music, games, broadcasts, drops, and AI-native worlds meet after dark.
           </p>
           <div className="button-row">
-            <ButtonLink to="/discover">Enter The Network <ArrowIcon /></ButtonLink>
+            <ButtonLink to="/discover">Enter The District <ArrowIcon /></ButtonLink>
             <ButtonLink to={entity ? '/entities/profile' : '/entities/generate'} variant="glass">{entity ? 'View Your Entity' : 'Generate An Entity'}</ButtonLink>
           </div>
         </div>
         <div className="hero-telemetry">
-          <span>UPLINK 100%</span>
+          <span>MAIN ENTRANCE</span>
           <SignalMark animated />
-          <span>34.0522 / -118.2437</span>
-          <span>14 CHANNELS ACTIVE</span>
+          <span>CLUBSTATIC / ROOFTOP / VIP</span>
+          <span>VENUES LIGHTING UP</span>
         </div>
       </section>
 
@@ -127,8 +123,8 @@ export default function HomePage() {
           <div className="section-row">
             <SectionHeading
               eyebrow="THE STATIC NETWORK"
-              title="Eight systems. One living world."
-              copy="Discover, build, play, broadcast, release, and own across an interconnected entertainment network."
+              title="Eight venues. One living district."
+              copy="Eight interconnected systems. One place to discover, build, play, broadcast, and own what comes next."
             />
             <span className="system-count">08<br /><small>CORE SYSTEMS</small></span>
           </div>
@@ -162,9 +158,9 @@ export default function HomePage() {
           <div className="product-stage__heading">
             <div>
               <Eyebrow>STATIC PLAY / LIVE PROTOTYPE</Eyebrow>
-              <h2>Describe the world.<br />Watch it come online.</h2>
+              <h2>Describe the world.<br />Watch the arcade light up.</h2>
             </div>
-            <p>Run the simulated generation sequence and see a local playable-world concept form from your prompt.</p>
+            <p>Run the preview generation sequence and see a playable-world concept form from your prompt.</p>
           </div>
           <PlayGenerator compact />
         </div>
@@ -188,9 +184,9 @@ export default function HomePage() {
           <div className="product-stage__heading">
             <div>
               <Eyebrow>STATIC STUDIO / CREATOR OS</Eyebrow>
-              <h2>One command center.<br />Every format.</h2>
+              <h2>Your creation tower.<br />Every format.</h2>
             </div>
-            <p>Move between song, film, character, game, world, and drop without leaving the creative signal.</p>
+            <p>Move between song, film, character, game, world, and drop from the same district command floor.</p>
           </div>
           <StudioCreator mini />
         </div>
@@ -229,9 +225,9 @@ export default function HomePage() {
         <div className="page-frame waitlist-layout">
           <Reveal>
             <LiveIndicator label="PRIVATE BETA ACCESS" />
-            <h2>Enter the<br /><em>next signal.</em></h2>
-            <p>Join the access list for creator pilots, early releases, private transmissions, and network testing.</p>
-            <div className="access-points"><span>CREATOR ACCESS</span><span>EARLY TRANSMISSIONS</span><span>PRIVATE NETWORK DROPS</span></div>
+            <h2>Request your<br /><em>district pass.</em></h2>
+            <p>Join the access list for creator pilots, early releases, private venues, and first-look network testing.</p>
+            <div className="access-points"><span>CREATOR ACCESS</span><span>PRIVATE VENUES</span><span>FOUNDING DROPS</span></div>
           </Reveal>
           <Reveal delay={120}>
             <WaitlistForm compact />
@@ -243,10 +239,10 @@ export default function HomePage() {
         <div className="final-call__signal" aria-hidden="true" />
         <div className="page-frame">
           <LiveIndicator label="THE SIGNAL IS LIVE" />
-          <h2>This is where<br />entertainment goes next.</h2>
+          <h2>The district is<br />starting to open.</h2>
           <p>Watch it. Hear it. Play it. Create it. Own it.</p>
           <div className="button-row">
-            <ButtonLink to="/discover">Enter STATIC <ArrowIcon /></ButtonLink>
+            <ButtonLink to="/discover">Enter The District <ArrowIcon /></ButtonLink>
             <ButtonLink to="/studio" variant="glass">Open Creator Studio</ButtonLink>
           </div>
         </div>

@@ -7,6 +7,11 @@ const KEYS = {
   signals: 'static_signals',
   worlds: 'static_worlds',
   drops: 'static_drops',
+  projects: 'static_projects',
+  catalogActions: 'static_catalog_actions',
+  follows: 'static_follows',
+  reminders: 'static_programming_reminders',
+  onboarding: 'static_district_onboarding',
   currentEntity: 'static_current_entity',
   live: 'static_live',
   account: 'static_local_account',
@@ -116,6 +121,8 @@ export function createEntity(input) {
   write(KEYS.entities, [...entities, entity])
   setCurrentEntity(entity.id)
   createChannelForEntity(entity)
+  completeOnboardingStep('entity', { entityId: entity.id, title: entity.name, route: `/channels/${handle}` })
+  completeOnboardingStep('channel', { entityId: entity.id, title: entity.channelName || entity.name, route: `/channels/${handle}` })
   return entity
 }
 
@@ -214,6 +221,7 @@ export function saveSignal(input) {
     ...input,
   }
   write(KEYS.signals, [signal, ...getSignals()])
+  completeOnboardingStep('signal', { signalId: signal.id, title: signal.title || signal.text || 'First Signal', route: `/feed#${signal.id}` })
   return signal
 }
 
@@ -237,7 +245,7 @@ export function getWorlds(entityId) {
 }
 
 export function saveWorld(input) {
-  const world = { id: makeId('world'), createdAt: new Date().toISOString(), ...input }
+  const world = { id: makeId('world'), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), ...input }
   write(KEYS.worlds, [world, ...read(KEYS.worlds)])
   return world
 }
@@ -247,9 +255,162 @@ export function getDrops(entityId) {
 }
 
 export function saveDrop(input) {
-  const drop = { id: makeId('drop'), createdAt: new Date().toISOString(), ...input }
+  const drop = { id: makeId('drop'), createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), ...input }
   write(KEYS.drops, [drop, ...read(KEYS.drops)])
   return drop
+}
+
+export function getProjects(filter = {}) {
+  const { entityId = '', type = '' } = filter
+  return read(KEYS.projects)
+    .filter((project) => (!entityId || project.entityId === entityId) && (!type || project.type === type))
+    .sort((a, b) => new Date(b.updatedAt || b.createdAt) - new Date(a.updatedAt || a.createdAt))
+}
+
+export function saveProject(input) {
+  const projects = getProjects()
+  const id = input.id || makeId('project')
+  const existing = projects.find((project) => project.id === id)
+  const project = {
+    status: 'Local preview',
+    entityId: '',
+    entityName: '',
+    type: 'studio',
+    title: 'Untitled Project',
+    prompt: '',
+    style: '',
+    route: '/studio',
+    outputType: '',
+    createdAt: existing?.createdAt || new Date().toISOString(),
+    ...existing,
+    ...input,
+    id,
+    updatedAt: new Date().toISOString(),
+  }
+  const next = projects.some((item) => item.id === id)
+    ? projects.map((item) => (item.id === id ? project : item))
+    : [project, ...projects]
+  write(KEYS.projects, next)
+  return project
+}
+
+export function updateProject(projectId, updates) {
+  const project = getProjects().find((item) => item.id === projectId)
+  if (!project) return null
+  return saveProject({ ...project, ...updates, id: projectId })
+}
+
+export function getCatalogActions() {
+  return read(KEYS.catalogActions, {})
+}
+
+export function getCatalogAction(itemId) {
+  return getCatalogActions()[itemId] || { saved: false, requested: false, followed: false }
+}
+
+export function toggleCatalogAction(itemId, action) {
+  const actions = getCatalogActions()
+  const current = actions[itemId] || { saved: false, requested: false, followed: false }
+  const next = {
+    ...actions,
+    [itemId]: {
+      ...current,
+      [action]: !current[action],
+      updatedAt: new Date().toISOString(),
+    },
+  }
+  write(KEYS.catalogActions, next)
+  return next[itemId]
+}
+
+export function makeFollowKey(targetId, targetType = 'entity') {
+  return `${targetType}:${targetId}`
+}
+
+export function getFollows() {
+  return read(KEYS.follows, {})
+}
+
+export function getFollow(targetId, targetType = 'entity') {
+  return getFollows()[makeFollowKey(targetId, targetType)] || null
+}
+
+export function toggleFollow(targetId, detail = {}) {
+  const targetType = detail.targetType || 'entity'
+  const key = makeFollowKey(targetId, targetType)
+  const follows = getFollows()
+  const next = { ...follows }
+  if (next[key]) delete next[key]
+  else {
+    next[key] = {
+      id: key,
+      targetId,
+      targetType,
+      title: detail.title || targetId,
+      route: detail.route || '/discover',
+      createdAt: new Date().toISOString(),
+      ...detail,
+    }
+    completeOnboardingStep('follow', { targetId, targetType, title: next[key].title, route: next[key].route })
+  }
+  write(KEYS.follows, next)
+  return next[key] || null
+}
+
+export function getOnboardingProgress() {
+  return read(KEYS.onboarding, {})
+}
+
+export function completeOnboardingStep(step, detail = {}) {
+  const progress = getOnboardingProgress()
+  return write(KEYS.onboarding, {
+    ...progress,
+    [step]: {
+      completedAt: new Date().toISOString(),
+      ...detail,
+    },
+  })
+}
+
+export function getReminders() {
+  return read(KEYS.reminders, {})
+}
+
+export function getReminder(itemId) {
+  return Boolean(getReminders()[itemId])
+}
+
+export function toggleReminder(itemId, detail = {}) {
+  const reminders = getReminders()
+  const next = { ...reminders }
+  if (next[itemId]) delete next[itemId]
+  else next[itemId] = { id: itemId, createdAt: new Date().toISOString(), ...detail }
+  write(KEYS.reminders, next)
+  return Boolean(next[itemId])
+}
+
+export function getNetworkStats() {
+  const entities = getEntities()
+  const signals = getSignals()
+  const worlds = getWorlds()
+  const drops = getDrops()
+  const projects = getProjects()
+  const reminders = Object.values(getReminders())
+  const catalog = Object.values(getCatalogActions())
+  const follows = Object.values(getFollows())
+  return {
+    entities: entities.length,
+    channels: getChannels().length,
+    signals: signals.length,
+    publicSignals: signals.filter((signal) => signal.visibility !== 'Draft').length,
+    worlds: worlds.length,
+    drops: drops.length,
+    projects: projects.length,
+    reminders: reminders.length,
+    follows: follows.length,
+    savedCatalog: catalog.filter((item) => item.saved).length,
+    requestedCatalog: catalog.filter((item) => item.requested).length,
+  }
 }
 
 export function setEntityLive(entity, live) {
@@ -340,6 +501,11 @@ export function getLocalMigrationBundle() {
     signals: getSignals(),
     worlds: getWorlds(),
     drops: getDrops(),
+    projects: getProjects(),
+    catalogActions: getCatalogActions(),
+    follows: getFollows(),
+    reminders: getReminders(),
+    onboarding: getOnboardingProgress(),
   }
 }
 
@@ -369,6 +535,21 @@ export function mergeCloudNetworkBundle(bundle) {
   }
   if (bundle.drops?.length) {
     write(KEYS.drops, merge(read(KEYS.drops), bundle.drops))
+  }
+  if (bundle.projects?.length) {
+    write(KEYS.projects, merge(getProjects(), bundle.projects))
+  }
+  if (bundle.catalogActions) {
+    write(KEYS.catalogActions, { ...getCatalogActions(), ...bundle.catalogActions })
+  }
+  if (bundle.follows) {
+    write(KEYS.follows, { ...getFollows(), ...bundle.follows })
+  }
+  if (bundle.reminders) {
+    write(KEYS.reminders, { ...getReminders(), ...bundle.reminders })
+  }
+  if (bundle.onboarding) {
+    write(KEYS.onboarding, { ...getOnboardingProgress(), ...bundle.onboarding })
   }
 
   if (!getCurrentEntity() && bundle.entities?.[0]) setCurrentEntity(bundle.entities[0].id)

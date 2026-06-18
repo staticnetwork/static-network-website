@@ -128,7 +128,7 @@ export default function EntityGenerator() {
 
   async function generate() {
     if (isPaid && (!activeProviderConnected || !confirmPaid)) {
-      setStatus(activeProviderConnected ? 'Confirm the paid provider request first.' : 'That provider is not validated. Use local preview or complete provider setup.')
+      setStatus(activeProviderConnected ? 'Confirm the paid provider request first.' : 'That provider is not validated. Use preview mode or complete provider setup.')
       return
     }
     setPhase('ANALYZING DNA')
@@ -140,7 +140,7 @@ export default function EntityGenerator() {
       setResults(images)
       setSelected(0)
       setPhase('READY')
-      setStatus(provider === 'local-preview' ? 'Three safe local concept renders created. No AI provider was called.' : `${provider} returned an image. Review before making it official.`)
+      setStatus(provider === 'local-preview' ? 'Three safe preview concepts created. No AI provider was called.' : `${provider} returned an image. Review before making it official.`)
     } catch (error) {
       setPhase('ERROR')
       setStatus(error.message || 'Generation failed.')

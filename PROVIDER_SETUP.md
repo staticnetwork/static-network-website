@@ -17,8 +17,13 @@ STATIC runs safely without external providers. Local preview systems remain avai
 3. OpenAI: create a project key at <https://platform.openai.com/api-keys> and set project budgets at <https://platform.openai.com/settings/organization/limits>.
 4. ElevenLabs: create a key at <https://elevenlabs.io/app/settings/api-keys>, select approved voices, and copy their voice IDs.
 5. Runway: create an API key at <https://dev.runwayml.com/>. Video launch remains intentionally locked until spend and duration are approved.
-6. LiveKit: create a project at <https://cloud.livekit.io/> and copy its WebSocket URL, API key, and API secret.
-7. Cloudflare R2: create a bucket and scoped object read/write token at <https://dash.cloudflare.com/>. Use a dedicated bucket for STATIC media.
+6. HeyGen: create an API key at <https://app.heygen.com/settings?nav=API> and
+   fund the separate API wallet. S.A.G.E. uses Cinematic Avatar for 1080p
+   full-body motion and Precision Lipsync for the approved ElevenLabs audio.
+   Keep watermark generation disabled. Do not substitute the rejected D-ID
+   face-crop workflow.
+7. LiveKit: create a project at <https://cloud.livekit.io/> and copy its WebSocket URL, API key, and API secret.
+8. Cloudflare R2: create a bucket and scoped object read/write token at <https://dash.cloudflare.com/>. Use a dedicated bucket for STATIC media.
 
 ## Netlify
 
@@ -39,4 +44,3 @@ node scripts/activate-providers.mjs --provider=openai --write-local
 ```
 
 The script reports variable names only and creates `.env.local` with owner-only permissions. `.env.local` must remain ignored by Git.
-

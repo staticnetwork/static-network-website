@@ -11,8 +11,12 @@
     "activate-elevenlabs": "node scripts/activate-elevenlabs.mjs",
     "activate-image-provider": "node scripts/activate-image-provider.mjs",
     "activate-talking-avatar": "node scripts/activate-talking-avatar.mjs",
+    "activate-heygen-clipboard": "node scripts/import-heygen-key-from-clipboard.mjs",
+    "generate-sage-heygen": "node scripts/generate-sage-heygen-talking-avatar.mjs",
+    "publish-sage-arrival": "node scripts/publish-approved-sage-arrival.mjs",
     "activate-core-providers": "node scripts/activate-core-providers.mjs",
-    "providers:validate": "node scripts/validate-providers.mjs"
+    "providers:validate": "node scripts/validate-providers.mjs",
+    "supabase:apply": "node scripts/apply-supabase-sql.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1068.0",

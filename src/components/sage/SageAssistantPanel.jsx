@@ -7,7 +7,7 @@ import SageActivityLog from './SageActivityLog'
 import SageCommandBar from './SageCommandBar'
 import SageWelcomeState from './SageWelcomeState'
 
-const suggestions = ['Create an Entity', 'Generate Mr Stone', 'Open my Studio', 'Explain Signals', 'Provider status', 'Take the tour']
+const suggestions = ['Open Arrival District', 'Take The Tour', 'Guide District OS', 'Open My Signal', 'Create an Entity', 'Explain preview mode']
 
 export default function SageAssistantPanel({ expanded = false }) {
   const sage = useSage()

@@ -9,13 +9,12 @@ export default function EntityGeneratorPage() {
         <div className="broadcast-grid" />
         <div className="scanlines" />
         <div className="page-frame entity-generator-page__intro">
-          <span>STATIC ENTITY ENGINE // VISUAL IDENTITY SYSTEM</span>
-          <h1>Generate the face.<br /><em>Protect the DNA.</em></h1>
-          <p>Build a repeatable identity from reference, direction, wardrobe, world, and official frames. Preview locally or connect an approved server-side provider.</p>
+          <span>STATIC IDENTITY ATELIER // VISUAL ENTITY SYSTEM</span>
+          <h1>Generate the face.<br /><em>Open the floor.</em></h1>
+          <p>Build a repeatable identity from reference, direction, wardrobe, world, and official frames. Use the preview renderer or connect an approved server-side provider.</p>
         </div>
         <div className="page-frame"><EntityGenerator /></div>
       </section>
     </>
   )
 }
-

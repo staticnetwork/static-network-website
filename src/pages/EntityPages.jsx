@@ -23,15 +23,18 @@ export function EntitiesPage() {
     <>
       <RouteSEO path="/entities" />
       <PageHero
-        code="CORE//ENTITY"
-        eyebrow="ENTITY-FIRST SOCIAL ENTERTAINMENT"
-        title="Humans build backstage. Entities become the signal."
-        copy="Create a digital performer, host, artist, gamer, influencer, founder, narrator, or character that can own a Channel and move across every STATIC system."
-        status={entities.length ? `${entities.length} LOCAL ENTITIES` : 'ORIGIN SLOT OPEN'}
+        code="ATELIER//ENTITY"
+        eyebrow="IDENTITY ATELIER"
+        title="Humans build backstage. Entities take the floor."
+        copy="Create a digital performer, host, artist, gamer, influencer, founder, narrator, or character that can own a Channel and move through the STATIC district."
+        status={entities.length ? `${entities.length} ENTITIES READY` : 'ORIGIN SLOT OPEN'}
+        image="/assets/static-studio-tower.png"
+        imagePosition="center center"
+        className="page-hero--studio-tower"
       >
         <div className="button-row">
           <ButtonLink to="/entities/generate">Generate An Entity <ArrowIcon /></ButtonLink>
-          <ButtonLink to="/entities/create" variant="glass">Manual Builder</ButtonLink>
+          <ButtonLink to="/entities/create" variant="glass">Identity Atelier</ButtonLink>
           {entities.length > 0 && <ButtonLink to="/entities/profile" variant="glass">View Your Entity</ButtonLink>}
         </div>
       </PageHero>
@@ -40,8 +43,8 @@ export function EntitiesPage() {
         <section className="section local-entity-section">
           <div className="page-frame">
             <div className="section-row">
-              <SectionHeading eyebrow="YOUR ENTITY NETWORK" title="Local identities, live in this browser." copy="Every Entity below has a connected Channel and can publish Signals, Worlds, Drops, and live status." />
-              <LiveIndicator label="LOCAL NETWORK ACTIVE" />
+              <SectionHeading eyebrow="YOUR ENTITY VENUES" title="Private identities, ready for the district." copy="Every Entity below has a connected Channel and can publish Signals, Worlds, Drops, and live status." />
+              <LiveIndicator label="PRIVATE PREVIEW ACTIVE" />
             </div>
             <div className="local-entity-grid">
               {entities.map((entity) => (
@@ -57,7 +60,7 @@ export function EntitiesPage() {
       <section className="section entity-network-examples">
         <div className="page-frame">
           <div className="section-row">
-            <SectionHeading eyebrow="NETWORK ENTITIES" title="One identity. Every format." copy="These network examples demonstrate how Entities can perform, host, narrate, compete, release, and evolve across entertainment worlds." />
+            <SectionHeading eyebrow="DISTRICT ENTITIES" title="One identity. Every format." copy="These district examples show how Entities can perform, host, narrate, compete, release, and evolve across entertainment worlds." />
             <ButtonLink to="/entities/generate" variant="glass">{entities.length ? 'Generate Another Entity' : 'Claim Rank #001'} <ArrowIcon /></ButtonLink>
           </div>
           <div className="network-entity-grid">
@@ -82,9 +85,9 @@ export function EntityCreatePage() {
         <div className="broadcast-grid" />
         <div className="scanlines" />
         <div className="page-frame">
-          <div><LiveIndicator label="ENTITY CORE ONLINE" /><span>CREATE//IDENTITY//WORLD</span></div>
-          <h1>Create the Entity.<br /><em>Build the world.</em></h1>
-          <p>Your public identity begins here. The Entity becomes the performer, creator, host, artist, gamer, influencer, founder, or character audiences meet across STATIC.</p>
+          <div><LiveIndicator label="IDENTITY ATELIER ONLINE" /><span>CREATE//IDENTITY//VENUE</span></div>
+          <h1>Create the Entity.<br /><em>Open the venue.</em></h1>
+          <p>Your public identity begins here. The Entity becomes the performer, creator, host, artist, gamer, influencer, founder, or character audiences meet across the STATIC district.</p>
           <Link className="button button--primary" to="/entities/generate">Use the Visual Entity Generator <ArrowIcon /></Link>
         </div>
       </section>

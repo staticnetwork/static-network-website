@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { SiteLayout } from './components/SiteChrome'
 import { useRouter } from './components/Router'
-import { SignalMark } from './components/UI'
+import SageSystem from './components/sage/SageSystem'
 import { useAuth } from './context/AuthContext'
-import { hasStaticInternalAccess, hasStaticOwnerAccess, staticBetaMode } from './lib/betaAccess'
-import BetaGatePage from './pages/BetaGatePage'
+import { hasStaticOwnerAccess } from './lib/betaAccess'
+import PortalGatePage from './pages/PortalGatePage'
 import HomePage from './pages/HomePage'
 import EntityGeneratorPage from './pages/EntityGeneratorPage'
 import ProviderStatusPage from './pages/ProviderStatusPage'
@@ -46,9 +46,13 @@ function RouteView({ ownerAccess }) {
 
   switch (path) {
     case '/':
+      return <PortalGatePage />
+    case '/home':
       return <HomePage />
     case '/signals':
       return <FeedPage signalsMode />
+    case '/my-signal':
+      return <FeedPage followedOnly />
     case '/feed':
       return <FeedPage />
     case '/channels':
@@ -120,16 +124,13 @@ function RouteView({ ownerAccess }) {
 
 export default function App() {
   const { path } = useRouter()
-  const { user, loading } = useAuth()
-  const internalAccess = hasStaticInternalAccess(user)
+  const { user } = useAuth()
   const ownerAccess = hasStaticOwnerAccess(user)
-  const publicUtilityPaths = new Set(['/contact', '/terms', '/privacy', '/login', '/signup'])
 
-  if (staticBetaMode && loading) return <div className="beta-loading"><SignalMark animated /><span>CHECKING ACCESS</span></div>
-  if (staticBetaMode && !internalAccess && !publicUtilityPaths.has(path)) return <BetaGatePage requestedPath={path} />
+  if (path === '/' || path === '/demo') return <><SageSystem /><PortalGatePage /></>
 
   return (
-    <SiteLayout assistantEnabled={internalAccess}>
+    <SiteLayout assistantEnabled>
       <RouteView ownerAccess={ownerAccess} />
     </SiteLayout>
   )

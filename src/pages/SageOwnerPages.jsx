@@ -329,7 +329,7 @@ export function SageLabPage() {
             <div><span>TALKING OUTPUT</span><span>{talk?.status?.toUpperCase() || 'NO JOB'}</span></div>
             {talk?.resultUrl ? <video src={talk.resultUrl} controls playsInline /> : <div className="sage-candidate-empty"><SignalMark animated /><h2>No synchronized result yet.</h2><p>Voice, public media, and D-ID must all validate before this stage can produce a reviewable clip.</p></div>}
             {talk?.resultUrl && <>
-              <label><span>Approve as</span><select value={clipSlot} onChange={(event) => setClipSlot(event.target.value)}><option value="officialSageTalkingVideo">Assistant speaking clip</option><option value="officialSageTourVideo">Tour intro video</option></select></label>
+              <label><span>Approve as</span><select value={clipSlot} onChange={(event) => setClipSlot(event.target.value)}>{officialSageSlots.filter(([id]) => id.endsWith('Video')).map(([id, label]) => <option key={id} value={id}>{label}</option>)}</select></label>
               <button className="button button--signal" type="button" onClick={approveVideo}>Approve Visible Lip Sync <ArrowIcon /></button>
             </>}
           </aside>

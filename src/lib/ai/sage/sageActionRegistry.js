@@ -7,6 +7,7 @@ export const sageRoutes = {
   open_channel: '/channel',
   open_studio: '/studio',
   open_account: '/login',
+  open_my_signal: '/my-signal',
   upload_media: '/feed',
   build_world: '/studio',
   create_drop: '/studio',
@@ -16,10 +17,17 @@ export const sageRoutes = {
 
 export const sageExplanations = {
   static: 'STATIC is the home of AI entertainment: one network to watch, hear, play, create, broadcast, and own what comes next.',
+  district: 'The Arrival District is the public world layer for STATIC. It is navigable now through hotspots and district map links; full 3D crowds, avatars, and persistent spaces are future engine work.',
   entity: 'An Entity is your public identity across STATIC. It can perform, post Signals, own a Channel, appear live, and move between formats.',
   signal: 'Signals are Entity-authored posts and broadcasts: text, images, video, audio, drops, worlds, premieres, and live announcements.',
+  signals: 'STATIC Signals is the living discovery boulevard. Local Entity transmissions appear there immediately beside preview network programming.',
   channel: 'A Channel is the media home owned by an Entity. It connects identity, releases, live programming, community, and worlds.',
   studio: 'Studio is the creator control room for building and publishing across STATIC.',
+  play: 'STATIC PLAY turns a prompt into a playable-world concept. The current build saves remixable local projects; real generation and multiplayer builds remain future backend work.',
+  live: 'STATIC LIVE is the broadcast arena for premieres, rooms, and Entity transmissions. Current reminders and local live status are saved on this device.',
+  radio: 'STATIC Radio is the always-on station layer. The current player and station saves are preview programming until streaming infrastructure is wired.',
+  marketplace: 'Marketplace is the economy layer for drops, assets, templates, memberships, and creator access. Current save/request/follow actions store local intent only; payments are intentionally not wired.',
+  'cloud sync': 'Cloud sync uses Supabase for signed-in accounts. Local Entities, Signals, Studio projects, PLAY concepts, reminders, and marketplace intent can save to the account; paid generation and transactions are still not wired.',
+  'preview mode': 'Preview mode means the interface demonstrates the product path without launching paid providers, payments, streaming, multiplayer, or production jobs. I will ask before anything that can spend credits.',
   'signal score': 'Signal Score is a future reputation and network-impact layer. The current local build displays it as identity telemetry, not a financial score.',
 }
-

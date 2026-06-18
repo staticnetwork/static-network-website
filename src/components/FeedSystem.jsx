@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { avatarCategories } from '../lib/avatarConfig'
 import {
-  addSignalComment,
   getChannelForEntity,
   getCurrentEntity,
   getEntities,
@@ -9,12 +8,13 @@ import {
   saveMedia,
   saveSignal,
   subscribeToNetworkUpdates,
-  updateSignal,
 } from '../lib/staticStore'
 import { EntityAvatar } from './AvatarSystem'
-import { LocalSignalMedia } from './EntitySystem'
+import { EntityFollowButton, LocalSignalMedia } from './EntitySystem'
 import { Link } from './Router'
 import { ArrowIcon, LiveIndicator, SignalMark } from './UI'
+import { useAuth } from '../context/AuthContext'
+import { addSocialComment, toggleSignalReaction, uploadSocialMedia } from '../lib/socialActions'
 
 const postTypes = ['Text', 'Image', 'Video', 'Audio', 'Link', 'Live Announcement', 'Drop', 'World', 'Original', 'Game']
 
@@ -27,6 +27,7 @@ function relativeTime(value) {
 }
 
 export function EntityComposer({ onTransmitted }) {
+  const { user } = useAuth()
   const entities = getEntities()
   const current = getCurrentEntity()
   const [entityId, setEntityId] = useState(current?.id || entities[0]?.id || '')
@@ -76,9 +77,23 @@ export function EntityComposer({ onTransmitted }) {
     const form = new FormData(event.currentTarget)
     try {
       const channel = getChannelForEntity(entity.id)
-      const media = file
-        ? await saveMedia(file, { ownerEntityId: entity.id, channelId: channel?.id, type: postType.toLowerCase() })
-        : null
+      let cloudMedia = null
+      let media = null
+      if (file) {
+        cloudMedia = await uploadSocialMedia(user, {
+          bucket: 'media',
+          entityId: entity.cloudId || entity.id,
+          channelId: channel?.cloudId || channel?.id || '',
+          file,
+          metadata: {
+            type: postType.toLowerCase(),
+            source: 'signal-composer',
+            entityLocalId: entity.localId || entity.id,
+            channelLocalId: channel?.localId || channel?.id || '',
+          },
+        })
+        media = await saveMedia(file, { ownerEntityId: entity.id, channelId: channel?.id, type: postType.toLowerCase() })
+      }
       const signal = saveSignal({
         entityId: entity.id,
         channelId: channel?.id || '',
@@ -100,6 +115,9 @@ export function EntityComposer({ onTransmitted }) {
         visibility: form.get('visibility'),
         mediaId: media?.id || null,
         mediaRefs: media?.id ? [media.id] : [],
+        mediaUrls: cloudMedia?.publicUrl ? [cloudMedia.publicUrl] : [],
+        cloudMediaPath: cloudMedia?.path || '',
+        cloudMediaAssetId: cloudMedia?.asset?.id || '',
         fileName: media?.fileName || '',
         fileType: media?.fileType || '',
       })
@@ -110,7 +128,7 @@ export function EntityComposer({ onTransmitted }) {
       setPostType('Text')
       setDraftText('')
       localStorage.removeItem('static_sage_signal_draft')
-      setStatus('Signal transmitted.')
+      setStatus(cloudMedia?.metadataError ? `Signal transmitted. Cloud media uploaded, but metadata needs migration: ${cloudMedia.metadataError}` : 'Signal transmitted.')
       onTransmitted?.(signal)
     } catch (error) {
       setStatus(error.message || 'The signal could not be stored on this device.')
@@ -172,7 +190,7 @@ export function EntityFeed({ entityId = '', showComposer = true }) {
   return (
     <div className="entity-social-feed">
       {showComposer && <EntityComposer onTransmitted={() => setSignals(getSignals())} />}
-      <div className="entity-feed__status"><LiveIndicator label="ENTITY-ONLY FEED" /><span>{visibleSignals.length} LOCAL TRANSMISSIONS</span></div>
+      <div className="entity-feed__status"><LiveIndicator label="ENTITY-ONLY FEED" /><span>{visibleSignals.length} PRIVATE PREVIEWS</span></div>
       {visibleSignals.length ? (
         <div className="entity-feed__stream">
           {visibleSignals.map((signal) => <EntitySignalPost signal={signal} currentEntity={currentEntity} key={signal.id} />)}
@@ -185,6 +203,7 @@ export function EntityFeed({ entityId = '', showComposer = true }) {
 }
 
 function EntitySignalPost({ signal, currentEntity }) {
+  const { user } = useAuth()
   const [commentOpen, setCommentOpen] = useState(false)
   const entities = getEntities()
   const entity = entities.find((item) => item.id === signal.entityId) || {
@@ -195,8 +214,13 @@ function EntitySignalPost({ signal, currentEntity }) {
     profileImageUrl: signal.profileImageUrl,
   }
 
-  function toggleReaction(key) {
-    updateSignal(signal.id, { reactions: { ...signal.reactions, [key]: !signal.reactions?.[key] } })
+  async function toggleReaction(key) {
+    try {
+      await toggleSignalReaction(user, signal, key)
+    } catch {
+      // The local reaction is already saved by the social bridge. Cloud retry
+      // happens through the account sync loop.
+    }
   }
 
   async function share() {
@@ -209,18 +233,22 @@ function EntitySignalPost({ signal, currentEntity }) {
     }
   }
 
-  function comment(event) {
+  async function comment(event) {
     event.preventDefault()
     if (!currentEntity) return
     const form = new FormData(event.currentTarget)
-    addSignalComment(signal.id, {
-      entityId: currentEntity.id,
-      entityName: currentEntity.name,
-      entityHandle: currentEntity.handle,
-      avatarConfig: currentEntity.avatarConfig,
-      profileImageRef: currentEntity.profileImageRef,
-      text: form.get('comment'),
-    })
+    try {
+      await addSocialComment(user, signal, {
+        entityId: currentEntity.cloudId || currentEntity.id,
+        entityName: currentEntity.name,
+        entityHandle: currentEntity.handle,
+        avatarConfig: currentEntity.avatarConfig,
+        profileImageRef: currentEntity.profileImageRef,
+        text: form.get('comment'),
+      })
+    } catch {
+      // Local comment is saved first. Cloud sync can retry after migration or sign-in.
+    }
     event.currentTarget.reset()
     setCommentOpen(true)
   }
@@ -230,7 +258,10 @@ function EntitySignalPost({ signal, currentEntity }) {
       <header className="entity-post__header">
         <EntityAvatar entity={entity} size="small" pose={signal.avatarPose} />
         <div><h3>{signal.entityName}</h3><p>{signal.entityHandle} / {signal.company || 'Independent Entity'}</p><span>{signal.badge || 'ENTITY SIGNAL'} · SIGNAL SCORE {signal.signalScore || 'LOCAL'}</span></div>
-        <time dateTime={signal.createdAt}>{relativeTime(signal.createdAt)}</time>
+        <div className="entity-post__header-actions">
+          {entity.id !== currentEntity?.id && entity.id && <EntityFollowButton entity={entity} compact />}
+          <time dateTime={signal.createdAt}>{relativeTime(signal.createdAt)}</time>
+        </div>
       </header>
       <div className="entity-post__pose">
         <EntityAvatar entity={entity} size="post" pose={signal.avatarPose} />

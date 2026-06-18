@@ -8,6 +8,7 @@ import SageSystem from './sage/SageSystem'
 const desktopNav = [
   ['Discover', '/discover'],
   ['Feed', '/feed'],
+  ['My Signal', '/my-signal'],
   ['Entities', '/entities'],
   ['Signals', '/signals'],
   ['Channels', '/channels'],
@@ -18,10 +19,47 @@ const desktopNav = [
   ['Marketplace', '/marketplace'],
 ]
 
+const appNav = [
+  ['District', '/', '◇'],
+  ['My Signal', '/my-signal', '◌'],
+  ['Create', '/entities/create', '+'],
+  ['Studio', '/studio', '▣'],
+  ['Account', '/account', '◎'],
+]
+
+function cloudSyncLabel({ configured, user, cloudSync }) {
+  if (!configured) return 'Local only'
+  if (!user) return 'Cloud login'
+  if (cloudSync?.status === 'queued') return 'Sync queued'
+  if (cloudSync?.status === 'syncing') return 'Syncing'
+  if (cloudSync?.status === 'error') return 'Sync issue'
+  if (cloudSync?.status === 'synced') return 'Cloud saved'
+  return 'Cloud ready'
+}
+
+function MobileAppNav() {
+  const { path } = useRouter()
+
+  return (
+    <nav className="mobile-app-nav" aria-label="STATIC app navigation">
+      {appNav.map(([label, to, icon]) => {
+        const active = to === '/' ? path === '/' : path === to || path.startsWith(`${to}/`)
+        return (
+          <Link className={active ? 'is-active' : ''} to={to} key={to}>
+            <span>{icon}</span>
+            <b>{label}</b>
+          </Link>
+        )
+      })}
+    </nav>
+  )
+}
+
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
   const { path } = useRouter()
-  const { configured, user, profile, signOut } = useAuth()
+  const { configured, user, profile, signOut, cloudSync } = useAuth()
+  const syncLabel = cloudSyncLabel({ configured, user, cloudSync })
 
   useEffect(() => {
     setOpen(false)
@@ -49,7 +87,14 @@ export function SiteHeader() {
       </nav>
 
       <div className="header-actions">
+        <Link className={path === '/' ? 'district-return is-active' : 'district-return'} to="/">
+          <span>Arrival District</span>
+        </Link>
         <LiveIndicator />
+        <span className={`cloud-sync-pill cloud-sync-pill--${cloudSync?.status || 'local-only'}`} title={cloudSync?.message || syncLabel}>
+          <i />
+          <span>{syncLabel}</span>
+        </span>
         {user
           ? <Link className="button button--small button--signal header-cta header-account" to="/account">{profile?.avatar_url && <img src={profile.avatar_url} alt="" />}Account</Link>
           : <Link className="button button--small button--signal header-cta" to="/login">Login</Link>}
@@ -85,7 +130,7 @@ export function SiteHeader() {
           ))}
         </div>
         <div className="network-menu__footer">
-          <span>THE HOME OF AI ENTERTAINMENT</span>
+          <span>{syncLabel} / THE HOME OF AI ENTERTAINMENT</span>
           <div className="network-menu__account">
             {user ? <>
               <Link to="/account">ACCOUNT <ArrowIcon /></Link>
@@ -104,12 +149,12 @@ export function SiteHeader() {
 
 export function BroadcastTicker() {
   const items = [
-    'ENTITY ONLINE / PUBLIC IDENTITY ACTIVE',
-    'NOW TRANSMITTING / FREQUENCY ZERO',
-    'STATIC ONE / GLASS SATELLITES',
-    'CHROME DISTRICT / WORLD OPEN',
-    'MEMORY PALACE / PREMIERE 21:00 PT',
-    'ENTITY CHANNELS / SIGNAL LIVE',
+    'MAIN ENTRANCE / ARRIVAL DISTRICT OPENING',
+    'CLUBSTATIC / LIVE FLOOR WARMING',
+    'ROOFTOP LOUNGE / PRIVATE ACCESS QUEUE',
+    'CREATOR BOULEVARD / CHANNELS LIGHTING UP',
+    'ARCADE WORLDS / STATIC PLAY PREVIEW',
+    'S.A.G.E. / CONCIERGE SIGNAL ONLINE',
   ]
   const loop = [...items, ...items]
 
@@ -137,7 +182,7 @@ export function SiteFooter() {
             <SignalMark />
             <span>STATIC</span>
           </Link>
-          <p>The Home of AI Entertainment</p>
+          <p>Arrive. Connect. Live.</p>
           <LiveIndicator />
         </div>
         {navGroups.map((group) => (
@@ -158,7 +203,7 @@ export function SiteFooter() {
       </div>
       <div className="footer-base">
         <span>© {new Date().getFullYear()} STATIC Network</span>
-        <span>LOS ANGELES / EVERYWHERE</span>
+        <span>ARRIVAL DISTRICT / EVERYWHERE</span>
         <span>thestaticnetwork.com</span>
       </div>
     </footer>
@@ -166,12 +211,17 @@ export function SiteFooter() {
 }
 
 export function SiteLayout({ children, assistantEnabled = true }) {
+  const { path } = useRouter()
+  const portalPublicPaths = new Set(['/login', '/signup', '/contact', '/terms', '/privacy'])
+  const shellClassName = `site-shell${portalPublicPaths.has(path) ? ' site-shell--portal-public' : ''}`
+
   return (
-    <div className="site-shell">
+    <div className={shellClassName}>
       <a className="skip-link" href="#main">Skip to content</a>
       {assistantEnabled && <SageSystem />}
       <SiteHeader />
       <main id="main">{children}</main>
+      <MobileAppNav />
       <SiteFooter />
     </div>
   )

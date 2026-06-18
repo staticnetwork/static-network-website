@@ -5,6 +5,7 @@ const routeRules = [
   ['customize_channel', /\b(customize|edit).*(channel)\b/i],
   ['open_studio', /\b(open|go to|show).*(studio|creator tools)\b/i],
   ['open_feed', /\b(open|go to|show).*(feed|signals composer)\b/i],
+  ['open_my_signal', /\b(open|go to|show).*(my signal|followed feed|personal feed)\b/i],
   ['open_channel', /\b(open|go to|show).*(my channel|channel)\b/i],
   ['open_account', /\b(open|go to|show|log).*(account|login|sign in|sign up)\b/i],
   ['provider_status', /\b(provider|api|integration).*(status|setup|connected)|\bprovider status\b/i],
@@ -19,6 +20,12 @@ export function parseSageIntent(input) {
   const lower = text.toLowerCase()
   if (!text) return { intent: 'help', text }
   if (/\b(tour|show me around|how everything works)\b/i.test(text)) return { intent: 'start_tour', text }
+  if (/\b(onboard|setup|set me up|what next|next move|killer loop|first loop|district os|guide me)\b/i.test(text)) return { intent: 'district_onboarding', text }
+  if (/\b(network status|my network|what have we built|dashboard|stats|inventory|reminders|saved projects)\b/i.test(text)) return { intent: 'network_status', text }
+  if (/\b(cloud|sync|supabase|saved to cloud|cloud saved|local only)\b/i.test(text)) return { intent: 'cloud_status', text }
+  if (/\b(real|actually works|working now|preview only|fake|shell|mock|backend|api|cost|credits|paid)\b/i.test(text)) return { intent: 'real_vs_preview', text }
+  if (/\b(open|go|show|take|return).*(district|arrival|home)\b/i.test(text)) return { intent: 'navigate', text, route: '/' }
+  if (/\b(district|arrival|map|venue|where should i go|what is this place)\b/i.test(text)) return { intent: 'district_status', text }
   if (/\b(set|make).*(default|active).*(entity)\b/i.test(text)) return { intent: 'set_default_entity', text, entityName: text.match(/(?:entity|as)\s+(.+)$/i)?.[1]?.trim() || '' }
   if (/\bpost\b|\bpublish\b|\btransmit\b/i.test(text)) {
     const payload = text
@@ -29,17 +36,17 @@ export function parseSageIntent(input) {
     return { intent: 'post_signal', text, payload: payload || 'Welcome to the STATIC Network.' }
   }
   if (/\b(what is|explain|tell me about|how does)\b/i.test(text)) {
-    const feature = ['signal score', 'entity', 'signal', 'channel', 'studio', 'static'].find((item) => lower.includes(item)) || 'static'
+    const feature = ['signal score', 'cloud sync', 'preview mode', 'district', 'marketplace', 'signals', 'signal', 'entity', 'channel', 'studio', 'play', 'live', 'radio', 'static'].find((item) => lower.includes(item)) || 'static'
     return { intent: 'explain_feature', text, feature }
+  }
+  if (/\b(go live|start.*live|begin.*broadcast)\b/i.test(text)) return { intent: 'go_live_preview', text }
+  if (/\b(my signal|radio|play|originals|marketplace|labs|discover|signals|live|account|studio|district|home)\b/i.test(text) && /\b(open|go|show|take|run)\b/i.test(text)) {
+    const destination = ['my signal', 'signals', 'radio', 'play', 'originals', 'marketplace', 'labs', 'discover', 'live', 'account', 'studio', 'district', 'home'].find((item) => lower.includes(item))
+    return { intent: 'navigate', text, route: ['district', 'home'].includes(destination) ? '/' : destination === 'account' ? '/account' : destination === 'my signal' ? '/my-signal' : `/${destination}` }
   }
   const route = routeRules.find(([, pattern]) => pattern.test(text))
   if (route) return { intent: route[0], text, preset: /mr stone/i.test(text) ? 'mr-stone' : '' }
-  if (/\b(radio|play|originals|marketplace|labs|discover)\b/i.test(text) && /\b(open|go|show|take)\b/i.test(text)) {
-    const destination = ['radio', 'play', 'originals', 'marketplace', 'labs', 'discover'].find((item) => lower.includes(item))
-    return { intent: 'navigate', text, route: `/${destination}` }
-  }
   return { intent: 'help', text }
 }
 
 export default parseSageIntent
-

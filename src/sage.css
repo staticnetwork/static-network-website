@@ -5,7 +5,8 @@
   display: grid;
   grid-template-columns: 1.12fr .88fr;
   align-items: center;
-  min-width: 320px;
+  min-width: 0;
+  max-width: 100vw;
   overflow: hidden;
   background:
     radial-gradient(circle at 30% 74%, rgba(120, 232, 255, .14), transparent 23%),
@@ -25,6 +26,17 @@
   mask-image: radial-gradient(circle at 40% 55%, black, transparent 70%);
 }
 
+.sage-arrival--video::after {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, transparent 0 36%, rgba(2, 4, 5, .12) 45%, rgba(2, 4, 5, .82) 60%, #020405 76%),
+    linear-gradient(180deg, #020405 0, transparent 13%, transparent 82%, #020405 100%);
+}
+
 .sage-arrival__noise {
   position: absolute;
   inset: 0;
@@ -32,6 +44,251 @@
   pointer-events: none;
   opacity: .025;
   background: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 4px);
+}
+
+.sage-arrival__stage {
+  position: relative;
+  z-index: 2;
+  height: 100vh;
+  min-height: 620px;
+  perspective: 1200px;
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2, .85, .25, 1);
+}
+
+.sage-arrival__stage::before {
+  position: absolute;
+  inset: 7% 4% 10%;
+  content: '';
+  border: 1px solid rgba(120, 232, 255, .14);
+  background:
+    linear-gradient(90deg, transparent 49.8%, rgba(120, 232, 255, .16) 50%, transparent 50.2%),
+    linear-gradient(transparent 49.8%, rgba(120, 232, 255, .12) 50%, transparent 50.2%);
+  box-shadow: inset 0 0 90px rgba(120, 232, 255, .04);
+  clip-path: polygon(8% 0, 92% 0, 100% 8%, 100% 92%, 92% 100%, 8% 100%, 0 92%, 0 8%);
+}
+
+.sage-arrival__platform {
+  position: absolute;
+  z-index: 1;
+  bottom: 8%;
+  left: 50%;
+  width: min(74%, 660px);
+  aspect-ratio: 3.5 / 1;
+  border: 1px solid rgba(120, 232, 255, .46);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(218, 255, 255, .3), rgba(120, 232, 255, .08) 36%, rgba(0, 0, 0, .8) 70%);
+  box-shadow: 0 0 28px rgba(120, 232, 255, .23), inset 0 0 35px rgba(120, 232, 255, .18);
+  transform: translateX(-50%) rotateX(67deg);
+}
+
+.sage-arrival__platform::before,
+.sage-arrival__platform::after,
+.sage-arrival__platform i {
+  position: absolute;
+  inset: 12%;
+  content: '';
+  border: 1px solid rgba(120, 232, 255, .3);
+  border-radius: 50%;
+  animation: sage-platform-pulse 2.8s ease-in-out infinite;
+}
+
+.sage-arrival__platform::after {
+  inset: 27%;
+  animation-delay: -.9s;
+}
+
+.sage-arrival__platform i:nth-child(1) {
+  inset: -12%;
+  opacity: .28;
+  animation-delay: -1.8s;
+}
+
+.sage-arrival__platform i:nth-child(2) {
+  inset: 39%;
+  background: rgba(190, 250, 255, .16);
+  box-shadow: 0 0 34px rgba(120, 232, 255, .4);
+}
+
+.sage-arrival__platform i:nth-child(3) {
+  inset: 46% -5%;
+  border-color: rgba(120, 232, 255, .18);
+}
+
+.sage-arrival__presence {
+  position: absolute;
+  z-index: 3;
+  inset: 8% 3% 11%;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  filter: brightness(1.4) saturate(.7) blur(4px);
+  transform: translateY(7%) scale(.92);
+  transform-origin: 50% 86%;
+  transition: opacity 1.05s ease, filter 1.2s ease, transform 1.15s cubic-bezier(.16, 1, .3, 1);
+}
+
+.sage-arrival__presence.has-video {
+  position: fixed;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  clip-path: none;
+  filter: brightness(1.4) saturate(.7) blur(4px);
+  transform: translateY(3%) scale(1.03);
+  mask-image: linear-gradient(180deg, transparent 0, #000 7%, #000 91%, transparent 100%);
+  box-shadow: none;
+}
+
+.sage-arrival__presence::after {
+  position: absolute;
+  inset: 0;
+  content: '';
+  pointer-events: none;
+  opacity: .2;
+  background: repeating-linear-gradient(180deg, transparent 0 4px, rgba(165, 247, 255, .24) 5px, transparent 6px);
+  mix-blend-mode: screen;
+}
+
+.sage-arrival__presence img,
+.sage-arrival__presence video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(120, 232, 255, .18);
+  object-fit: contain;
+  object-position: center;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .58), 0 0 55px rgba(120, 232, 255, .1);
+}
+
+.sage-arrival__presence.has-video video {
+  position: absolute;
+  top: -2vh;
+  left: -17vw;
+  width: 115vw;
+  height: 104vh;
+  border: 0;
+  object-fit: cover;
+  object-position: center;
+  transform: none;
+  box-shadow: none;
+}
+
+.sage-arrival__presence.has-still img {
+  clip-path: polygon(3% 0, 97% 0, 100% 4%, 100% 96%, 97% 100%, 3% 100%, 0 96%, 0 4%);
+}
+
+.sage-arrival__pending {
+  display: grid;
+  place-items: center;
+  width: min(60%, 420px);
+  aspect-ratio: .72;
+  border: 1px solid rgba(120, 232, 255, .25);
+  color: var(--green);
+  font: 600 2rem var(--display);
+  letter-spacing: .18em;
+}
+
+.sage-arrival__beam {
+  position: absolute;
+  z-index: 2;
+  right: 15%;
+  bottom: 9%;
+  left: 15%;
+  height: 77%;
+  opacity: .45;
+  background: linear-gradient(180deg, rgba(120, 232, 255, .02), rgba(120, 232, 255, .14));
+  filter: blur(22px);
+  clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%);
+  transition: opacity 1.2s ease;
+}
+
+.sage-arrival__telemetry {
+  position: absolute;
+  z-index: 7;
+  bottom: 27px;
+  left: 35px;
+  display: grid;
+  gap: 5px;
+  color: var(--green);
+  font: .55rem var(--mono);
+  letter-spacing: .1em;
+}
+
+.sage-arrival__telemetry small {
+  color: #5f747d;
+}
+
+.sage-arrival--materialize .sage-arrival__presence,
+.sage-arrival--present .sage-arrival__presence {
+  opacity: 1;
+  filter: brightness(1) saturate(1) blur(0);
+  transform: translateY(0) scale(1);
+}
+
+.sage-arrival--materialize .sage-arrival__presence.has-video,
+.sage-arrival--present .sage-arrival__presence.has-video {
+  transform: translateY(0) scale(1);
+}
+
+.sage-arrival--video .sage-arrival__stage::before,
+.sage-arrival--video .sage-arrival__platform,
+.sage-arrival--video .sage-arrival__beam {
+  display: none;
+}
+
+.sage-arrival--video .sage-arrival__stage {
+  perspective: none;
+}
+
+.sage-arrival--video .sage-arrival__copy {
+  padding: 8vw 5vw 7vw 1vw;
+  text-shadow: 0 2px 25px #020405;
+}
+
+.sage-arrival--video .sage-arrival__telemetry {
+  z-index: 7;
+  padding: 8px 10px;
+  border-left: 1px solid rgba(120, 232, 255, .28);
+  background: rgba(2, 4, 5, .42);
+  backdrop-filter: blur(8px);
+}
+
+.sage-arrival--present .sage-arrival__presence.has-still {
+  animation: sage-stage-pacing 8s ease-in-out infinite alternate;
+}
+
+.sage-arrival--collapse {
+  pointer-events: none;
+  background-color: transparent;
+  transition: background-color .65s ease;
+}
+
+.sage-arrival--collapse::before,
+.sage-arrival--collapse .sage-arrival__noise,
+.sage-arrival--collapse .sage-arrival__beam,
+.sage-arrival--collapse .sage-arrival__platform,
+.sage-arrival--collapse .sage-arrival__telemetry,
+.sage-arrival--collapse .sage-arrival__status {
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+
+.sage-arrival--collapse .sage-arrival__stage {
+  opacity: 0;
+  transform: translate(calc(48vw - 38px), calc(44vh - 38px)) scale(.09);
+  transform-origin: bottom right;
+}
+
+.sage-arrival--video.sage-arrival--collapse .sage-arrival__presence {
+  opacity: 0;
+  transform: translate(42vw, 42vh) scale(.08);
+}
+
+.sage-arrival--collapse .sage-arrival__copy {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
 .sage-3d-arrival {
@@ -87,6 +344,7 @@
   z-index: 8;
   max-width: 650px;
   padding: 9vw 7vw 7vw 0;
+  transition: opacity .45s ease, transform .55s ease;
 }
 
 .sage-arrival__copy > span {
@@ -115,6 +373,15 @@
 
 .sage-arrival__copy strong {
   color: #e8fbff;
+}
+
+.sage-arrival__copy .sage-arrival__aside {
+  max-width: 520px;
+  padding-left: 14px;
+  border-left: 1px solid rgba(120, 232, 255, .28);
+  color: #74878f;
+  font: .65rem/1.65 var(--mono);
+  letter-spacing: .025em;
 }
 
 .sage-arrival__copy > div {
@@ -715,6 +982,20 @@ body.menu-open .sage-panel {
   to { box-shadow: 0 0 25px rgba(120, 232, 255, .6); }
 }
 
+@keyframes sage-platform-pulse {
+  50% {
+    opacity: .35;
+    transform: scale(1.04);
+    box-shadow: 0 0 28px rgba(120, 232, 255, .22);
+  }
+}
+
+@keyframes sage-stage-pacing {
+  0%, 12% { transform: translateX(-1.5%); }
+  45%, 58% { transform: translateX(1.8%); }
+  88%, 100% { transform: translateX(-.6%); }
+}
+
 @media (max-width: 900px) {
   .sage-arrival {
     grid-template-columns: 1fr 1fr;
@@ -725,6 +1006,11 @@ body.menu-open .sage-panel {
   .sage-arrival__copy h1 {
     font-size: clamp(3.6rem, 9vw, 6rem);
   }
+  .sage-arrival--video::after {
+    background:
+      linear-gradient(90deg, transparent 0 30%, rgba(2, 4, 5, .16) 43%, rgba(2, 4, 5, .88) 62%, #020405 78%),
+      linear-gradient(180deg, #020405 0, transparent 12%, transparent 82%, #020405 100%);
+  }
 }
 
 @media (max-width: 680px) {
@@ -732,12 +1018,59 @@ body.menu-open .sage-panel {
     display: block;
     overflow-y: auto;
   }
+  .sage-arrival__stage {
+    height: 52vh;
+    min-height: 360px;
+  }
+  .sage-arrival__stage::before {
+    inset: 12px 12px 0;
+  }
+  .sage-arrival__presence {
+    inset: 28px 12px 32px;
+  }
+  .sage-arrival__presence.has-video {
+    position: absolute;
+    inset: -8px 0 -30px;
+    width: 100%;
+    height: auto;
+    transform: translateY(3%) scale(1.03);
+    mask-image: linear-gradient(180deg, transparent 0, #000 5%, #000 82%, transparent 100%);
+  }
+  .sage-arrival--materialize .sage-arrival__presence.has-video,
+  .sage-arrival--present .sage-arrival__presence.has-video {
+    transform: translateY(0) scale(1);
+  }
+  .sage-arrival__presence.has-video video {
+    top: -2%;
+    left: -2%;
+    width: 104%;
+    height: 104%;
+    object-fit: cover;
+  }
+  .sage-arrival--video::after {
+    top: 0;
+    bottom: auto;
+    height: 55vh;
+    background: linear-gradient(180deg, #020405 0, transparent 12%, transparent 72%, #020405 100%);
+  }
+  .sage-arrival--video .sage-arrival__copy {
+    padding: 0 22px 90px;
+    text-shadow: none;
+  }
+  .sage-arrival__platform {
+    bottom: 1%;
+    width: 82%;
+  }
+  .sage-arrival__telemetry {
+    bottom: 8px;
+    left: 20px;
+  }
   .sage-3d-arrival {
-    height: 54vh;
-    min-height: 390px;
+    height: 52vh;
+    min-height: 360px;
   }
   .sage-arrival__copy {
-    margin-top: -48px;
+    margin-top: -16px;
     padding: 0 22px 90px;
   }
   .sage-arrival__copy h1 {
@@ -757,7 +1090,8 @@ body.menu-open .sage-panel {
     font-size: .54rem;
   }
   .sage-arrival__status,
-  .sage-3d-arrival__telemetry {
+  .sage-3d-arrival__telemetry,
+  .sage-arrival__telemetry {
     display: none;
   }
   .sage-launcher {
@@ -800,8 +1134,12 @@ body.menu-open .sage-panel {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .sage-arrival *,
   .sage-launcher > span i,
   .sage-voice-control > button.is-listening {
     animation: none;
+  }
+  .sage-arrival__presence {
+    transition-duration: .01ms;
   }
 }

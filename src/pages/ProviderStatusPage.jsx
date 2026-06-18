@@ -40,7 +40,7 @@ export default function ProviderStatusPage() {
   return (
     <>
       <RouteSEO path="/provider-status" title="Provider Status | STATIC Network" description="Secure provider configuration status for STATIC Network." />
-      <PageHero compact code="SYSTEM//PROVIDERS" eyebrow="SECURE INTEGRATION STATUS" title="The network knows what is real." copy="These checks validate configuration without exposing credentials or launching paid generation." status={checking ? 'CHECKING' : 'STATUS READY'} />
+      <PageHero compact code="OPS//PROVIDERS" eyebrow="SECURE INTEGRATION STATUS" title="The district knows what is real." copy="These checks validate configuration without exposing credentials or launching paid generation." status={checking ? 'CHECKING' : 'STATUS READY'} />
       <section className="section provider-status-page">
         <div className="page-frame">
           <div className="provider-status-toolbar">

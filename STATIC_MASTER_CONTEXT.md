@@ -14,7 +14,16 @@ Current official foundation:
 - Active slots: `officialSageFullBody` and `officialSageIdleStill`.
 - Voice: ElevenLabs Lily, labeled `Lily - British Executive Female`.
 - Spoken pronunciation: on-screen `S.A.G.E.` is normalized to spoken `Sage`.
-- Talking/lip-sync video: not active until a real provider result is returned and approved.
+- Talking/lip-sync video: not active until a full-body, high-definition,
+  watermark-free provider result is returned and approved.
+- Rejected test: the June 13, 2026 D-ID Talk proved the storage, voice, and
+  provider pipeline, but its 512x512 face crop and trial watermark are not
+  acceptable S.A.G.E. output. D-ID must not be used as the production visual
+  layer.
+- Selected production candidate: HeyGen Cinematic Avatar at 1080p for
+  full-body motion, followed by HeyGen Precision Lipsync using the approved
+  ElevenLabs audio. Requests must set `enable_watermark: false` and preserve
+  the source format where supported.
 
 Provider secrets are server-only Netlify variables. Only public Supabase configuration may use `VITE_`. Paid generation is never automatic and always requires explicit confirmation.
 
@@ -59,6 +68,34 @@ Canonical network copy:
 STATIC PLAY line:
 
 > What would you like to play today?
+
+## STATIC Radio Direction
+
+STATIC Radio must be built on creator-owned, STATIC-owned, AI-generated with
+valid commercial rights, or separately licensed audio. Spotify is not the
+backbone for public 24/7 stations; it can only be considered later as an
+optional personal account/taste/metadata integration if its terms allow the
+specific use case.
+
+Radio V1 architecture:
+
+1. Tracks enter STATIC through upload, STATIC Originals, approved AI generation,
+   or future licensed catalog deals.
+2. Every creator-uploaded or AI-generated track needs a rights declaration
+   before public station use.
+3. Station programming is stored as a queue/schedule, not faked by the UI.
+4. Public anonymous listening telemetry should use a rate-limited Edge Function.
+   Direct browser inserts are reserved for signed-in owner/listener actions.
+5. Provider jobs for music generation are queued as backend work and must remain
+   pending until a server-side adapter, cost approval, and rights policy exist.
+
+Current radio SQL path:
+
+- `supabase/network_spine.sql` creates the early station-save table.
+- `supabase/radio_backbone.sql` expands Radio into tracks, rights declarations,
+  station schedules, and signed-in tune/play events.
+- `scripts/apply-supabase-sql.mjs` applies migrations through Supabase's
+  project database query endpoint with a personal access token.
 
 ## Audience
 
@@ -163,3 +200,33 @@ admin credentials never belong in the browser.
 - Calls to action should lead to a real route or an interactive local demo.
 - Core S.A.G.E. and Entity transformation may not use "preview" as a substitute for a working provider output.
 - Public visitors must never see procedural S.A.G.E., browser voice, or low-quality internal builders.
+
+## Arrival District / World Engine Direction
+
+The public homepage is now the STATIC Arrival District, not a traditional
+homepage or investor demo. The district should feel like a cinematic
+entertainment city visitors can enter, tour, and later control through a real
+world engine layer.
+
+Current public build:
+
+- uses a cinematic Arrival District video mode
+- uses the generated Arrival District image as the core public landing world
+- exposes venue hotspots for Signals, Live, PLAY, Studio, Channels, Radio,
+  Marketplace, and S.A.G.E.
+- uses cinematic travel as a web-native placeholder for future camera paths
+- keeps S.A.G.E. click-triggered for browser audio and provider-credit honesty
+- removes the public `/demo` room; old `/demo` visits fall back to the Arrival
+  District
+
+Engine readiness:
+
+- shared venue/world facts live in `src/lib/worldEngine/districtManifest.js`
+- the future runtime bridge lives in `src/lib/worldEngine/engineBridge.js`
+- the Arrival District DOM exposes engine-friendly scene, mount, venue, zone,
+  spawn, and camera metadata
+- `WORLD_ENGINE_READINESS.md` documents the next workload
+
+Do not claim the real-time engine layer, NPCs, multiplayer, user-controlled
+avatars, spatial audio, marketplace transactions, or provider generation are
+live until those systems are actually implemented.

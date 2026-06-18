@@ -25,4 +25,10 @@ export async function syncCloudNetworkToLocal(user) {
   return localStore.mergeCloudNetworkBundle(bundle)
 }
 
+export async function syncLocalNetworkToCloud(user) {
+  if (!isSupabaseConfigured || !user) return null
+  const bundle = localStore.getLocalMigrationBundle()
+  return supabaseStore.importLocalBundle(user.id, bundle)
+}
+
 export { localStore, supabaseStore }

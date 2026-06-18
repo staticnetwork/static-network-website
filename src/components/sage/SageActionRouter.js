@@ -8,8 +8,7 @@ export function planSageAction(parsed) {
   if (parsed.intent === 'set_default_entity') return { type: 'confirm', response: 'Changing the active identity affects the whole local network. Approve this action?' }
   if (parsed.intent === 'go_live_preview') return { type: 'confirm', response: 'I can open the Live preview. Nothing will broadcast externally. Approve this action?' }
   if (sageRoutes[parsed.intent]) return { type: 'navigate', route: sageRoutes[parsed.intent], response: `Opening ${parsed.intent.replaceAll('_', ' ')}.` }
-  return { type: 'respond', response: 'I can navigate STATIC, explain its systems, open creative tools, prefill a Signal, load Entity direction, check providers, or start the guided tour.' }
+  return { type: 'respond', response: 'I can navigate STATIC, guide your District OS setup, explain what is real versus preview, open creative tools, prefill a Signal, check providers, or start the tour.' }
 }
 
 export default planSageAction
-

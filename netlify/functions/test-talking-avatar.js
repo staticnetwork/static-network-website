@@ -18,9 +18,9 @@ const providerConfig = {
   heygen: {
     name: 'HeyGen',
     required: ['HEYGEN_API_KEY'],
-    url: 'https://api.heygen.com/v2/avatars',
+    url: 'https://api.heygen.com/v3/users/me',
     headers: () => ({ 'X-Api-Key': process.env.HEYGEN_API_KEY }),
-    generationSupported: false,
+    generationSupported: true,
   },
 }
 

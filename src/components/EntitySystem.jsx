@@ -5,6 +5,8 @@ import {
   getDrops,
   getEntities,
   getEntitySignals,
+  getFollow,
+  getFollows,
   getMedia,
   getWorlds,
   saveDrop,
@@ -19,6 +21,8 @@ import { avatarCategories, defaultAvatarConfig } from '../lib/avatarConfig'
 import { AvatarControlDeck, EntityAvatar, StoredMedia } from './AvatarSystem'
 import { Link, useRouter } from './Router'
 import { ArrowIcon, LiveIndicator, SignalMark } from './UI'
+import { useAuth } from '../context/AuthContext'
+import { syncSocialLiveEvent, toggleSocialFollow, uploadSocialMedia } from '../lib/socialActions'
 
 export { EntityAvatar } from './AvatarSystem'
 
@@ -124,6 +128,41 @@ export function EntityCard({ entity, preview = false }) {
       </div>
     </article>
   )
+}
+
+export function EntityFollowButton({ entity, compact = false }) {
+  const { user } = useAuth()
+  const followTargetId = entity.cloudId || entity.id
+  const [follow, setFollow] = useState(() => getFollow(followTargetId, 'entity'))
+
+  useEffect(() => subscribeToNetworkUpdates(() => setFollow(getFollow(followTargetId, 'entity'))), [followTargetId])
+
+  async function toggle() {
+    const detail = {
+      targetType: 'entity',
+      title: entity.channelName || entity.name,
+      route: `/channels/${entity.handle.replace('@', '')}`,
+      handle: entity.handle,
+      badge: entity.badge,
+      cloudId: entity.cloudId || '',
+    }
+    try {
+      const result = await toggleSocialFollow(user, followTargetId, detail)
+      setFollow(result.local)
+    } catch {
+      setFollow(getFollow(followTargetId, 'entity'))
+    }
+  }
+
+  return (
+    <button className={follow ? 'button button--primary entity-follow-button is-following' : 'button button--glass entity-follow-button'} type="button" onClick={toggle}>
+      {follow ? (compact ? 'Following' : 'Following Venue') : compact ? 'Follow' : 'Follow Venue'} <ArrowIcon />
+    </button>
+  )
+}
+
+function getLocalFollowerCount(entityId) {
+  return Object.values(getFollows()).filter((follow) => follow.targetType === 'entity' && follow.targetId === entityId).length
 }
 
 export function EntityBuilder() {
@@ -344,7 +383,7 @@ export function LocalSignalCard({ signal, onOpen }) {
           </div>
           <h3>{signal.title}</h3>
           <small>{signal.caption}</small>
-          <footer><span>{signal.type}</span><span>{signal.tags || 'LOCAL TRANSMISSION'}</span><b>Open signal <ArrowIcon /></b></footer>
+          <footer><span>{signal.type}</span><span>{signal.tags || 'PRIVATE PREVIEW'}</span><b>Open Card <ArrowIcon /></b></footer>
         </div>
       </button>
     </article>
@@ -356,7 +395,7 @@ function ModalFrame({ title, code, onClose, children, wide = false }) {
     <div className="entity-modal" role="dialog" aria-modal="true" aria-label={title}>
       <button className="entity-modal__backdrop" type="button" onClick={onClose} aria-label="Close" />
       <section className={wide ? 'entity-modal__panel entity-modal__panel--wide' : 'entity-modal__panel'}>
-        <header><span>{code}</span><LiveIndicator label="LOCAL TRANSMISSION" /><button type="button" onClick={onClose} aria-label="Close">×</button></header>
+        <header><span>{code}</span><LiveIndicator label="PRIVATE PREVIEW" /><button type="button" onClick={onClose} aria-label="Close">×</button></header>
         <h2>{title}</h2>
         {children}
       </section>
@@ -365,6 +404,7 @@ function ModalFrame({ title, code, onClose, children, wide = false }) {
 }
 
 export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal', firstSignal = false }) {
+  const { user } = useAuth()
   const [type, setType] = useState(firstSignal ? 'Status' : initialType)
   const [file, setFile] = useState(null)
   const [previewUrl, setPreviewUrl] = useState('')
@@ -384,10 +424,27 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
     event.preventDefault()
     setPublishing(true)
     const form = new FormData(event.currentTarget)
+    const channel = getChannelForEntity(entity.id)
     let media = null
-    if (file) media = await saveMedia(file, { ownerEntityId: entity.id, channelId: getChannelForEntity(entity.id)?.id })
+    let cloudMedia = null
+    if (file) {
+      cloudMedia = await uploadSocialMedia(user, {
+        bucket: 'media',
+        entityId: entity.cloudId || entity.id,
+        channelId: channel?.cloudId || channel?.id || '',
+        file,
+        metadata: {
+          type: type.toLowerCase(),
+          source: firstSignal ? 'first-signal-modal' : 'upload-signal-modal',
+          entityLocalId: entity.localId || entity.id,
+          channelLocalId: channel?.localId || channel?.id || '',
+        },
+      })
+      media = await saveMedia(file, { ownerEntityId: entity.id, channelId: channel?.id })
+    }
     saveSignal({
       entityId: entity.id,
+      channelId: channel?.id || '',
       entityName: entity.name,
       entityHandle: entity.handle,
       company: entity.company,
@@ -405,11 +462,14 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
       visibility: form.get('visibility'),
       mediaId: media?.id || null,
       mediaRefs: media?.id ? [media.id] : [],
+      mediaUrls: cloudMedia?.publicUrl ? [cloudMedia.publicUrl] : [],
+      cloudMediaPath: cloudMedia?.path || '',
+      cloudMediaAssetId: cloudMedia?.asset?.id || '',
       fileName: media?.fileName || '',
       fileType: media?.fileType || '',
     })
     setPublishing(false)
-    setStatus('Signal transmitted.')
+    setStatus(cloudMedia?.metadataError ? `Signal transmitted. Media metadata needs migration: ${cloudMedia.metadataError}` : 'Signal transmitted.')
     window.setTimeout(onClose, 850)
   }
 
@@ -452,6 +512,7 @@ export function UploadSignalModal({ entity, onClose, initialType = 'Text Signal'
 }
 
 export function LiveEntityMode({ entity, onClose, onEntityChange }) {
+  const { user } = useAuth()
   const [started, setStarted] = useState(Boolean(entity.live))
   const chat = ['signal_origin: identity locked', 'worldbuilder: broadcast looks unreal', 'static_one: transmission received']
 
@@ -460,6 +521,7 @@ export function LiveEntityMode({ entity, onClose, onEntityChange }) {
     setStarted(next)
     const updated = setEntityLive(entity, next)
     onEntityChange?.(updated)
+    syncSocialLiveEvent(user, updated, next).catch(() => {})
     if (next) {
       saveSignal({
         entityId: entity.id,
@@ -588,10 +650,43 @@ export function EntityActionHub({ entity, compact = false, onEntityChange }) {
   )
 }
 
+function ChannelPulsePanel({ entity, channel, signals, worlds, drops, followerCount, pinnedSignal }) {
+  const modules = (Array.isArray(channel?.modules) && channel.modules.length
+    ? channel.modules
+    : ['Signals', 'Videos', 'Live', 'Music', 'Worlds', 'Drops', 'About']
+  ).slice(0, 7)
+
+  return (
+    <section className="channel-pulse-panel" aria-label={`${entity.name} channel pulse`}>
+      <article className="channel-pulse-panel__headline">
+        <LiveIndicator label="CHANNEL PULSE" />
+        <h2>{channel?.name || entity.channelName || entity.name}</h2>
+        <p>{channel?.tagline || entity.channelTagline || entity.bio}</p>
+      </article>
+      <div className="channel-pulse-panel__metrics">
+        <span><b>{followerCount}</b>LOCAL FOLLOWS</span>
+        <span><b>{signals.length}</b>SIGNALS</span>
+        <span><b>{worlds.length}</b>WORLDS</span>
+        <span><b>{drops.length}</b>DROPS</span>
+      </div>
+      <article className="channel-pulse-panel__pinned">
+        <span>PINNED SIGNAL</span>
+        <h3>{pinnedSignal?.title || 'No pinned Signal yet.'}</h3>
+        <p>{pinnedSignal?.caption || pinnedSignal?.text || 'Transmit a public Signal to give this venue a front-door story.'}</p>
+        <Link to="/my-signal">Watch in My Signal <ArrowIcon /></Link>
+      </article>
+      <div className="channel-pulse-panel__modules">
+        {modules.map((module) => <span key={module}>{module}</span>)}
+      </div>
+    </section>
+  )
+}
+
 export function EntityProfile({ initialEntity, channelMode = false }) {
   const [entity, setEntity] = useState(initialEntity)
   const [tab, setTab] = useState(channelMode ? 'Feed' : 'Signals')
-  const [, setVersion] = useState(0)
+  const [version, setVersion] = useState(0)
+  const [shareStatus, setShareStatus] = useState('')
 
   useEffect(() => subscribeToNetworkUpdates(() => setVersion((value) => value + 1)), [])
 
@@ -599,6 +694,8 @@ export function EntityProfile({ initialEntity, channelMode = false }) {
   const signals = getEntitySignals(entity.id)
   const worlds = getWorlds(entity.id)
   const drops = getDrops(entity.id)
+  const followerCount = version >= 0 ? getLocalFollowerCount(entity.id) : 0
+  const pinnedSignal = signals.find((signal) => signal.id === channel?.featuredSignalId) || signals[0] || null
   const tabs = channelMode
     ? ['Feed', 'Videos', 'Shorts', 'Live', 'Music', 'Worlds', 'Drops', 'About']
     : ['Signals', 'Channel', 'Videos', 'Music', 'Live', 'Originals', 'Play', 'Marketplace', 'Drops', 'Worlds', 'About']
@@ -611,7 +708,28 @@ export function EntityProfile({ initialEntity, channelMode = false }) {
       ? signals.filter((signal) => signal.type.includes('Music') || signal.fileType?.startsWith('audio/'))
       : tab === 'Live'
         ? signals.filter((signal) => signal.type.includes('Live'))
-        : signals
+      : signals
+
+  async function shareChannel() {
+    const route = `/channels/${entity.handle.replace('@', '')}`
+    const url = `${window.location.origin}${route}`
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: channel?.name || entity.name,
+          text: channel?.tagline || entity.bio || 'Enter this STATIC Channel.',
+          url,
+        })
+        setShareStatus('Share sheet opened.')
+      } else {
+        await navigator.clipboard.writeText(url)
+        setShareStatus('Channel link copied.')
+      }
+    } catch {
+      setShareStatus('Share cancelled.')
+    }
+    window.setTimeout(() => setShareStatus(''), 2400)
+  }
 
   function renderTab() {
     if (tab === 'About') {
@@ -652,9 +770,11 @@ export function EntityProfile({ initialEntity, channelMode = false }) {
           <h2>{entity.handle}</h2>
           <blockquote>{channelMode ? channel?.tagline : entity.bio}</blockquote>
           {channelMode && <div className="button-row channel-profile__actions">
-            <button className="button button--primary" type="button">Follow / Request Access</button>
+            <EntityFollowButton entity={entity} />
             <Link className="button button--glass" to="/channel/customize">Customize Channel</Link>
+            <button className="button button--glass" type="button" onClick={shareChannel}>Share Channel</button>
           </div>}
+          {shareStatus && <p className="channel-profile__share-status" role="status">{shareStatus}</p>}
           <div className="entity-profile__meta">
             <span><b>{entity.signalScore}</b>SIGNAL SCORE</span>
             <span><b>{entity.company || 'INDEPENDENT'}</b>COMPANY / BRAND</span>
@@ -663,6 +783,17 @@ export function EntityProfile({ initialEntity, channelMode = false }) {
           </div>
         </div>
       </section>
+      {channelMode && (
+        <ChannelPulsePanel
+          entity={entity}
+          channel={channel}
+          signals={signals}
+          worlds={worlds}
+          drops={drops}
+          followerCount={followerCount}
+          pinnedSignal={pinnedSignal}
+        />
+      )}
       <EntityActionHub entity={entity} onEntityChange={setEntity} />
       <nav className="entity-profile__tabs" aria-label="Entity content">
         {tabs.map((item) => <button className={tab === item ? 'is-active' : ''} type="button" onClick={() => setTab(item)} key={item}>{item}</button>)}

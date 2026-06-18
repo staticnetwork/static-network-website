@@ -1,14 +1,14 @@
 import { ask, choose, confirm, heading, offerNetlifyImport, openProviderPage, safeJsonFetch, writeLocalEnv } from './provider-activation-utils.mjs'
 
-heading('TALKING AVATAR', 'D-ID is recommended for the first approved S.A.G.E. still-to-video workflow. Tavus is the Phase 3 realtime candidate; HeyGen remains a strong prepaid alternative.')
-console.log('D-ID: 14-day free trial; post-trial pricing is account-specific in its dashboard.')
+heading('TALKING AVATAR', 'HeyGen is the selected full-body clip candidate. The production workflow uses 1080p Cinematic Avatar motion followed by Precision Lipsync with watermarking disabled.')
+console.log('D-ID: rejected for production after its 512x512 face-crop and trial-watermark test.')
 console.log('Tavus: free tier includes limited conversational and generated video minutes; custom replicas begin on paid plans.')
-console.log('HeyGen: API free credits exist, but custom photo-avatar generation may require prepaid usage.')
+console.log('HeyGen: the API uses a separate prepaid wallet; Cinematic Avatar is $7 per video and Precision Lipsync is billed by output duration.')
 
 const provider = await choose('Which talking-avatar provider do you want to activate?', [
-  { label: 'D-ID (recommended first talking-video workflow)', value: 'did' },
+  { label: 'HeyGen (selected full-body clip workflow)', value: 'heygen' },
   { label: 'Tavus (recommended Phase 3 realtime evaluation)', value: 'tavus' },
-  { label: 'HeyGen (prepaid alternative)', value: 'heygen' },
+  { label: 'D-ID (rejected; credential validation only)', value: 'did' },
 ])
 if (!provider) {
   console.log('Skipped. No file was changed.')
@@ -29,7 +29,7 @@ const config = {
   heygen: {
     page: 'https://app.heygen.com/settings?nav=API',
     env: 'HEYGEN_API_KEY',
-    validate: (key) => safeJsonFetch('https://api.heygen.com/v2/avatars', { headers: { 'X-Api-Key': key } }),
+    validate: (key) => safeJsonFetch('https://api.heygen.com/v3/users/me', { headers: { 'X-Api-Key': key } }),
   },
 }[provider]
 
@@ -51,25 +51,13 @@ writeLocalEnv({
 console.log(`${provider.toUpperCase()} validation passed. No video was generated and no paid credits were used.`)
 
 if (provider === 'did') {
-  console.log('A D-ID test needs a public image URL and public audio URL and may consume trial or paid credits.')
-  if (await confirm('Create one small D-ID talking-video test now?') === true) {
-    const sourceUrl = await ask('Public image URL')
-    const audioUrl = await ask('Public audio URL')
-    const response = await fetch('https://api.d-id.com/talks', {
-      method: 'POST',
-      headers: { Authorization: `Basic ${apiKey}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        source_url: sourceUrl,
-        script: { type: 'audio', audio_url: audioUrl },
-        config: { fluent: true, pad_audio: 0, result_format: 'mp4' },
-      }),
-    })
-    const data = await response.json()
-    if (!response.ok) throw new Error(`D-ID test generation returned ${response.status}: ${data.description || data.message || 'request failed'}`)
-    console.log(`D-ID accepted the owner-approved test. Talk ID: ${data.id}. Review the completed result in D-ID before approving it in STATIC.`)
-  }
+  console.log('D-ID remains validation-only. STATIC will not submit another D-ID generation.')
+} else if (provider === 'heygen') {
+  const wallet = validation.data?.data?.wallet || validation.data?.wallet
+  console.log('HeyGen production adapter is active: $1 avatar creation, $7 cinematic motion, then $0.0667/sec precision lipsync.')
+  if (wallet) console.log(`Wallet status returned by HeyGen: ${JSON.stringify(wallet)}`)
 } else {
-  console.log(`No paid ${provider.toUpperCase()} generation was run. The current STATIC owner lab adapter supports D-ID; this provider requires a reviewed adapter before media tests.`)
+  console.log(`No paid ${provider.toUpperCase()} generation was run. This provider requires a reviewed adapter before media tests.`)
 }
 console.log('Talking-video generation remains owner-confirmed inside /sage-lab.')
 

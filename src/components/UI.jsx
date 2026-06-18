@@ -101,11 +101,34 @@ export function Reveal({ children, className = '', delay = 0, as = 'div' }) {
   )
 }
 
-export function PageHero({ code, eyebrow, title, copy, status, children, compact = false }) {
+export function PageHero({
+  code,
+  eyebrow,
+  title,
+  copy,
+  status,
+  children,
+  compact = false,
+  image = '',
+  imagePosition = 'center center',
+  className = '',
+}) {
+  const style = image
+    ? {
+        '--page-hero-image': `url("${image}")`,
+        '--page-hero-position': imagePosition,
+      }
+    : undefined
+
   return (
-    <section className={`page-hero ${compact ? 'page-hero--compact' : ''}`}>
+    <section className={`page-hero ${compact ? 'page-hero--compact' : ''} ${image ? 'page-hero--image' : ''} ${className}`} style={style}>
       <div className="broadcast-grid" aria-hidden="true" />
       <div className="page-hero__scan" aria-hidden="true" />
+      {image && (
+        <figure className="page-hero__media" aria-hidden="true">
+          <img src={image} alt="" decoding="async" />
+        </figure>
+      )}
       <div className="page-frame page-hero__layout">
         <div className="page-hero__content">
           <div className="page-hero__meta">
@@ -118,10 +141,10 @@ export function PageHero({ code, eyebrow, title, copy, status, children, compact
           {children}
         </div>
         <div className="page-hero__telemetry" aria-hidden="true">
-          <span>NET//NODE 88</span>
-          <span>UPLINK 100%</span>
-          <span>LAT 34.0522</span>
-          <span>LNG -118.2437</span>
+          <span>DISTRICT//88</span>
+          <span>VENUE LIGHTS ON</span>
+          <span>ARRIVAL FLOOR</span>
+          <span>AFTER DARK</span>
           <SignalMark animated />
         </div>
       </div>
@@ -151,10 +174,10 @@ export function SignalCard({ item, index }) {
   )
 }
 
-export function ShellNotice({ children = 'Interactive network demonstration using simulated programming.' }) {
+export function ShellNotice({ children = 'Preview interface for the STATIC district experience.' }) {
   return (
     <div className="shell-notice" role="note">
-      <span>NETWORK DEMO</span>
+      <span>DISTRICT PREVIEW</span>
       <p>{children}</p>
     </div>
   )

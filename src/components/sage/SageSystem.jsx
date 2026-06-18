@@ -1,7 +1,8 @@
 import SageAssistantPanel from './SageAssistantPanel'
+import SageArrivalExperience from './SageArrivalExperience'
 import SagePersistentLauncher from './SagePersistentLauncher'
 import SageTourFlow from './SageTourFlow'
 
 export default function SageSystem() {
-  return <><SageTourFlow /><SagePersistentLauncher /><SageAssistantPanel /></>
+  return <><SageArrivalExperience /><SageTourFlow /><SagePersistentLauncher /><SageAssistantPanel /></>
 }

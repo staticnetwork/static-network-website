@@ -18,6 +18,10 @@ export const officialSageSlots = [
   ['officialSageTourStill', 'Tour still'],
   ['officialSageTalkingVideo', 'Talking video'],
   ['officialSageTourVideo', 'Tour video'],
+  ['officialSageArrivalVideo', 'Arrival performance'],
+  ['officialSageIdleLoopVideo', 'Idle pacing loop'],
+  ['officialSageCollapseVideo', 'Corner collapse'],
+  ['officialSageSummonVideo', 'Corner summon'],
 ]
 
 const approvedFoundationAsset = {
@@ -29,6 +33,19 @@ const approvedFoundationAsset = {
   mimeType: 'image/jpeg',
   fileName: 'official-sage-foundation.jpg',
   model: 'gemini-3.1-flash-image',
+}
+
+const approvedArrivalAsset = {
+  approved: true,
+  approvedAt: '2026-06-14T15:00:00.000Z',
+  publicUrl: 'https://pub-6411cf234e1a443988675e632c525670.r2.dev/sage/sage-heygen-arrival-final.mp4',
+  storage: 'r2-public',
+  source: 'heygen-photo-avatar-v3-native-audio-owner-approved-v1',
+  mimeType: 'video/mp4',
+  fileName: 'sage-heygen-arrival-final.mp4',
+  durationSeconds: 11.9564,
+  generationCostUsd: 0.55,
+  playbackCostUsd: 0,
 }
 
 const initialIdentity = {
@@ -43,8 +60,12 @@ const initialIdentity = {
       ...approvedFoundationAsset,
       slot: 'officialSageIdleStill',
     },
+    officialSageArrivalVideo: {
+      ...approvedArrivalAsset,
+      slot: 'officialSageArrivalVideo',
+    },
   },
-  updatedAt: approvedFoundationAsset.approvedAt,
+  updatedAt: approvedArrivalAsset.approvedAt,
 }
 
 export function getSageIdentity() {

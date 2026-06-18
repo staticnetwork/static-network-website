@@ -8,9 +8,10 @@ export function BetaRequestForm() {
 
   async function handleSubmit(event) {
     event.preventDefault()
+    const formElement = event.currentTarget
     setBusy(true)
     setStatus('')
-    const form = new FormData(event.currentTarget)
+    const form = new FormData(formElement)
     const result = await saveBetaRequest({
       name: form.get('name'),
       email: form.get('email'),
@@ -20,24 +21,24 @@ export function BetaRequestForm() {
     })
     setBusy(false)
     if (!result.localSaved && !result.cloudSaved) {
-      setStatus('Your request could not be saved in this browser. Please contact the STATIC team directly.')
+      setStatus('The access request could not be completed. Use the direct STATIC contact channel.')
       return
     }
-    setStatus(result.cloudSaved ? 'Request received by the private beta team.' : 'Request saved on this device. Cloud intake activates when the private beta backend connects.')
-    event.currentTarget.reset()
+    setStatus('Access request received. Watch your inbox.')
+    formElement.reset()
   }
 
   return (
-    <form className="beta-request-form" onSubmit={handleSubmit}>
-      <div className="form-header"><span>FOUNDING ACCESS</span><span>BETA//001</span></div>
+    <form className="beta-request-form portal-access-terminal" onSubmit={handleSubmit}>
+      <div className="form-header"><span>ARRIVAL CLEARANCE</span><span>DISTRICT//001</span></div>
       <div className="field-grid">
         <label><span>Name</span><input name="name" autoComplete="name" required /></label>
         <label><span>Email</span><input name="email" type="email" autoComplete="email" required /></label>
       </div>
       <label><span>Creator type</span><select name="creatorType" defaultValue="creator" required><option value="creator">Creator / Artist</option><option value="studio">Studio / Production Team</option><option value="developer">Developer / AI Builder</option><option value="brand">Brand / Partner</option><option value="fan">Fan / Early Explorer</option><option value="other">Other</option></select></label>
-      <label><span>What do you want to build?</span><textarea name="buildGoal" rows="5" required placeholder="Tell us what you want to create, launch, or discover inside STATIC." /></label>
+      <label><span>What are you building?</span><textarea name="buildGoal" rows="5" required placeholder="Describe the Entity, venue, channel, studio, game, or world you want to bring into STATIC." /></label>
       <label><span>Social or portfolio link <em>Optional</em></span><input name="socialLink" type="url" placeholder="https://" /></label>
-      <button className="button button--signal button--wide" type="submit" disabled={busy}>{busy ? 'Sending Request...' : 'Join The Private Beta'} <ArrowIcon /></button>
+      <button className="button button--signal button--wide" type="submit" disabled={busy}>{busy ? 'Sending Request...' : 'Request Access'} <ArrowIcon /></button>
       <p className="form-status" role="status" aria-live="polite">{status}</p>
     </form>
   )
@@ -65,15 +66,15 @@ export function WaitlistForm({ compact = false }) {
     }
 
     // TODO: Connect to the approved waitlist provider when credentials and data policy are finalized.
-    setStatus('Transmission received. You’re on the access list.')
+    setStatus('Request received. You’re on the access list.')
     event.currentTarget.reset()
   }
 
   return (
     <form className={`waitlist-form ${compact ? 'waitlist-form--compact' : ''}`} onSubmit={handleSubmit}>
       <div className="form-header">
-        <span>ACCESS REQUEST</span>
-        <span>FORM//001</span>
+        <span>DISTRICT ACCESS</span>
+        <span>PASS//001</span>
       </div>
       <div className="field-grid">
         <label>
@@ -104,7 +105,7 @@ export function WaitlistForm({ compact = false }) {
         Request Access <ArrowIcon />
       </button>
       <p className="form-disclaimer">
-        Your access request is saved to this browser for the network demonstration.
+        Private beta requests are staged here until the production access system is connected.
       </p>
       <p className="form-status" role="status" aria-live="polite">{status}</p>
     </form>
@@ -117,13 +118,13 @@ export function ContactForm() {
   function handleSubmit(event) {
     event.preventDefault()
     // TODO: Route approved contact categories to a production support or CRM provider.
-    setStatus('Transmission prepared. Use the direct network email for immediate delivery.')
+    setStatus('Message staged. Use the direct STATIC email for fastest response.')
   }
 
   return (
     <form className="waitlist-form contact-form" onSubmit={handleSubmit}>
       <div className="form-header">
-        <span>DIRECT TRANSMISSION</span>
+        <span>DIRECT MESSAGE</span>
         <span>CONTACT//001</span>
       </div>
       <div className="field-grid">
