@@ -1,0 +1,494 @@
+{
+  "generatedAt": "2026-06-23T00:56:24.801Z",
+  "assets": [
+    {
+      "sourceStatus": "design-needed",
+      "licenseStatus": "must-be-original-owned-mark",
+      "blenderNotes": "No Blender work required unless the final mark becomes a 3D sign, pendant, badge, or emissive decal pack.",
+      "unrealNotes": "Use as SVG/vector source first, then derive decal, emissive sign, UI icon, pendant, clothing patch, billboard, and city signage materials.",
+      "id": "official-static-logo-system",
+      "name": "Official STATIC logo system",
+      "status": "needed",
+      "priority": "P0",
+      "targetPath": "/assets/brand/static-official-logo.svg",
+      "replaces": "Temporary SignalMark and AI-baked geometric concept emblems in generated art",
+      "requirements": [
+        "Fully original owned mark with no Ready Player One/OASIS-style hex contract-symbol dependency",
+        "Primary wordmark, standalone mark, small favicon/app icon, city signage lockup, and monochrome versions",
+        "Derivative decal/badge rules for jackets, pendants, billboards, vehicles, venue signs, and UI",
+        "Vector source retained outside generated raster concept art",
+        "Trademark/legal review before treating it as final commercial identity"
+      ]
+    },
+    {
+      "sourceStatus": "prototype-present",
+      "licenseStatus": "owner-generated-prototype-review-before-public",
+      "blenderNotes": "Open the existing GLB only for inspection, scale, texture check, and possible decimation; do not treat it as final MetaHuman-quality output.",
+      "unrealNotes": "Use as a temporary import test. Final Mr. Stone should move through the MetaHuman/humanoid rig pipeline before serious gameplay.",
+      "id": "mr-stone-rig",
+      "name": "Mr. Stone playable Entity rig",
+      "status": "needed",
+      "priority": "P0",
+      "targetPath": "/assets/world/city/characters/mr-stone/mr-stone.glb",
+      "replaces": "Procedural Three.js Mr. Stone marker",
+      "requirements": [
+        "GLB/glTF or VRM-compatible humanoid rig",
+        "Neutral idle, walk, car-entry, car-exit, sit, point, phone, drink, cigar, and VIP lounge animations",
+        "Wardrobe slots for jacket, pants, shoes, jewelry, watch, glasses, and status pass",
+        "See /assets/world/city/characters/mr-stone/README.md for the production rig spec",
+        "Mobile-safe LOD under 15 MB for first web prototype"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "black-suv",
+      "name": "Black luxury SUV",
+      "status": "needed",
+      "priority": "P0",
+      "targetPath": "/assets/world/city/vehicles/stone-suv.glb",
+      "replaces": "Procedural SUV shell",
+      "requirements": [
+        "Exterior model with separate wheel, door, window, and cabin objects",
+        "Door open/close animation",
+        "Window-down animation and first-person cabin/window frame camera anchor",
+        "Radio dash glow mesh",
+        "Low-poly web LOD plus higher-detail source file"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-tower-valet",
+      "name": "STATIC Tower valet chunk",
+      "status": "needed",
+      "priority": "P0",
+      "targetPath": "/assets/world/city/venues/static-tower-valet.glb",
+      "replaces": "Valet node and generic city floor",
+      "requirements": [
+        "Tower entrance, valet curb, elevator exit, road merge, lighting, and collision surfaces",
+        "Spawn markers for Mr. Stone, valet NPC, SUV, camera rail, and route exit",
+        "Baked neon/gold lighting pass"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "market-walk-interior",
+      "name": "Market Walk retail chunk",
+      "status": "needed",
+      "priority": "P0",
+      "targetPath": "/assets/world/city/venues/market-walk.glb",
+      "replaces": "Procedural Market Walk boutique/status proxy",
+      "requirements": [
+        "Curb drop-off, storefront, wardrobe wall, jewelry case, status mirror, and exit marker",
+        "Separate interactive meshes for clothing wall, jewelry case, status mirror, and checkout/status confirmation",
+        "Lighting that matches the generated Arrival District and Channels/Marketplace hero art"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "radio-rooftop",
+      "name": "STATIC Radio rooftop venue",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/static-radio-rooftop.glb",
+      "replaces": "Radio Rooftop node and crowd particles",
+      "requirements": [
+        "Elevator exit, host/security point, VIP couch, DJ booth, dance floor, skyline, drink/cigar props",
+        "NPC crowd loop spawn markers",
+        "Audio-reactive light rig hooks"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-arena",
+      "name": "STATIC Arena / basketball venue",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/static-arena.glb",
+      "replaces": "No sports venue chunk yet",
+      "requirements": [
+        "Original arena exterior/interior chunk with court, player tunnel, VIP boxes, fan wall, creator suite, and skyline plaza",
+        "Commercial-safe basketball court with no NBA, NCAA, team, school, athlete, or real sponsor marks",
+        "Separate interactive meshes for court, hoop, scoreboard, tunnel, VIP box, crowd wall, and venue entrance",
+        "Prepared for sports_events, arena_sessions, team_rosters, event_access, and future Unreal client scene streaming"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "basketball-court-kit",
+      "name": "STATIC basketball court kit",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/sports/basketball-court-kit.glb",
+      "replaces": "No basketball gameplay prop kit yet",
+      "requirements": [
+        "Hoop, rim, backboard, floor, ball, shot spots, benches, tunnel marker, and non-branded scoreboard",
+        "Clean collision-friendly geometry and separate materials for court lighting, glass, metal, and ball",
+        "Mobile-safe web LOD plus higher-detail Unreal source mesh"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-blues-audio",
+      "name": "STATIC Blues route cue",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/audio/static-blues-loop.ogg",
+      "replaces": "Named audio cue only",
+      "requirements": [
+        "Rights-safe original audio loop",
+        "Short web preview under 60 seconds",
+        "Loop point metadata and muted fallback"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "vibe-strip-chunk",
+      "name": "Vibe Mode STATIC Strip chunk",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/routes/vibe-strip.glb",
+      "replaces": "Procedural first-person strip cruise lights and billboard canyon",
+      "requirements": [
+        "Road chunk with wet pavement, moving billboard surfaces, skyline parallax cards, traffic-light sweep hooks, and camera rail markers",
+        "First-person window composition target matching the Arrival District videos",
+        "Mobile-safe lighting bake with animated emissive materials separated for runtime control"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-city-mountain-sign",
+      "name": "Gold STATIC CITY mountain sign",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/landmarks/static-city-mountain-sign.glb",
+      "replaces": "No signature mountain sign landmark yet",
+      "requirements": [
+        "Massive gold STATIC CITY letters with two original 100-foot winged guardian statues supporting the sign",
+        "Readable from strip, beach, marina, tower, and island approach routes",
+        "No Hollywood sign copy, no religious iconography dependency, no real-world monument clone",
+        "Prepared for UE5.8 world landmark LODs, night lighting, helicopter/drone/cinematic passes, and map iconography"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "private-static-island-estate",
+      "name": "Private STATIC Island estate",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/private-static-island-estate.glb",
+      "replaces": "STATIC Tower penthouse as final Mr. Stone residence canon",
+      "requirements": [
+        "One-million-square-foot private island estate with mansion, harbor, yacht dock, helipad, underground garage, command room, beach edge, and guarded perimeter",
+        "Separate spawn markers for bedroom, wardrobe, harbor, helipad, garage, command room, yacht dock, and vehicle exit",
+        "Luxury black-glass/champagne/violet STATIC design language with mythic guardian perimeter silhouettes",
+        "Prepared for property_access, estate_access, marine_routes, vehicle_builds, companions, and UE5.8 World Partition"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-marina-district",
+      "name": "STATIC Marina district chunk",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/static-marina.glb",
+      "replaces": "No marina/marine travel district yet",
+      "requirements": [
+        "Luxury marina with yacht slips, speedboat docks, water taxi terminal, waterfront club, sea wall, island approach signage, and nighttime reflections",
+        "Route markers for water taxis, yacht parties, speedboat races, jet ski starts, beach approaches, and island estate travel",
+        "Prepared for marine_sessions, water vehicles, event_access, Radio simulcasts, and UE5.8 water rendering"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-beach-district",
+      "name": "Solar Coast district chunk",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/static-beach.glb",
+      "replaces": "No beach-life district yet",
+      "requirements": [
+        "Beach clubs, car show plaza, mansion/high-rise backdrop, boardwalk, jet ski launch, beach party stage, creator shoot spots, cabanas, waterfront retail, and city skyline view",
+        "No copied Miami/LA landmarks or brand signs",
+        "Prepared for beach events, marine races, creator shoots, crowd loops, and social presence"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-island-resort-quarter",
+      "name": "STATIC Island Resort Quarter chunk",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/static-island-resort-quarter.glb",
+      "replaces": "No STATIC Island vacation/resort quarter yet",
+      "requirements": [
+        "Original STATIC Island resort quarter with yacht arrival, beach markets, food courts, future luau stage, firelight music, light-reactive dancewear, electric flower accessories, boardwalk shops, ocean-sport rentals, palms, lanterns, plaza seating, and warm night-life crowd routes",
+        "Commercial-safe and culturally respectful: inspired by island warmth and rhythm, not a copy of real sacred sites, real resorts, real monuments, or stereotyped costumes",
+        "Prepared for creator shops, social hangouts, beach events, yacht access, family/friend plazas, ocean sports, and future NPC crowd loops inside the STATIC Island District"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "sky-crown-district",
+      "name": "Sky Crown district chunk",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/venues/sky-crown-district.glb",
+      "replaces": "No supertall luxury skyline district yet",
+      "requirements": [
+        "Original supertall skyline district with sky bridges, rooftop pools, observation decks, luxury hotel lobbies, creator headquarters, and elevated transit approaches",
+        "Commercial-safe architecture: no copied Burj Khalifa, no real Dubai landmarks, no hotel logos, no real estate brand marks",
+        "Prepared for skyline routes, penthouse properties, high-altitude events, creator headquarters, and UE5.8 World Partition/LOD streaming"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "speedboat-jet-ski-kit",
+      "name": "Speedboat / jet ski vehicle kit",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/vehicles/marine-vehicle-kit.glb",
+      "replaces": "No marine vehicle assets yet",
+      "requirements": [
+        "Original speedboat and jet ski models with separated steering, wake hooks, driver/passenger anchors, emissive trims, and material slots",
+        "No real brands, no real boat manufacturer markings, no copied racing game assets",
+        "Prepared for marine_sessions, race routes, water taxis, and future controllable boating"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "yacht-party-venue",
+      "name": "STATIC yacht party venue",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/venues/yacht-party.glb",
+      "replaces": "No floating venue/event shell yet",
+      "requirements": [
+        "Luxury yacht party venue with DJ booth, VIP deck, lounge seating, dance floor, Radio broadcast screen, bottle-service props, and skyline/island view",
+        "Prepared for event_access, live_rooms, Radio simulcast, creator appearances, and private party routes"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "summit-return-route",
+      "name": "STATIC Tower summit return route",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/routes/summit-return.glb",
+      "replaces": "Procedural tower return road, valet ring, and mission-complete marker",
+      "requirements": [
+        "Mountain road chunk, distant tower skyline composition, valet return curb, completion gate, and camera pullout markers",
+        "Separate valet tip/NPC interaction marker for future animation and state tracking",
+        "Compatible with route_sessions and property return spawn logic"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-race-car",
+      "name": "Original STATIC race car",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/vehicles/static-race-car.glb",
+      "replaces": "No red-light challenge/opponent car asset yet",
+      "requirements": [
+        "Original unbranded street-racing coupe with separated wheels, interior, underglow, and customization-friendly material slots",
+        "Commercial-safe design with no copied real car logos, grilles, decals, or game assets",
+        "Low-poly web LOD plus higher-detail source file"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "static-velocity-garage",
+      "name": "STATIC Velocity garage",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/venues/static-velocity-garage.glb",
+      "replaces": "No vehicle customization venue yet",
+      "requirements": [
+        "Garage scene with paint booth, rim wall, underglow display, audio bench, wrap station, car lift, and social lounge",
+        "Separate interactive station meshes for future customization UI",
+        "Lighting and material palette matching black/violet/champagne STATIC City canon"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "night-run-route",
+      "name": "STATIC Velocity night run route",
+      "status": "needed",
+      "priority": "P1",
+      "targetPath": "/assets/world/city/routes/night-run.glb",
+      "replaces": "No instanced red-light race route yet",
+      "requirements": [
+        "Closed original racing route chunk with red-light start, billboard canyon, authored obstacle hazards, and camera rail markers",
+        "No copied Ready Player One, Need for Speed, Midnight Club, GTA, or real-world IP",
+        "Prepared for race_sessions, route validation, and non-cash Signal Credit rewards later"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "crew-hq",
+      "name": "Crew HQ / faction base",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/venues/crew-hq.glb",
+      "replaces": "No crew/faction base venue yet",
+      "requirements": [
+        "Crew banner wall, command table, vehicle bay, social lounge, trophy/prestige wall, recruitment terminal, and entrance markers",
+        "No real gang symbols, hate symbols, real military logos, or copied IP",
+        "Prepared for crews, crew_memberships, presence_events, and moderation state"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "district-fortress-kit",
+      "name": "District fortress upgrade kit",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/props/district-fortress-kit.glb",
+      "replaces": "No fortress/wall/turret upgrade assets yet",
+      "requirements": [
+        "Modular walls, gates, shields, stylized turrets, watch decks, command-room pieces, banners, and energy pylons",
+        "Fictional arcade-readable silhouettes with no real-world tactical instruction",
+        "Prepared for fortress_upgrades, territory_control, and treaty-bloc visuals"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "dominion-arena",
+      "name": "Dominion conflict arena",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/venues/dominion-arena.glb",
+      "replaces": "No opt-in faction conflict arena yet",
+      "requirements": [
+        "Arcade sci-fi arena with cover structures, spawn pads, scoreboards, spectator zones, vehicle lanes, and energy barriers",
+        "No gore, no realistic military branding, no copied shooter/MOBA/RTS IP",
+        "Prepared for conflict_sessions, anti-cheat later, replay clips, and moderation"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "guardian-companion",
+      "name": "Guardian companion / bodyguard",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/companions/guardian-companion.glb",
+      "replaces": "No companion/bodyguard asset yet",
+      "requirements": [
+        "Original fictional guardian companion with strong silhouette, readable scale, and no copied IP",
+        "Idle, follow, alert, protect, dismiss, and venue-entrance animation targets for later rigging",
+        "Mobile-safe LOD under 10 MB for first web prototype, with higher-detail source file retained separately",
+        "No real-world tactical gear branding, hate symbols, celebrity likenesses, or copyrighted creature designs",
+        "Prepared for companions, companion_slots, companion_behavior, and opt-in conflict mode rules"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "companion-hub",
+      "name": "Companion Hub / Guardian Yard",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/venues/companion-hub.glb",
+      "replaces": "No companion selection venue yet",
+      "requirements": [
+        "Premium city venue where players select cute companions, guardian bodyguards, robots, dragons, golems, and loadouts",
+        "Separate pads or bays for small, medium, large, mythic, and robotic companions",
+        "Interactive meshes for companion preview, stance, follow distance, skin, loadout, and squad slot terminals",
+        "Lighting and material palette matching STATIC City black/violet/champagne with green companion-system accents",
+        "Prepared for companions, inventory_items, entitlements, moderation, and performance budgets"
+      ]
+    },
+    {
+      "sourceStatus": "not-sourced",
+      "licenseStatus": "not-cleared",
+      "blenderNotes": "Inspect scale, transforms, mesh separation, material slots, UVs, texture paths, file size, and GLB validity before using in the owner web preview.",
+      "unrealNotes": "Import into the matching /Game/STATIC folder, create material instances, collision, LODs, Nanite/streaming decisions, and Blueprint hooks after the UE5.8 project exists.",
+      "id": "the-red-light-hidden-walk",
+      "name": "The Red Light / Hidden Walking Street venue chain",
+      "status": "needed",
+      "priority": "P2",
+      "targetPath": "/assets/world/city/venues/the-red-light-hidden-walk.glb",
+      "replaces": "No hidden mature-nightlife discovery venue yet",
+      "requirements": [
+        "Exterior tucked-away bar entrance, interior bar passage, back-door reveal, and dense neon walking-street corridor",
+        "Bars, lounges, performer balconies, food stalls, coded doors, VIP stairways, rain reflections, crowd lanes, and hidden camera reveal markers",
+        "Fictional premium nightlife tone with no real city copy, no explicit public content, no real adult-business brands, and no copied signage",
+        "Prepared for age_gate_later, venue_access, discovery_flags, npc_crowds, moderation, and future Unreal scene streaming"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,246 @@
+{
+  "generatedAt": "2026-06-23T00:56:24.819Z",
+  "route": "/asset-intake",
+  "ownerAlias": "/world-bible",
+  "storageKey": "static_world_asset_intake",
+  "note": "Option catalog only. Owner local records are exported from the browser console after review.",
+  "options": {
+    "assetTypes": [
+      "Character",
+      "Companion",
+      "Creature",
+      "Vehicle",
+      "Weapon",
+      "Building",
+      "Interior",
+      "Prop",
+      "Wardrobe",
+      "Jewelry",
+      "Environment",
+      "Audio",
+      "Animation",
+      "VFX",
+      "UI / Decal"
+    ],
+    "formats": [
+      "GLB",
+      "GLTF",
+      "FBX",
+      "OBJ",
+      "Blend",
+      "PNG",
+      "JPG",
+      "WEBM",
+      "MP4",
+      "WAV",
+      "OGG",
+      "Unknown"
+    ],
+    "sources": [
+      "Owner-generated",
+      "Purchased pack",
+      "Free pack",
+      "Marketplace candidate",
+      "Needs sourcing",
+      "Quarantine"
+    ],
+    "licenses": [
+      "Commercial cleared",
+      "Owner-created",
+      "Needs review",
+      "Prototype only",
+      "Restricted",
+      "Unknown"
+    ],
+    "rarities": [
+      "Common",
+      "Uncommon",
+      "Rare",
+      "Epic",
+      "Legendary",
+      "Mythic",
+      "Founder"
+    ],
+    "gameplayRoles": [
+      "Ambient NPC",
+      "Recruitable NPC",
+      "Companion candidate",
+      "Boss / champion",
+      "Vendor",
+      "Guard / security",
+      "Performer",
+      "Vehicle / travel",
+      "Player-owned build asset",
+      "District landmark",
+      "Quest object",
+      "Cosmetic / wardrobe",
+      "Combat kit",
+      "Event prop",
+      "World terrain"
+    ],
+    "homes": [
+      {
+        "id": "arrival-district",
+        "label": "Arrival District",
+        "worldLayer": "STATIC City",
+        "biome": "city-core"
+      },
+      {
+        "id": "static-strip",
+        "label": "STATIC Strip",
+        "worldLayer": "STATIC City",
+        "biome": "nightlife"
+      },
+      {
+        "id": "signal-borough",
+        "label": "Signal Borough",
+        "worldLayer": "STATIC City",
+        "biome": "dense-urban"
+      },
+      {
+        "id": "arena-district",
+        "label": "Arena District",
+        "worldLayer": "STATIC City",
+        "biome": "sports"
+      },
+      {
+        "id": "radio-rooftop-district",
+        "label": "Radio Rooftop District",
+        "worldLayer": "STATIC City",
+        "biome": "music"
+      },
+      {
+        "id": "market-walk-district",
+        "label": "Market Walk District",
+        "worldLayer": "STATIC City",
+        "biome": "retail"
+      },
+      {
+        "id": "play-district",
+        "label": "PLAY District",
+        "worldLayer": "STATIC City",
+        "biome": "game-portals"
+      },
+      {
+        "id": "studio-district",
+        "label": "Studio District",
+        "worldLayer": "STATIC City",
+        "biome": "creator-production"
+      },
+      {
+        "id": "beach-district",
+        "label": "Solar Coast",
+        "worldLayer": "STATIC City",
+        "biome": "coast"
+      },
+      {
+        "id": "marina-district",
+        "label": "STATIC Marina",
+        "worldLayer": "STATIC City",
+        "biome": "marine"
+      },
+      {
+        "id": "tunnel-rise-suburbs",
+        "label": "Tunnel Rise Suburbs",
+        "worldLayer": "STATIC City",
+        "biome": "residential"
+      },
+      {
+        "id": "sky-crown-district",
+        "label": "Sky Crown District",
+        "worldLayer": "STATIC City",
+        "biome": "supertall-luxury"
+      },
+      {
+        "id": "crown-ridge",
+        "label": "Crown Ridge",
+        "worldLayer": "STATIC City",
+        "biome": "luxury-hillside"
+      },
+      {
+        "id": "static-tower-summit",
+        "label": "STATIC Tower Summit",
+        "worldLayer": "STATIC City",
+        "biome": "landmark"
+      },
+      {
+        "id": "static-island",
+        "label": "STATIC Island District",
+        "worldLayer": "STATIC City",
+        "biome": "owner-estate"
+      },
+      {
+        "id": "fields-desert",
+        "label": "The Fields / Desert Region",
+        "worldLayer": "Fields",
+        "biome": "Desert Region"
+      },
+      {
+        "id": "fields-forest",
+        "label": "The Fields / Forest Region",
+        "worldLayer": "Fields",
+        "biome": "Forest Region"
+      },
+      {
+        "id": "fields-snow",
+        "label": "The Fields / Snow Region",
+        "worldLayer": "Fields",
+        "biome": "Snow Region"
+      },
+      {
+        "id": "static-island-resort-shore",
+        "label": "STATIC Island / Resort Shore",
+        "worldLayer": "STATIC Island",
+        "biome": "Resort Shore"
+      },
+      {
+        "id": "static-island-character-wild-belt",
+        "label": "STATIC Island / Character Wild Belt",
+        "worldLayer": "STATIC Island",
+        "biome": "Character Wild Belt"
+      },
+      {
+        "id": "static-island-frontline-perimeter",
+        "label": "STATIC Island / Frontline Perimeter",
+        "worldLayer": "STATIC Island",
+        "biome": "Frontline Perimeter"
+      },
+      {
+        "id": "static-island-fortress-wall",
+        "label": "STATIC Island / Fortress Wall",
+        "worldLayer": "STATIC Island",
+        "biome": "Fortress Wall"
+      },
+      {
+        "id": "static-island-moat-and-inner-grounds",
+        "label": "STATIC Island / Moat And Inner Grounds",
+        "worldLayer": "STATIC Island",
+        "biome": "Moat And Inner Grounds"
+      },
+      {
+        "id": "static-island-peak-compound",
+        "label": "STATIC Island / Peak Compound",
+        "worldLayer": "STATIC Island",
+        "biome": "Peak Compound"
+      },
+      {
+        "id": "rootside-tunnels",
+        "label": "Rootside / Underground Tunnels",
+        "worldLayer": "Hidden City",
+        "biome": "Rootside"
+      },
+      {
+        "id": "astral-port",
+        "label": "STATIC Astral Port / Orbit",
+        "worldLayer": "Future Universe",
+        "biome": "Astral Port"
+      },
+      {
+        "id": "asset-quarantine",
+        "label": "Catalog / Quarantine",
+        "worldLayer": "Pipeline",
+        "biome": "Unassigned"
+      }
+    ]
+  }
+}

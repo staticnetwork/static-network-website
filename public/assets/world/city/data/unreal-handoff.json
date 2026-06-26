@@ -1,0 +1,86 @@
+{
+  "generatedAt": "2026-06-23T00:56:24.819Z",
+  "unrealPlan": {
+    "engine": "Unreal Engine 5.8",
+    "target": "cinematic realism with STATIC identity",
+    "floor": "GTA-level open-world polish",
+    "ceiling": "near-real premium entertainment city with game/sport/social systems",
+    "warning": "Photoreal is not enough. STATIC has to look real and still feel unmistakably like STATIC."
+  },
+  "visualStylePrinciples": [
+    [
+      "Cinematic realism",
+      "Characters, streets, vehicles, venues, crowds, and interiors should feel physically believable, not toy-like or browser-game flat."
+    ],
+    [
+      "STATIC exaggeration",
+      "Reality gets pushed through black glass, wet pavement, violet/champagne neon, signal screens, premium wardrobe, and broadcast-city motion."
+    ],
+    [
+      "Readable status",
+      "Outfits, jewelry, vehicles, properties, companions, passes, tables, and entrances must communicate rank and access at a glance."
+    ],
+    [
+      "Crowd heat",
+      "The city needs fan movement, phones up, venue lines, club tables, arena nights, valet flows, and NPC clusters before true multiplayer scales."
+    ],
+    [
+      "Camera as product",
+      "Arrival, travel, sports, shopping, rooftop, racing, and club moments should feel like authored shots first, then controllable gameplay."
+    ]
+  ],
+  "animationStylePrinciples": [
+    [
+      "Naturalistic base",
+      "Walks, idles, sitting, driving, valet, shopping, dancing, cheering, drinking, and talking should start from believable human motion."
+    ],
+    [
+      "Luxury confidence",
+      "Mr. Stone and high-status Entities should move with calm control: no cartoon bounce, no stiff mannequin energy, no cheap idle loops."
+    ],
+    [
+      "Venue-specific motion",
+      "Arena fans, club dancers, rooftop hosts, guards, valets, racers, shoppers, and companions all need distinct loop libraries."
+    ],
+    [
+      "Performance-first humans",
+      "Use MetaHuman-compatible characters and capture/retargeting where possible for faces, hands, posture, and conversation."
+    ],
+    [
+      "Stylized spectacle on top",
+      "Companions, portals, billboards, music-reactive lights, combat modes, racing, and S.A.G.E. can carry the heightened STATIC magic."
+    ]
+  ],
+  "milestones": [
+    [
+      "01",
+      "UE5.8 project shell",
+      "Create the Unreal project with source control, folder standards, input/camera baseline, and STATIC visual test map."
+    ],
+    [
+      "02",
+      "Arrival District lookdev",
+      "Rebuild the hero district as a small real-time scene: wet street, towers, signage, crowd shells, club/arena/radio landmarks."
+    ],
+    [
+      "03",
+      "MetaHuman Mr. Stone",
+      "Convert or build Mr. Stone as the first production-quality playable MetaHuman with wardrobe/accessory slots."
+    ],
+    [
+      "04",
+      "Animation pack",
+      "Block idle, walk, turn, sit, car entry/exit, drink/cigar, valet, phone, VIP couch, cheering, club, and arena fan loops."
+    ],
+    [
+      "05",
+      "Vehicle and camera proof",
+      "Luxury SUV, valet pickup, strip cruise, first-person window view, chase cam, and return-to-tower route."
+    ],
+    [
+      "06",
+      "Venue proof",
+      "STATIC Arena basketball shell, Club STATIC, Market Walk, Radio Rooftop, and STATIC Tower all connected by route/camera handoffs."
+    ]
+  ]
+}

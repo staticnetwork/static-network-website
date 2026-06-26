@@ -1,0 +1,781 @@
+{
+  "generatedAt": "2026-06-23T00:56:24.819Z",
+  "world": {
+    "name": "STATIC City",
+    "access": "owner-only-build",
+    "principle": "Unreal Engine 5.8 game-first world layer with social media interfaces, not a website with game controls.",
+    "currentSlice": "Browser owner prototype route: STATIC Tower command suite -> valet -> luxury SUV -> Market Walk -> Radio Rooftop VIP -> vibe-mode strip cruise -> tower return. Full canon moves Mr. Stone primary residence to Private STATIC Island."
+  },
+  "tiers": [
+    {
+      "id": "summit",
+      "name": "STATIC Tower Summit",
+      "range": [
+        0,
+        18
+      ],
+      "elevation": "Summit",
+      "tone": "gold",
+      "copy": "The symbolic top: city command landmark, concert crown, theme park, observation deck, and celebrity red-carpet destination. Mr. Stone’s true residence moves to Private STATIC Island."
+    },
+    {
+      "id": "crown-ridge",
+      "name": "Crown Ridge",
+      "range": [
+        18,
+        38
+      ],
+      "elevation": "Upper city",
+      "tone": "champagne",
+      "copy": "Luxury hotels, villas, elite lounges, galleries, high-status event routes, and prestige property approaches."
+    },
+    {
+      "id": "neon-rise",
+      "name": "Neon Rise",
+      "range": [
+        38,
+        58
+      ],
+      "elevation": "Mid city",
+      "tone": "violet",
+      "copy": "Better apartments, Channels, studios, Radio approaches, PLAY lounges, nicer cars, and visible social status."
+    },
+    {
+      "id": "base-loop",
+      "name": "Base Loop",
+      "range": [
+        58,
+        78
+      ],
+      "elevation": "Ring road",
+      "tone": "purple",
+      "copy": "The circular strip around the mountain: valet routes, Market Walk, starter businesses, transit, and public venue access."
+    },
+    {
+      "id": "street-pulse",
+      "name": "Street Pulse",
+      "range": [
+        78,
+        100
+      ],
+      "elevation": "Base",
+      "tone": "street",
+      "copy": "Darker, louder, cheaper, crowded, accessible, and alive with creator hustle, open Signals, street music, and first homes."
+    }
+  ],
+  "routeNodes": [
+    {
+      "id": "penthouse-spawn",
+      "label": "Tower Command Suite",
+      "type": "property",
+      "tier": "summit",
+      "x": 55,
+      "y": 8,
+      "status": "top floor",
+      "objective": "Prototype wake route in the STATIC Tower command suite. Full canon starts from Mr. Stone’s Private STATIC Island estate once the UE5.8 world exists.",
+      "backend": "profile, entity, property_access, inventory_state"
+    },
+    {
+      "id": "penthouse-elevator",
+      "label": "Penthouse Elevator",
+      "type": "travel",
+      "tier": "summit",
+      "x": 57,
+      "y": 13,
+      "status": "interior path",
+      "objective": "Walk out of the penthouse and enter the private elevator down to the tower valet floor.",
+      "backend": "interior_route_state, elevator_jobs, access_rules"
+    },
+    {
+      "id": "static-tower",
+      "label": "STATIC Tower",
+      "type": "landmark",
+      "tier": "summit",
+      "x": 52,
+      "y": 10,
+      "status": "canon locked",
+      "objective": "Anchor the city with the flagship venue, event crown, theme park, and command view.",
+      "backend": "landmarks, events, access_rules"
+    },
+    {
+      "id": "summit-valet",
+      "label": "Tower Valet",
+      "type": "travel",
+      "tier": "crown-ridge",
+      "x": 60,
+      "y": 25,
+      "status": "suv waiting",
+      "objective": "Exit the elevator, wait for the luxury SUV, enter, and start STATIC Radio.",
+      "backend": "vehicle_inventory, route_state, travel_jobs"
+    },
+    {
+      "id": "crown-ridge",
+      "label": "Crown Ridge",
+      "type": "social",
+      "tier": "crown-ridge",
+      "x": 42,
+      "y": 32,
+      "status": "map shell",
+      "objective": "Pass villas, hotels, elite lounges, red carpets, and high-status social architecture.",
+      "backend": "presence, property_access, event_heat"
+    },
+    {
+      "id": "neon-drive",
+      "label": "Mountain Descent",
+      "type": "route",
+      "tier": "neon-rise",
+      "x": 54,
+      "y": 48,
+      "status": "camera path next",
+      "objective": "Cruise through brighter mid-city roads while Radio and billboards react to live events.",
+      "backend": "route_state, radio_session, billboard_queue"
+    },
+    {
+      "id": "radio-building",
+      "label": "Radio Building",
+      "type": "venue",
+      "tier": "neon-rise",
+      "x": 62,
+      "y": 54,
+      "status": "arrival",
+      "objective": "Pull up to the STATIC Radio building, step out, walk in, and take the elevator to the rooftop party.",
+      "backend": "venue_arrivals, elevator_jobs, valet_dropoffs"
+    },
+    {
+      "id": "play-gate",
+      "label": "PLAY Gate",
+      "type": "venue",
+      "tier": "neon-rise",
+      "x": 73,
+      "y": 52,
+      "status": "venue shell",
+      "objective": "Enter playable worlds, limited modes, creator arenas, and future generated game sessions.",
+      "backend": "play_sessions, world_templates, moderation"
+    },
+    {
+      "id": "static-arena",
+      "label": "STATIC Arena",
+      "type": "sport",
+      "tier": "neon-rise",
+      "x": 47,
+      "y": 53,
+      "status": "basketball first",
+      "objective": "Basketball becomes the first sports proof: arena nights, fan heat, VIP boxes, creator teams, and later playable 1v1/3v3/5v5.",
+      "backend": "sports_events, arena_sessions, team_rosters, event_access"
+    },
+    {
+      "id": "club-static",
+      "label": "Club STATIC",
+      "type": "nightlife",
+      "tier": "base-loop",
+      "x": 66,
+      "y": 65,
+      "status": "nightlife",
+      "objective": "Party, aftershows, sports watch parties, creator appearances, VIP tables, and social gravity on the strip.",
+      "backend": "events, venue_access, presence_events, live_rooms"
+    },
+    {
+      "id": "market-walk",
+      "label": "Market Walk",
+      "type": "market",
+      "tier": "base-loop",
+      "x": 43,
+      "y": 66,
+      "status": "fit upgrade",
+      "objective": "Stop at the mall, buy new clothes and jewelry, update outfit/status, then continue to STATIC Radio.",
+      "backend": "items, wishlists, entitlements, payments_later"
+    },
+    {
+      "id": "radio-rooftop",
+      "label": "Radio Rooftop VIP",
+      "type": "event",
+      "tier": "neon-rise",
+      "x": 58,
+      "y": 61,
+      "status": "vip escort",
+      "objective": "Get escorted to VIP, receive a drink and cigar, and sit on the couch while the rooftop party moves around him.",
+      "backend": "stations, rights, audio_sessions, venue_presence"
+    },
+    {
+      "id": "vibe-strip",
+      "label": "Vibe Mode Strip",
+      "type": "route",
+      "tier": "street-pulse",
+      "x": 32,
+      "y": 82,
+      "status": "first person",
+      "objective": "Roll the window down, switch to first-person camera, and cruise past STATIC Strip skyscrapers while STATIC Blues plays.",
+      "backend": "camera_mode, radio_session, route_state, ambient_city_audio"
+    },
+    {
+      "id": "signal-strip",
+      "label": "Signal Strip",
+      "type": "social",
+      "tier": "street-pulse",
+      "x": 31,
+      "y": 84,
+      "status": "feed bridge",
+      "objective": "Open Signals, follow Entities, discover drops, watch clips, and return to the city loop.",
+      "backend": "signals, follows, comments, content_moderation"
+    },
+    {
+      "id": "the-red-light",
+      "label": "The Red Light",
+      "type": "hidden-nightlife",
+      "tier": "street-pulse",
+      "x": 28,
+      "y": 86,
+      "status": "hidden entrance",
+      "objective": "Find the tucked-away bar, enter through the front, cross the interior, and exit through the back into the secret mature-nightlife walking street.",
+      "backend": "age_gate_later, venue_access, discovery_flags, moderation, presence_events"
+    },
+    {
+      "id": "hidden-walking-street",
+      "label": "Hidden Walking Street",
+      "type": "hidden-nightlife",
+      "tier": "street-pulse",
+      "x": 24,
+      "y": 88,
+      "status": "secret corridor",
+      "objective": "Prototype the dense neon walking-street energy: bars, lounges, performer balconies, food stalls, coded doors, VIP stairways, crowd heat, and rain-reflection spectacle.",
+      "backend": "age_gate_later, venue_access, npc_crowds, events, moderation, discovery_flags"
+    },
+    {
+      "id": "velocity-garage",
+      "label": "Velocity Garage",
+      "type": "vehicle",
+      "tier": "street-pulse",
+      "x": 37,
+      "y": 78,
+      "status": "custom shop",
+      "objective": "Build the garage identity loop: paint, rims, underglow, suspension, interior, audio, wraps, and saved vehicle builds.",
+      "backend": "vehicle_builds, inventory_items, entitlements, moderation"
+    },
+    {
+      "id": "night-run-light",
+      "label": "Night Run Light",
+      "type": "race",
+      "tier": "street-pulse",
+      "x": 27,
+      "y": 87,
+      "status": "red-light race",
+      "objective": "Prototype red-light challenges where an NPC or future real player pulls up beside you and launches an instanced race route.",
+      "backend": "race_sessions, route_sessions, non_cash_signal_credits, anti_cheat_later"
+    },
+    {
+      "id": "car-show-plaza",
+      "label": "Car Show Plaza",
+      "type": "event",
+      "tier": "base-loop",
+      "x": 48,
+      "y": 70,
+      "status": "feed event",
+      "objective": "Host car shows promoted through Signals with custom cars, lowriders, slabs, lifted trucks, bikes, motorcycles, stage performances, clips, and drops.",
+      "backend": "events, signals_social, vehicle_builds, presence_events, moderation"
+    },
+    {
+      "id": "takeover-zone",
+      "label": "Takeover Zone",
+      "type": "race",
+      "tier": "street-pulse",
+      "x": 22,
+      "y": 91,
+      "status": "limited-time",
+      "objective": "Controlled fictional underground zone for donuts, burnout choreography, passenger-camera shots, crowd heat, and replay clips.",
+      "backend": "events, route_sessions, replay_clips, safety_rules, moderation"
+    },
+    {
+      "id": "companion-hub",
+      "label": "Companion Hub",
+      "type": "companion",
+      "tier": "base-loop",
+      "x": 72,
+      "y": 68,
+      "status": "guardian select",
+      "objective": "Choose cute sidekicks, guardian bodyguards, robots, creatures, dragons, golems, companion stance, follow distance, and loadout slots.",
+      "backend": "companions, companion_slots, inventory_items, moderation"
+    },
+    {
+      "id": "guardian-yard",
+      "label": "Guardian Yard",
+      "type": "companion",
+      "tier": "neon-rise",
+      "x": 76,
+      "y": 58,
+      "status": "bodyguard test",
+      "objective": "Prototype guardian follow/protect behavior for opt-in danger modes, crew zones, faction arenas, and high-status owner entrances.",
+      "backend": "companions, companion_behavior, conflict_sessions, safety_rules"
+    },
+    {
+      "id": "crew-hq",
+      "label": "Crew HQ",
+      "type": "crew",
+      "tier": "base-loop",
+      "x": 64,
+      "y": 74,
+      "status": "faction base",
+      "objective": "Prototype crew formation, crew identity, roles, banners, home base, and moderated faction presence.",
+      "backend": "crews, crew_memberships, moderation, presence_events"
+    },
+    {
+      "id": "dominion-arena",
+      "label": "Dominion Arena",
+      "type": "conflict",
+      "tier": "street-pulse",
+      "x": 18,
+      "y": 82,
+      "status": "opt-in war mode",
+      "objective": "Prototype instanced crew-versus-crew spectacle with fictional loadouts, territory prestige, non-cash Signal Credits, and no public real-value wagering.",
+      "backend": "conflict_sessions, territory_control, signal_credit_ledger, anti_cheat_later, moderation"
+    },
+    {
+      "id": "fortress-row",
+      "label": "Fortress Row",
+      "type": "crew",
+      "tier": "neon-rise",
+      "x": 69,
+      "y": 57,
+      "status": "upgrade lane",
+      "objective": "Prototype district upgrades: walls, gates, shields, turrets, watch decks, command rooms, and treaty-bloc visual control.",
+      "backend": "territory_control, fortress_upgrades, crews, entitlements, moderation"
+    },
+    {
+      "id": "survival-zone",
+      "label": "Survival Zone",
+      "type": "conflict",
+      "tier": "street-pulse",
+      "x": 16,
+      "y": 92,
+      "status": "wave event",
+      "objective": "Prototype wave-defense events where crews defend against fictional NPC waves in first-person or third-person arcade mode.",
+      "backend": "survival_sessions, npc_waves, replay_clips, rewards_non_cash, moderation"
+    },
+    {
+      "id": "tower-return",
+      "label": "Tower Return",
+      "type": "property",
+      "tier": "summit",
+      "x": 52,
+      "y": 12,
+      "status": "valet tip",
+      "objective": "Third-person far shot of the SUV going back up the mountain, then Mr. Stone gets out, tips valet, and walks back in.",
+      "backend": "route_completion, npc_interaction, property_spawn_return"
+    }
+  ],
+  "sceneModes": {
+    "penthouse": {
+      "id": "penthouse",
+      "label": "Penthouse interior",
+      "camera": "third-person follow",
+      "control": "local avatar controller",
+      "step": 1.65,
+      "bounds": {
+        "x": [
+          51,
+          59
+        ],
+        "y": [
+          5,
+          15
+        ]
+      },
+      "copy": "The first playable scene starts inside Mr. Stone’s top-floor penthouse: glass skyline wall, wardrobe/status area, private hallway, and elevator target."
+    },
+    "valet": {
+      "id": "valet",
+      "label": "Tower valet floor",
+      "camera": "cinematic third-person",
+      "control": "guided interaction",
+      "step": 2.2,
+      "bounds": {
+        "x": [
+          55,
+          63
+        ],
+        "y": [
+          20,
+          29
+        ]
+      },
+      "copy": "The first exterior-interior bridge: elevator opens to valet, SUV arrives, radio state starts, and NPC valet logic will live here later."
+    },
+    "vehicle": {
+      "id": "vehicle",
+      "label": "Vehicle route",
+      "camera": "authored chase cam",
+      "control": "cinematic travel first",
+      "step": 3,
+      "bounds": {
+        "x": [
+          28,
+          70
+        ],
+        "y": [
+          24,
+          84
+        ]
+      },
+      "copy": "Vehicle movement is still authored. Real driving comes after avatar, camera, route, and scene streaming foundations are stable."
+    },
+    "market": {
+      "id": "market",
+      "label": "Market Walk retail",
+      "camera": "shopping third-person",
+      "control": "guided shopping interaction",
+      "step": 2,
+      "bounds": {
+        "x": [
+          39,
+          47
+        ],
+        "y": [
+          62,
+          69
+        ]
+      },
+      "copy": "Market Walk proves the fit, jewelry, inventory, and status loop before the Radio Rooftop arrival."
+    },
+    "venue": {
+      "id": "venue",
+      "label": "Venue approach",
+      "camera": "social third-person",
+      "control": "guided avatar interaction",
+      "step": 2.4,
+      "bounds": {
+        "x": [
+          54,
+          66
+        ],
+        "y": [
+          50,
+          65
+        ]
+      },
+      "copy": "Venue spaces are where NPCs, crowds, props, music, access, and social presence start becoming gameplay."
+    },
+    "city": {
+      "id": "city",
+      "label": "STATIC City exterior",
+      "camera": "world map prototype",
+      "control": "route node movement",
+      "step": 3,
+      "bounds": {
+        "x": [
+          4,
+          96
+        ],
+        "y": [
+          4,
+          96
+        ]
+      },
+      "copy": "The broad city layer remains a world map shell until we have authored street chunks, avatar traversal, vehicles, and optimization."
+    }
+  },
+  "systems": [
+    [
+      "STATIC ID",
+      "One account connects web, mobile, future Unreal client, console, VR, haptics, Entity ownership, inventory, companions, vehicles, and event access."
+    ],
+    [
+      "Create-a-player",
+      "Face/body builder, wardrobe, jewelry, animations, mic identity, optional voice effects, and persistence."
+    ],
+    [
+      "Property/spawn",
+      "Starter rooms, apartments, businesses, penthouses, mansions, castles, suites, and landmark spawn rules."
+    ],
+    [
+      "Vehicle/travel",
+      "Valet, vehicle classes, route selection, cinematic travel clips, and later controllable driving."
+    ],
+    [
+      "STATIC Sports",
+      "Basketball first: arena nights, fan heat, VIP watch parties, creator teams, and playable sports only after real physics/netcode exist."
+    ],
+    [
+      "Velocity/racing",
+      "Red-light challenges, deep car customization, night runs, car shows, takeover zones, and non-cash reputation rewards before any real-value wagering."
+    ],
+    [
+      "Dominion/factions",
+      "Crews, alliances, district-control windows, fortress upgrades, treaty blocs, arcade loadouts, and survival-wave events as opt-in game modes."
+    ],
+    [
+      "Companions/guardians",
+      "Cute sidekicks, guardian bodyguards, robots, dragons, golems, companion squads, stance, loadouts, and opt-in protection behavior."
+    ],
+    [
+      "Story campaign",
+      "GTA-style cinematic open-world chapters with better controls, more realistic graphics, and STATIC creator/social systems; origin missions prove the first slice."
+    ],
+    [
+      "Enterable interiors",
+      "Hero interiors are authored, repeatable interiors are templated, towers use lobby/elevator/instanced floors, and background buildings stay facade-only until needed."
+    ],
+    [
+      "Mall/marketplace",
+      "Clothing, jewelry, skins, accessories, memberships, wishlists, drops, and payments later."
+    ],
+    [
+      "Radio rooftop",
+      "Ambient venue, station UI, now playing, lounge props, and rights-safe/static-made music."
+    ],
+    [
+      "Social presence",
+      "NPC shells, friends/follows, then real multiplayer only after auth, privacy, and moderation."
+    ],
+    [
+      "Venue events",
+      "Concerts, red carpets, premieres, creator drops, crowd heat, and Signals aftershock."
+    ],
+    [
+      "Inventory/status",
+      "Visible fit, vehicle, property, event attendance, access passes, and progression state."
+    ]
+  ],
+  "backendContracts": [
+    [
+      "profiles",
+      "Supabase user profile, display name, handle, role, privacy, moderation status."
+    ],
+    [
+      "platform_links",
+      "Cross-platform login links for web, mobile, PC/console, VR, haptic devices, and future game clients."
+    ],
+    [
+      "entities",
+      "Account-bound Entity identity, body/style choices, current spawn, active outfit, mic/effects settings."
+    ],
+    [
+      "entity_loadouts",
+      "Active outfit, vehicle, property, companion slots, status tier, and visibility state for a playable Entity."
+    ],
+    [
+      "property_access",
+      "Approved/owned spawn locations, businesses, hotel suites, penthouses, mansions, and landmark rights."
+    ],
+    [
+      "inventory_items",
+      "Wardrobe, jewelry, props, vehicles, passes, skins, and future paid entitlements."
+    ],
+    [
+      "world_sessions",
+      "Current route, scene, position, camera state, client type, vehicle, property, and session status across web/game clients."
+    ],
+    [
+      "signals_social",
+      "Follows, saves, comments, public posts, clips, drop announcements, and event aftershock."
+    ],
+    [
+      "radio_sessions",
+      "Station schedule, now playing, host, rights source, simulcast, and user listening state."
+    ],
+    [
+      "presence_events",
+      "NPC shells, friend presence, room occupancy, event heat, reports, bans, and moderation gates."
+    ],
+    [
+      "story_missions",
+      "Mission definitions, chapter arc, beat order, cinematic intent, unlock rules, district dependencies, reward intent, and public/internal visibility."
+    ],
+    [
+      "mission_progress",
+      "Per-account mission state, active beat, completed beats, failed/abandoned state, replay permission, and reward issuance."
+    ],
+    [
+      "building_interiors",
+      "Interior type, building link, hero/template/lobby/facade/event tier, access rules, streaming target, and moderation status."
+    ],
+    [
+      "interior_instances",
+      "Instanced apartment/shop/office/hotel-room state, furniture template, owner access, spawn markers, and reset rules."
+    ],
+    [
+      "age_gates",
+      "Mature venue access policy, consent/version state, moderation locks, region/legal flags, and audit trail for hidden nightlife content."
+    ],
+    [
+      "vehicle_builds",
+      "Account-bound vehicle ownership/customization, paint, wraps, wheels, underglow, suspension, audio, interior, and moderation state."
+    ],
+    [
+      "race_sessions",
+      "Instanced race route, challenger type, non-cash stake, route validation, result, replay pointer, and anti-cheat status later."
+    ],
+    [
+      "sports_events",
+      "Arena schedules, sport type, teams, venue route, spectator state, rights/moderation notes, and event heat."
+    ],
+    [
+      "arena_sessions",
+      "Playable or watch-party sports session state, participants, score shell, court route, replay pointer, and validation status later."
+    ],
+    [
+      "team_rosters",
+      "Creator/studio/crew team membership, role, jersey/skin reference, moderation state, and league-season eligibility."
+    ],
+    [
+      "crews",
+      "Crew profile, owner, roles, banner, home base, moderation status, privacy, recruitment state, and seasonal reputation."
+    ],
+    [
+      "territory_control",
+      "Seasonal district-control state, treaty bloc, visual ownership, contested windows, cooldowns, and reset schedule."
+    ],
+    [
+      "conflict_sessions",
+      "Opt-in arcade conflict instance, crew participants, ruleset, loadout class, result validation, replay pointer, and anti-cheat status later."
+    ],
+    [
+      "fortress_upgrades",
+      "Non-cash district visual upgrades, walls, gates, shields, turrets, command rooms, event stage, and entitlement limits."
+    ],
+    [
+      "companions",
+      "Account-bound companion identity, species/type, scale class, current skin, animation set, owner, moderation state, and safety flags."
+    ],
+    [
+      "companion_slots",
+      "Active companion/bodyguard slots, follow/protect mode, district permissions, performance budget, and opt-in conflict availability."
+    ]
+  ],
+  "visualTargets": [
+    {
+      "id": "arrival-cinema",
+      "title": "Arrival District fidelity",
+      "image": "/assets/static-arrival-district.png",
+      "copy": "The world should feel like the generated Arrival District: dense, cinematic, social, expensive, wet streets, moving light, and venue signage everywhere."
+    },
+    {
+      "id": "signals-street",
+      "title": "Signals as street culture",
+      "image": "/assets/static-signals-boulevard.png",
+      "copy": "Signals should become people, phones, billboards, drops, clips, crowd heat, and creator pulse inside the city."
+    },
+    {
+      "id": "radio-rooftop",
+      "title": "Radio as destination",
+      "image": "/assets/static-radio-rooftop.png",
+      "copy": "Radio is not a playlist screen. It is a rooftop venue, broadcast desk, skyline, crowd, host layer, and Vibe Mode soundtrack."
+    },
+    {
+      "id": "play-gate",
+      "title": "PLAY as a portal district",
+      "image": "/assets/static-play-world-gate.png",
+      "copy": "STATIC PLAY should feel like walking into playable worlds, arenas, lounges, limited modes, and creator-made game entrances."
+    },
+    {
+      "id": "sports-arena",
+      "title": "Arena and fan gravity",
+      "image": "/assets/static-arrival-district.png",
+      "copy": "The Arrival District image already implies sports nights, VIP tables, fan movement, and arena heat. Basketball should be the first playable sport lane."
+    }
+  ],
+  "districtBillboards": [
+    {
+      "id": "summit-arrival-board",
+      "nodeId": "static-tower",
+      "title": "ARRIVE. CONNECT. LIVE.",
+      "src": "/assets/static-arrival-district.png",
+      "x": 51,
+      "y": 13,
+      "width": 4.3,
+      "height": 2.45,
+      "elevation": 4.2,
+      "rotation": -0.25,
+      "tone": "#fff0ca"
+    },
+    {
+      "id": "signals-strip-board",
+      "nodeId": "signal-strip",
+      "title": "SIGNALS LIVE",
+      "src": "/assets/static-signals-boulevard.png",
+      "x": 28,
+      "y": 77,
+      "width": 4.1,
+      "height": 2.3,
+      "elevation": 2.2,
+      "rotation": 0.42,
+      "tone": "#e56cff"
+    },
+    {
+      "id": "radio-rooftop-board",
+      "nodeId": "radio-rooftop",
+      "title": "STATIC RADIO",
+      "src": "/assets/static-radio-rooftop.png",
+      "x": 64,
+      "y": 61,
+      "width": 4,
+      "height": 2.25,
+      "elevation": 2.85,
+      "rotation": -0.55,
+      "tone": "#9d63ff"
+    },
+    {
+      "id": "play-world-board",
+      "nodeId": "play-gate",
+      "title": "STATIC PLAY",
+      "src": "/assets/static-play-world-gate.png",
+      "x": 75,
+      "y": 48,
+      "width": 3.85,
+      "height": 2.18,
+      "elevation": 2.7,
+      "rotation": -0.74,
+      "tone": "#a364ff"
+    },
+    {
+      "id": "static-arena-board",
+      "nodeId": "static-arena",
+      "title": "STATIC ARENA",
+      "src": "/assets/static-arrival-district.png",
+      "x": 48,
+      "y": 49,
+      "width": 3.9,
+      "height": 2.2,
+      "elevation": 3,
+      "rotation": -0.1,
+      "tone": "#ff7a2f"
+    },
+    {
+      "id": "club-static-board",
+      "nodeId": "club-static",
+      "title": "CLUB STATIC",
+      "src": "/assets/static-arrival-district.png",
+      "x": 67,
+      "y": 66,
+      "width": 3.45,
+      "height": 1.95,
+      "elevation": 2.25,
+      "rotation": -0.35,
+      "tone": "#e56cff"
+    },
+    {
+      "id": "market-walk-board",
+      "nodeId": "market-walk",
+      "title": "MARKET WALK",
+      "src": "/assets/static-marketplace-boulevard.png",
+      "x": 39,
+      "y": 65,
+      "width": 3.65,
+      "height": 2.08,
+      "elevation": 2.25,
+      "rotation": 0.34,
+      "tone": "#ffb45e"
+    },
+    {
+      "id": "studio-tower-board",
+      "nodeId": "crown-ridge",
+      "title": "CREATOR TOWER",
+      "src": "/assets/static-studio-tower.png",
+      "x": 36,
+      "y": 34,
+      "width": 3.55,
+      "height": 2,
+      "elevation": 3.35,
+      "rotation": 0.16,
+      "tone": "#d8ad68"
+    }
+  ]
+}

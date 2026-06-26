@@ -1,0 +1,153 @@
+{
+  "generatedAt": "2026-06-23T00:56:24.819Z",
+  "storyTarget": "GTA-style cinematic open-world campaign with STATIC creator/social systems",
+  "firstSlice": "STATIC Origin Missions",
+  "missionLoop": [
+    {
+      "id": "wake",
+      "nodeId": "penthouse-spawn",
+      "label": "Wake Up",
+      "sceneZone": "penthouse",
+      "camera": "interior-third-person",
+      "location": "STATIC Tower / Top-floor penthouse",
+      "objective": "Mr. Stone wakes up in the top-floor penthouse. The city is below him and the first route objective loads.",
+      "stageDirection": "Bedroom lights come alive, skyline reflection hits the glass, subtle STATIC tower hum underneath.",
+      "systemNeeds": [
+        "property spawn",
+        "interior scene",
+        "character rig",
+        "wake/idle animation"
+      ]
+    },
+    {
+      "id": "walk-to-elevator",
+      "nodeId": "penthouse-elevator",
+      "label": "Elevator",
+      "sceneZone": "penthouse",
+      "camera": "follow-cam",
+      "location": "Private penthouse hallway",
+      "objective": "Walk out of the penthouse and enter the private elevator.",
+      "stageDirection": "Camera follows behind. Door opens with gold tower lighting. Elevator panel shows valet floor.",
+      "systemNeeds": [
+        "pathfinding",
+        "door interaction",
+        "elevator transition",
+        "interior streaming"
+      ]
+    },
+    {
+      "id": "valet",
+      "nodeId": "summit-valet",
+      "label": "Valet",
+      "sceneZone": "valet",
+      "camera": "cinematic-third-person",
+      "location": "STATIC Tower valet floor",
+      "objective": "Exit elevator, wait for the luxury SUV, get in, and trigger STATIC Radio.",
+      "stageDirection": "Valet pulls up the black SUV. Door opens. Radio display boots with STATIC Blues queued.",
+      "systemNeeds": [
+        "vehicle spawn",
+        "NPC valet shell",
+        "enter vehicle animation",
+        "radio session state"
+      ]
+    },
+    {
+      "id": "drive-to-radio",
+      "nodeId": "neon-drive",
+      "label": "Drive",
+      "sceneZone": "vehicle",
+      "camera": "vehicle-chase",
+      "location": "Mountain descent / Neon Rise",
+      "objective": "Drive from STATIC Tower down toward Market Walk before the rooftop.",
+      "stageDirection": "Wide chase camera, city lights streak, Radio comes alive, billboards react to Mr. Stone route and mall arrival.",
+      "systemNeeds": [
+        "route camera path",
+        "vehicle path",
+        "billboard queue",
+        "ambient traffic"
+      ]
+    },
+    {
+      "id": "mall-stop",
+      "nodeId": "market-walk",
+      "label": "Mall Stop",
+      "sceneZone": "market",
+      "camera": "shopping-third-person",
+      "location": "Market Walk / Luxury retail floor",
+      "objective": "Stop at the mall, buy clothes and jewelry, and update Mr. Stone’s visible status before the rooftop.",
+      "stageDirection": "SUV pulls up to Market Walk. Boutique lights flare. Jewelry case opens. Fit/status updates before he exits back to the vehicle.",
+      "systemNeeds": [
+        "storefront interaction",
+        "wardrobe inventory",
+        "jewelry inventory",
+        "outfit swap",
+        "status update"
+      ]
+    },
+    {
+      "id": "radio-arrival",
+      "nodeId": "radio-building",
+      "label": "Radio Arrival",
+      "sceneZone": "venue",
+      "camera": "arrival-walk",
+      "location": "STATIC Radio entrance",
+      "objective": "Pull up, step out, enter the Radio building, and ride elevator to rooftop.",
+      "stageDirection": "SUV stops at curb. Crowd audio rises. Security recognizes Mr. Stone and clears the path.",
+      "systemNeeds": [
+        "arrival marker",
+        "vehicle exit animation",
+        "building interior portal",
+        "security NPC shell"
+      ]
+    },
+    {
+      "id": "vip",
+      "nodeId": "radio-rooftop",
+      "label": "VIP Rooftop",
+      "sceneZone": "venue",
+      "camera": "social-third-person",
+      "location": "STATIC Radio rooftop party",
+      "objective": "Escort Mr. Stone to VIP, give him a drink and cigar, then seat him on the VIP couch while people dance.",
+      "stageDirection": "Host greets him. Bottle service glow. Crowd dances around the rooftop while the skyline breathes.",
+      "systemNeeds": [
+        "VIP seat interaction",
+        "drink prop",
+        "cigar prop",
+        "crowd NPC loops",
+        "rooftop audio"
+      ]
+    },
+    {
+      "id": "vibe-mode",
+      "nodeId": "vibe-strip",
+      "label": "Vibe Mode",
+      "sceneZone": "vehicle",
+      "camera": "first-person-window",
+      "location": "STATIC Strip",
+      "objective": "Get back in the SUV, turn on Vibe Mode, roll down the window, and look out at the skyscrapers while STATIC Blues plays.",
+      "stageDirection": "Camera slides into first person. Window lowers. City wind, crowd spillover, neon reflections, blues track.",
+      "systemNeeds": [
+        "first-person camera",
+        "window animation",
+        "city ambience",
+        "rights-safe Static Blues asset"
+      ]
+    },
+    {
+      "id": "return-tower",
+      "nodeId": "tower-return",
+      "label": "Return",
+      "sceneZone": "vehicle",
+      "camera": "far-third-person",
+      "location": "Mountain road back to STATIC Tower",
+      "objective": "Far third-person shot follows the SUV back up the mountain. Mr. Stone exits, tips valet, and walks back in.",
+      "stageDirection": "Camera pulls wide. STATIC Tower dominates the summit. Valet gets tipped. Doors close behind him.",
+      "systemNeeds": [
+        "return route camera",
+        "tip valet interaction",
+        "mission completion state",
+        "property return spawn"
+      ]
+    }
+  ]
+}
