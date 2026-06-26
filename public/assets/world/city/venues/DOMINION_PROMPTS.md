@@ -43,4 +43,3 @@ Prompt:
 ```text
 Create an original STATIC DOMINION survival-wave event zone. Futuristic district defense plaza, glowing wave gates, shield generators, crew command point, NPC spawn portals, spectator balcony, emergency neon lighting, premium black/violet/champagne palette, arcade sci-fi tone, no gore, no real-world violence instructions, no copied zombie/game IP, web-optimized GLB scene chunk with separated gates, command point, generator, and spawn portal meshes.
 ```
-

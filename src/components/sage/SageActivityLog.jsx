@@ -6,4 +6,3 @@ export default function SageActivityLog({ activity = [] }) {
     </div>
   )
 }
-

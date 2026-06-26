@@ -6,4 +6,3 @@ export const entityAnimationMap = {
   postPose: 'PostPose',
   fullBody: 'FullBody',
 }
-

@@ -26,4 +26,3 @@ The Three.js runtime and GLB asset slots are also present. Current 3D figures ar
 ## Asset contract
 
 GLB/glTF files live under `public/assets/entities/<category>/`. Registry paths are defined in `src/lib/entityEngine/entityAssetRegistry.js`. Every cosmetic record should support identity, category, rarity, premium/unlocked state, asset reference, material and color options, body/pose compatibility, attach point, and marketplace readiness. All current items remain unlocked and non-transactional.
-

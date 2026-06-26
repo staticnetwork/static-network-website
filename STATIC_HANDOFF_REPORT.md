@@ -1,7 +1,7 @@
 # STATIC Network Current-State Handoff Report
 
-Generated: 2026-06-17  
-Scope: factual handoff for Sage/ChatGPT and owner review  
+Generated: 2026-06-17
+Scope: factual handoff for Sage/ChatGPT and owner review
 Rule for this report: do not treat a placeholder, inactive route, mock UI, or unconfigured provider as complete.
 
 ## Verification Performed

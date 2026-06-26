@@ -19,4 +19,3 @@ S.A.G.E. is the user-approved operating assistant inside STATIC, not an unsuperv
 - Every action has an audit trail and permissions can be revoked.
 - Automation is rate-limited and must follow provider and platform terms.
 - Open-ended internet automation is not active in the current build.
-

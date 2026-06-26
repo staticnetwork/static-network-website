@@ -34,4 +34,3 @@ Avoid warping buildings, changing faces too much, changing STATIC logos, inventi
 - Motion strength: medium-low to medium
 - Camera motion: slow push-in / handheld drift
 - Style: real-life night event video
-

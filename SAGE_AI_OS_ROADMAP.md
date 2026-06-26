@@ -22,4 +22,3 @@ S.A.G.E. is STATIC’s AI operating layer: concierge, guide, operator, and creat
 Every capability passes through four layers: understand, preview, approve, execute. Sensitive operations never skip preview and approval. The activity log records suggestions, route changes, confirmations, and completed actions without storing voice audio by default.
 
 The current build implements local understanding, route control, Entity/Signal prefills, confirmations, activity history, browser speech, a 3D procedural stand-in, and secure provider boundaries. Production S.A.G.E. GLB assets, paid providers, continuous wake-word detection, external browser tools, and autonomous routines remain future work.
-

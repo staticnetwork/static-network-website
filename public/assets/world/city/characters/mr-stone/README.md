@@ -66,4 +66,3 @@ This asset replaces:
 
 The rig must support the current owner storyboard route:
 penthouse spawn, elevator walk, valet pickup, SUV enter/exit, Market Walk fit/status beat, Radio Rooftop VIP, and Vibe Mode handoff.
-

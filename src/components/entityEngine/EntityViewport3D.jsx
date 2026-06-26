@@ -70,4 +70,3 @@ export default function EntityViewport3D({ onReady, className = '' }) {
 
   return <div ref={mountRef} className={`entity-viewport-3d ${className}`}>{fallback && <p>3D preview unavailable on this device.</p>}</div>
 }
-

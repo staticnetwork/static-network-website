@@ -22,4 +22,3 @@ export function listenOnce({ onStart, onResult, onError, onEnd }) {
   recognition.start()
   return recognition
 }
-

@@ -3,4 +3,3 @@ export function captureCanvas(canvas, fileName = 'static-entity-capture.png') {
     canvas.toBlob((blob) => resolve(blob ? new File([blob], fileName, { type: 'image/png' }) : null), 'image/png')
   })
 }
-

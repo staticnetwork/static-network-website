@@ -29,4 +29,3 @@ export const handler = async (event) => {
     return json(502, { ok: false, provider: 'OpenAI', configured: true, error: error.message || 'S.A.G.E. request failed.' })
   }
 }
-

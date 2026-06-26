@@ -50,4 +50,3 @@ export const handler = async (event) => {
     return json(502, { ok: false, provider: preferred, configured: true, error: error.message || 'Image generation failed.' })
   }
 }
-

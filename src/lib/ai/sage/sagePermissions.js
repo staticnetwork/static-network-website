@@ -11,4 +11,3 @@ export const sensitiveSageIntents = new Set([
 export function sageIntentRequiresConfirmation(intent) {
   return sensitiveSageIntents.has(intent)
 }
-

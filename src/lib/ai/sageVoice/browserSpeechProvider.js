@@ -24,4 +24,3 @@ export function speakWithBrowser(text, options = {}) {
 export function stopBrowserSpeech() {
   window.speechSynthesis?.cancel()
 }
-

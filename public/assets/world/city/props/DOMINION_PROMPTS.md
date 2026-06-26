@@ -37,4 +37,3 @@ Prompt:
 ```text
 Create an original futuristic treaty-bloc defense wall and turret set for STATIC DOMINION. Large alliance wall segments, glowing city shields, non-realistic stylized turrets, tower gates, crew banner mounts, prestige lighting, premium cyber-luxury palette, arcade/sci-fi visual language, no real-world military insignia, no realistic tactical details, no copied IP, web-optimized modular GLB pieces.
 ```
-

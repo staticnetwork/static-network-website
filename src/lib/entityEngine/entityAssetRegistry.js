@@ -16,4 +16,3 @@ export const entityAssetRegistry = {
 export function assetPath(category, fileName) {
   return `${entityAssetRegistry[category] || entityAssetRegistry.base}${fileName}`
 }
-

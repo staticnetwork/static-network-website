@@ -42,4 +42,3 @@ export const handler = async (event) => {
   const publicUrl = process.env.R2_PUBLIC_BASE_URL ? `${process.env.R2_PUBLIC_BASE_URL.replace(/\/$/, '')}/${key}` : ''
   return json(200, { ok: true, key, publicUrl })
 }
-

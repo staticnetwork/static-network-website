@@ -16,4 +16,3 @@ export const handler = async (event) => {
     error: 'Video generation is intentionally held at the adapter boundary until an owner-approved model, duration, and spend limit are selected.',
   })
 }
-

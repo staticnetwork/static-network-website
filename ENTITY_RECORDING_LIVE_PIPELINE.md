@@ -24,4 +24,3 @@
 - Server-side transcoding after a storage and retention policy exists
 
 No camera or microphone should activate without a user gesture and visible indicator. No recording should persist without explicit approval.
-

@@ -77,4 +77,3 @@ export function providerFailure(provider, response) {
 export function base64FromBuffer(buffer) {
   return Buffer.from(buffer).toString('base64')
 }
-

@@ -27,4 +27,3 @@ Known limitations:
 - Not modular wardrobe/accessory architecture.
 - Not the final 8K/modded-GTA-quality visual bar.
 - Needs optimization, animation validation, and licensing cleanup before public production use.
-

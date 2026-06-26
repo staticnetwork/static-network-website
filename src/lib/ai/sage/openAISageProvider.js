@@ -8,4 +8,3 @@ export async function askOpenAISage(input, confirmPaid = false) {
   if (!response.ok) throw new Error(data.error || 'S.A.G.E. provider request failed.')
   return data.text
 }
-

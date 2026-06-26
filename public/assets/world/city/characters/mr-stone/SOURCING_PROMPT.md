@@ -17,4 +17,3 @@ Export target:
 ```text
 public/assets/world/city/characters/mr-stone/mr-stone.glb
 ```
-

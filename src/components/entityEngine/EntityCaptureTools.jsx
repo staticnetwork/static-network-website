@@ -8,4 +8,3 @@ export default function EntityCaptureTools({ canvas, onCapture }) {
   }
   return <div className="entity-capture-tools">{['profile', 'full-body', 'post-pose', 'channel-banner'].map((type) => <button type="button" onClick={() => capture(type)} key={type}>Capture {type}</button>)}</div>
 }
-

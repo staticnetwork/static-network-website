@@ -57,4 +57,3 @@ Prompt:
 ```text
 Create an original fictional controlled takeover zone for a game world. Closed industrial lot, neon cones, camera pads, burnout circle marks, crowd-safe barriers, wet pavement, violet/gold lighting, cinematic underground energy, no real-world illegal street instructions, no real brands, web-optimized GLB scene chunk, separated donut circle, camera platform, crowd zone, and lighting rigs.
 ```
-

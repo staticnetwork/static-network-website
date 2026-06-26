@@ -30,4 +30,3 @@ export async function saveBetaRequest(input) {
   if (error) return { localSaved, cloudSaved: false, cloudError: true }
   return { localSaved, cloudSaved: true }
 }
-

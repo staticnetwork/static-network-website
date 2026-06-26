@@ -15,4 +15,3 @@ export const handler = async () => {
     return json(502, { ok: false, provider: 'Runway', configured: true, validated: false, error: 'Validation request failed.' })
   }
 }
-

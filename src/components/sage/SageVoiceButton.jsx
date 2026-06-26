@@ -34,4 +34,3 @@ export default function SageVoiceButton({ onTranscript, disabled = false }) {
     </div>
   )
 }
-

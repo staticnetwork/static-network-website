@@ -7,4 +7,3 @@ export function generateEntityImages(provider, payload) {
   if (provider === 'openai') return generateWithOpenAI(payload)
   return generateMockEntityImages(payload)
 }
-

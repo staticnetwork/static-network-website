@@ -156,4 +156,3 @@ export default function Sage3DViewport({ gesture = 'idle', compact = false, clas
 
   return <div className={`sage-3d-viewport ${className}`} ref={mountRef}>{failed && <Sage3DPerformanceFallback />}</div>
 }
-

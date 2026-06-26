@@ -3,4 +3,3 @@ export const entityMaterials = {
   silhouette: { color: 0x101722, roughness: 0.42, metalness: 0.68 },
   signalMetal: { color: 0x8fa9b7, roughness: 0.18, metalness: 0.92 },
 }
-

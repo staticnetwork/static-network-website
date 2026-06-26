@@ -1167,7 +1167,7 @@ export function ProfilePage({ profileHandle = '' }) {
 	          <div className={`creator-profile-hero-card ${showingFounder ? 'creator-profile-hero-card--founder' : ''}`}>
 	            <div className={`creator-profile-avatar-stack ${profileFrameTier ? `creator-profile-avatar-stack--${profileFrameTier}` : ''}`}>
                 <span className={`creator-profile-avatar-frame ${profileFrameTier ? `creator-profile-avatar-frame--${profileFrameTier}` : ''}`}>
-  	              <CreatorAvatar creator={creator} size="post" />
+              <CreatorAvatar creator={creator} size="post" />
                   {profileFrameTier === 'trillion' && <TrillionProfileFrame />}
                 </span>
 	              <InlineSignalBadges milestones={milestoneBadges} />
@@ -1179,13 +1179,13 @@ export function ProfilePage({ profileHandle = '' }) {
 	                  <h1>{creator.displayName}</h1>
                     <SignalStrengthBadge score={creator.signalScore} />
                   </div>
-  		            <div className="creator-profile-actions">
-  		              {showingFounder && ownerProfile && <ButtonLink to="/feed#create-post">Create Official Post <ArrowIcon /></ButtonLink>}
-  		              {(showingFounder || showingBot) && !ownerProfile && user && <button className="button button--primary" type="button" onClick={followProfile}>{profileFollow ? 'Following' : `Follow ${showingFounder ? 'Mr. Stone' : creator.displayName}`} <ArrowIcon /></button>}
-  		              {(showingFounder || showingBot) && !user && <ButtonLink to="/login">Login To Follow <ArrowIcon /></ButtonLink>}
-  		              {!showingFounder && !showingBot && <ButtonLink to="/feed#create-post">Create Post <ArrowIcon /></ButtonLink>}
-  		              <ButtonLink to={ownerProfile || (!showingFounder && !showingBot) ? '/account' : '/signup'} variant="glass">{ownerProfile || (!showingFounder && !showingBot) ? 'Edit Profile' : 'Create Account'}</ButtonLink>
-  		            </div>
+            <div className="creator-profile-actions">
+              {showingFounder && ownerProfile && <ButtonLink to="/feed#create-post">Create Official Post <ArrowIcon /></ButtonLink>}
+              {(showingFounder || showingBot) && !ownerProfile && user && <button className="button button--primary" type="button" onClick={followProfile}>{profileFollow ? 'Following' : `Follow ${showingFounder ? 'Mr. Stone' : creator.displayName}`} <ArrowIcon /></button>}
+              {(showingFounder || showingBot) && !user && <ButtonLink to="/login">Login To Follow <ArrowIcon /></ButtonLink>}
+              {!showingFounder && !showingBot && <ButtonLink to="/feed#create-post">Create Post <ArrowIcon /></ButtonLink>}
+              <ButtonLink to={ownerProfile || (!showingFounder && !showingBot) ? '/account' : '/signup'} variant="glass">{ownerProfile || (!showingFounder && !showingBot) ? 'Edit Profile' : 'Create Account'}</ButtonLink>
+            </div>
                 </div>
                 <div className="creator-profile-header-stats" aria-label="Profile stats">
                   {profileHeaderStats.map(([label, value]) => <span key={label}><b>{value}</b>{label}</span>)}

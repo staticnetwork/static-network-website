@@ -45,4 +45,3 @@ Prompt:
 ```text
 Create an original futuristic custom motorcycle or lowrider bike for STATIC Network city events. Candy paint, neon accent lighting, chrome-like unbranded trim, show-bike silhouette, premium night city aesthetic, web-optimized GLB, no real motorcycle logos, no weapons, original design only.
 ```
-

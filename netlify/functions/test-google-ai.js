@@ -10,4 +10,3 @@ export const handler = async () => {
     return json(502, { ok: false, provider: 'Google AI', configured: true, validated: false, error: 'Validation request failed.' })
   }
 }
-

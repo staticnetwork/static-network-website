@@ -10,4 +10,3 @@ export async function speakWithElevenLabs(text, confirmPaid = false) {
   await audio.play()
   return audio
 }
-
