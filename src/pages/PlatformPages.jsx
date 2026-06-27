@@ -34,7 +34,7 @@ const platformBySlug = Object.fromEntries(platforms.map((platform) => [platform.
 
 const platformHeroScenes = {
   channels: {
-    image: '/assets/world/city/heroes/static-channels-signal-walk-v3.png',
+    image: '/assets/world/city/heroes/static-channels-creator-venue-row-v1.png',
     className: 'page-hero--channels-district',
   },
   live: {

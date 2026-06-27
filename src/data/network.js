@@ -146,7 +146,11 @@ export const routeMeta = {
   },
   '/radio': {
     title: 'STATIC Radio | Rooftop Frequency',
-    description: 'Tune into 24/7 city stations for new music, moods, scenes, and digital culture.',
+    description: 'Tune into 24/7 city stations for creator-owned audio, songs, moods, scenes, and digital culture.',
+  },
+  '/tv': {
+    title: 'STATIC TV | Creator Shows and Music Videos',
+    description: 'Watch creator-uploaded AI videos, shows, premieres, channels, and music videos on STATIC TV.',
   },
   '/play': {
     title: 'STATIC PLAY | Playable Imagination',
@@ -340,6 +344,7 @@ export const navGroups = [
       ['Signals', '/signals'],
       ['Channels', '/channels'],
       ['Radio', '/radio'],
+      ['STATIC TV', '/tv'],
       ['STATIC PLAY', '/play'],
       ['STATIC LIVE', '/live'],
       ['Originals', '/originals'],
@@ -361,7 +366,6 @@ export const navGroups = [
   {
     label: 'Build',
     links: [
-      ['Provider Status', '/provider-status'],
       ['STATIC PLAY', '/play'],
       ['Marketplace', '/marketplace'],
       ['LABS', '/labs'],

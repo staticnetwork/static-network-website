@@ -249,6 +249,23 @@ export const officialFounderProfile = {
   verified: true,
 }
 
+export const dexCreatorProfile = {
+  id: 'official-dex',
+  displayName: 'Dex',
+  handle: '@dex',
+  archetype: 'STATIC product architect',
+  vibe: 'Product direction, black-glass social systems, Signal mechanics, and the bridge from STATIC Social into STATIC City',
+  bio: 'VP of product inside STATIC. Building the social layer first, then the world behind it.',
+  signalScore: '12.4M',
+  followerCount: '77.7K',
+  badge: 'STATIC VP',
+  avatarUrl: '/assets/brand/static-mark-official-working.png',
+  profileImageUrl: '/assets/brand/static-mark-official-working.png',
+  coverImageUrl: '/assets/world/city/heroes/static-signals-boulevard-v8-final.png',
+  following: [officialFounderProfile.id],
+  verified: true,
+}
+
 const officialFounderPostIdentity = {
   preview: true,
   visibility: 'Public',
@@ -378,6 +395,88 @@ export const socialBotCreators = botTuples.map(([displayName, handle, archetype,
   profileImageUrl: sharedSocialImages[index % sharedSocialImages.length],
   following: [officialFounderProfile.id],
 }))
+
+export const allSeededSocialCreators = [dexCreatorProfile, ...socialBotCreators]
+
+const dexPostIdentity = {
+  preview: true,
+  visibility: 'Public',
+  entityId: dexCreatorProfile.id,
+  creatorId: dexCreatorProfile.id,
+  entityName: dexCreatorProfile.displayName,
+  entityHandle: dexCreatorProfile.handle,
+  company: dexCreatorProfile.archetype,
+  badge: dexCreatorProfile.badge,
+  signalScore: dexCreatorProfile.signalScore,
+  profileImageUrl: dexCreatorProfile.profileImageUrl,
+  avatarUrl: dexCreatorProfile.avatarUrl,
+  avatarPose: 'Product Architect',
+  tags: 'static-social, product-direction, black-glass',
+  mediaId: '',
+  mediaRefs: [],
+  fileName: '',
+  fileType: 'image/png',
+  aiAssisted: true,
+  aiContribution: 'AI-assisted product direction translated into STATIC Social UI language',
+  aiTools: 'ChatGPT product systems + visual direction',
+  aiProcess: 'STATIC internal product pass',
+  rightsConfirmed: true,
+  signalReward: 100,
+  reactions: { amplified: true, saved: true },
+}
+
+export const dexCreatorPosts = [
+  {
+    ...dexPostIdentity,
+    id: 'official-dex-black-glass-direction',
+    createdAt: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
+    postType: 'Product Direction',
+    type: 'Product Direction',
+    title: 'Black glass is the interface language.',
+    text: 'Pulling STATIC Social away from dashboard energy and into something people can actually live in: glossy black glass, real metallic gold, cleaner posts, visible Signal, and less noise between creator and audience.',
+    caption: 'Pulling STATIC Social away from dashboard energy and into something people can actually live in: glossy black glass, real metallic gold, cleaner posts, visible Signal, and less noise between creator and audience.',
+    mediaUrls: ['/assets/world/city/heroes/static-signals-boulevard-v8-final.png'],
+    previewReactionCount: 1420,
+    previewShareCount: 266,
+    previewCommentCount: 184,
+    comments: [
+      {
+        id: 'dex-comment-black-glass-a',
+        createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
+        entityId: socialBotCreators[39].id,
+        entityName: socialBotCreators[39].displayName,
+        entityHandle: socialBotCreators[39].handle,
+        profileImageUrl: socialBotCreators[39].avatarUrl,
+        avatarUrl: socialBotCreators[39].avatarUrl,
+        text: 'That is the product language. Less console, more luxury app.',
+      },
+      {
+        id: 'dex-comment-black-glass-b',
+        createdAt: new Date(Date.now() - 4 * 60 * 1000).toISOString(),
+        entityId: socialBotCreators[28].id,
+        entityName: socialBotCreators[28].displayName,
+        entityHandle: socialBotCreators[28].handle,
+        profileImageUrl: socialBotCreators[28].avatarUrl,
+        avatarUrl: socialBotCreators[28].avatarUrl,
+        text: 'Save the gold for moments that matter. Signal, post actions, status, and earned rewards.',
+      },
+    ],
+  },
+  {
+    ...dexPostIdentity,
+    id: 'official-dex-signal-score-hook',
+    createdAt: new Date(Date.now() - 19 * 60 * 1000).toISOString(),
+    postType: 'Text',
+    type: 'Text',
+    title: 'Signal has to be visible every day.',
+    text: 'The score is not decoration. It is the reason people keep showing up: post, follow, comment, share, level up, unlock badges, and walk into the next STATIC layer already carrying reputation.',
+    caption: 'The score is not decoration. It is the reason people keep showing up: post, follow, comment, share, level up, unlock badges, and walk into the next STATIC layer already carrying reputation.',
+    mediaUrls: [],
+    previewReactionCount: 1180,
+    previewShareCount: 219,
+    previewCommentCount: 141,
+  },
+]
 
 const commentBank = [
   'This feels expensive. Save this direction.',

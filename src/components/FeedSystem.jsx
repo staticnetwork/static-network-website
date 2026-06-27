@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import {
   addCreatorSignalPoints,
   addSocialNotification,
@@ -18,13 +18,13 @@ import { RadioPlayer } from './NetworkDemos'
 import { Link } from './Router'
 import { ArrowIcon, LiveIndicator, SignalMark, StaticBrandMark } from './UI'
 import { useAuth } from '../context/AuthContext'
-import { officialFounderPosts, officialFounderProfile, previewSocialSignals, socialBotCreators } from '../data/socialBots'
+import { allSeededSocialCreators, dexCreatorPosts, officialFounderPosts, officialFounderProfile, previewSocialSignals } from '../data/socialBots'
 import { signalBarLabel, signalBarsForScore, unlockedSignalMilestones } from '../data/signalMilestones'
 import { useBackendCapability } from '../lib/backendReadiness'
 import { getForYouReason, rankForYouSignals, recordFeedEngagement, recordFeedImpression } from '../lib/launchSystems'
 import { addSocialComment, assistSocialPost, createRadioTrackShell, recordSocialActivity, reportSocialContent, toggleSignalReaction, uploadSocialMedia } from '../lib/socialActions'
 
-const postTypes = ['Text', 'Image', 'Video', 'Music Video', 'Music', 'Audio', 'Link', 'Live Announcement', 'Asset Drop', 'World Concept']
+const postTypes = ['Text', 'Image', 'Video', 'Music Video', 'Show', 'Music', 'Audio', 'Link', 'Live Announcement', 'Asset Drop', 'World Concept']
 const MAX_CAROUSEL_MEDIA = 10
 const carouselPostTypes = new Set(['Image', 'Video'])
 const aiContributionOptions = [
@@ -61,6 +61,7 @@ const mediaRules = {
 
 mediaRules.Music = mediaRules.Audio
 mediaRules['Music Video'] = mediaRules.Video
+mediaRules.Show = mediaRules.Video
 
 function signalBoostForType() {
   return signalRewards.post
@@ -110,11 +111,17 @@ function mediaKindForFile(file, fallbackType = '') {
 
 function isRadioEligiblePostType(type = '') {
   const value = String(type || '').toLowerCase()
+  if (value.includes('video') || value.includes('show')) return false
   return value.includes('music') || value.includes('audio')
 }
 
 function radioMediaModeForPostType(type = '') {
   return String(type || '').toLowerCase().includes('video') ? 'music_video' : 'audio'
+}
+
+function isStaticTvEligiblePostType(type = '') {
+  const value = String(type || '').toLowerCase()
+  return value.includes('video') || value.includes('show')
 }
 
 function genresFromTags(value = '') {
@@ -160,7 +167,7 @@ function profileRouteForHandle(handle = '', currentCreator = null) {
     .map((value) => normalizeHandle(value))
   if (currentHandles.includes(normalized)) return '/profile'
   if (normalized === 'mrstone') return '/profile/mrstone'
-  const seededCreator = socialBotCreators.find((creator) => normalizeHandle(creator.handle) === normalized)
+  const seededCreator = allSeededSocialCreators.find((creator) => normalizeHandle(creator.handle) === normalized)
   if (seededCreator || normalizeHandle(officialFounderProfile.handle) === normalized) return `/profile/${normalized}`
   return `/search?mention=${encodeURIComponent(normalized)}`
 }
@@ -330,6 +337,11 @@ export function EntityComposer({ onTransmitted }) {
     setStatus('')
     const form = new FormData(formElement)
     try {
+      if (isStaticTvEligiblePostType(postType) && !files.length) {
+        setStatus('STATIC TV posts need a video file. Attach a Video, Music Video, or Show upload before posting.')
+        setBusy(false)
+        return
+      }
       const savedCreator = saveCreatorProfile({
         ...creator,
         displayName: form.get('creatorName'),
@@ -373,6 +385,13 @@ export function EntityComposer({ onTransmitted }) {
         fileType: mediaRecords[0]?.fileType || '',
         fileTypes: mediaRecords.map((item) => item.fileType),
         mediaCount: mediaRecords.length,
+        contentSurface: isStaticTvEligiblePostType(postType)
+          ? 'static-tv'
+          : isRadioEligiblePostType(postType)
+            ? 'static-radio'
+            : 'static-social',
+        staticTvSubmittedAt: isStaticTvEligiblePostType(postType) && mediaRecords.length ? new Date().toISOString() : '',
+        staticTvStatus: isStaticTvEligiblePostType(postType) && mediaRecords.length ? (user ? 'uploading' : 'local_available') : '',
         aiAssisted: true,
         aiContribution: form.get('aiContribution'),
         aiTools: form.get('aiTools'),
@@ -410,7 +429,9 @@ export function EntityComposer({ onTransmitted }) {
       setPostType('Text')
       setDraftText('')
       localStorage.removeItem('static_sage_signal_draft')
-      setStatus(`Post published. +${signal.signalReward} Signal.${files.length && user ? ' Uploading media to cloud...' : ''}`)
+      const localTvCopy = isStaticTvEligiblePostType(postType) && files.length && !user ? ' Added to STATIC TV on this device.' : ''
+      const localRadioCopy = isRadioEligiblePostType(postType) && files.length && !user ? ' Added to the local STATIC media player.' : ''
+      setStatus(`Post published. +${signal.signalReward} Signal.${files.length && user ? ' Uploading media to cloud...' : ''}${localTvCopy}${localRadioCopy}`)
       setBusy(false)
       if (files.length && user) {
         try {
@@ -480,6 +501,13 @@ export function EntityComposer({ onTransmitted }) {
               })
             }
           }
+          if (isStaticTvEligiblePostType(postType) && uploaded.length) {
+            updateSignal(signal.id, {
+              staticTvSubmittedAt: new Date().toISOString(),
+              staticTvStatus: 'available',
+              staticTvMediaIds: uploaded.map((item) => item.asset?.id).filter(Boolean),
+            })
+          }
           const metadataError = uploaded.find((item) => item.metadataError)?.metadataError
           const derivativeError = uploaded.find((item) => item.derivativeError)?.derivativeError
           const radioCopy = isRadioEligiblePostType(postType)
@@ -489,11 +517,14 @@ export function EntityComposer({ onTransmitted }) {
                 ? ' Added to the local player queue; cloud radio review needs a schema check.'
                 : ' Added to the STATIC media player queue.'
             : ''
+          const tvCopy = isStaticTvEligiblePostType(postType)
+            ? ' Added to STATIC TV.'
+            : ''
           setStatus(metadataError
             ? `Post published. +${signal.signalReward} Signal. Media uploaded, but metadata needs migration: ${metadataError}`
             : derivativeError
-              ? `Post published. +${signal.signalReward} Signal. Media uploaded. Processing queue needs migration: ${derivativeError}${radioCopy}`
-              : `Post published. +${signal.signalReward} Signal. Media uploaded and queued for processing.${radioCopy}`)
+              ? `Post published. +${signal.signalReward} Signal. Media uploaded. Processing queue needs migration: ${derivativeError}${radioCopy}${tvCopy}`
+              : `Post published. +${signal.signalReward} Signal. Media uploaded and queued for processing.${radioCopy}${tvCopy}`)
         } catch (uploadError) {
           updateSignal(signal.id, { cloudUploadStatus: 'failed', cloudUploadError: uploadError.message || 'Cloud media upload failed.' })
           setStatus(`Post published locally. +${signal.signalReward} Signal. Cloud media upload needs retry.`)
@@ -534,7 +565,7 @@ export function EntityComposer({ onTransmitted }) {
     }
   }
 
-  const acceptsMedia = ['Image', 'Video', 'Music Video', 'Music', 'Audio'].includes(postType)
+  const acceptsMedia = ['Image', 'Video', 'Music Video', 'Show', 'Music', 'Audio'].includes(postType)
   const carouselEnabled = carouselPostTypes.has(postType)
   const activeMediaRule = mediaRules[postType]
   const mediaLimit = carouselEnabled ? MAX_CAROUSEL_MEDIA : 1
@@ -624,13 +655,14 @@ export function EntityComposer({ onTransmitted }) {
 export function EntityFeed({ entityId = '', showComposer = true }) {
   const [signals, setSignals] = useState(() => getSignals())
   const { user, profile } = useAuth()
+  const showMobileStoryRail = useMobileViewport()
   const currentCreator = getCreatorProfile(creatorFallbackFromAuth(profile, user))
   const visibleSignals = useMemo(
     () => entityId ? signals.filter((signal) => signal.entityId === entityId) : signals,
     [entityId, signals],
   )
   const networkSignals = useMemo(
-    () => entityId ? visibleSignals : rankForYouSignals([...officialFounderPosts, ...visibleSignals, ...previewSocialSignals]),
+    () => entityId ? visibleSignals : rankForYouSignals([...officialFounderPosts, ...dexCreatorPosts, ...visibleSignals, ...previewSocialSignals]),
     [entityId, visibleSignals],
   )
 
@@ -646,18 +678,44 @@ export function EntityFeed({ entityId = '', showComposer = true }) {
 
   return (
     <div className="entity-social-feed">
-      {!entityId && <SocialStoryRail />}
+      {!entityId && showMobileStoryRail && <SocialStoryRail />}
       {!entityId && !user && <SignedOutComposerTeaser />}
-      {!entityId && <FeedInlineRadioCard />}
       {showComposer && <EntityComposer onTransmitted={() => setSignals(getSignals())} />}
+      {!entityId && <MobileLiveQuickAction user={user} />}
       {networkSignals.length ? (
         <div className="entity-feed__stream">
-          {networkSignals.map((signal) => <EntitySignalPost signal={signal} currentCreator={currentCreator} key={signal.id} />)}
+          {networkSignals.map((signal, index) => (
+            <Fragment key={signal.id}>
+              <EntitySignalPost signal={signal} currentCreator={currentCreator} />
+              {!entityId && showMobileStoryRail && index === 1 && (
+                <div className="feed-mobile-media-break" aria-label="STATIC media apps">
+                  <FeedInlineRadioCard />
+                  <FeedInlineTvCard />
+                </div>
+              )}
+            </Fragment>
+          ))}
         </div>
       ) : (
         <div className="entity-feed__empty"><SignalMark animated /><span>FEED LISTENING</span><h2>No AI work has been posted here yet.</h2><p>The first post starts building Signal.</p></div>
       )}
     </div>
+  )
+}
+
+function MobileLiveQuickAction({ user }) {
+  const showMobileLive = useMobileViewport()
+  if (!showMobileLive || !user) return null
+
+  return (
+    <section className="feed-mobile-live-action" aria-label="Go live on STATIC Social">
+      <div>
+        <LiveIndicator label="Signal Live" />
+        <strong>Go live from your Signal.</strong>
+        <span>AI creators can join the room while the human crowd builds.</span>
+      </div>
+      <Link to={user ? '/live' : '/login'}>{user ? 'Go Live' : 'Login To Go Live'}</Link>
+    </section>
   )
 }
 
@@ -691,8 +749,8 @@ function FeedInlineRadioCard() {
         <LiveIndicator label="STATIC RADIO" />
         <div>
           <span>Creator station</span>
-          <h2>Music and music videos from inside the network.</h2>
-          <p>Approved creator uploads move into the station rotation.</p>
+          <h2>Creator music from inside the network.</h2>
+          <p>Approved audio uploads move into station rotation. Videos live on STATIC TV.</p>
         </div>
       </div>
       <RadioPlayer mini />
@@ -700,27 +758,56 @@ function FeedInlineRadioCard() {
   )
 }
 
-function SignedOutComposerTeaser() {
+function FeedInlineTvCard() {
+  const showMobileTv = useMobileViewport()
+  if (!showMobileTv) return null
+
   return (
-    <section className="feed-join-card" id="create-post" aria-label="Join STATIC Social to post">
-      <div className="feed-join-card__avatars" aria-hidden="true">
-        {socialBotCreators.slice(0, 5).map((creator) => <CreatorAvatar creator={creator} size="small" key={creator.id} />)}
+    <section className="feed-tv-card" aria-label="STATIC TV">
+      <div className="feed-tv-card__screen" aria-hidden="true">
+        <StaticBrandMark className="static-brand-mark" />
+        <span>TV</span>
       </div>
       <div>
-        <span>Start building Signal</span>
-        <h2>Post AI-made work. Earn Signal. Get discovered.</h2>
-        <p>Browse freely. Create a profile when you are ready to post images, videos, audio, music, links, drops, and AI-assisted work.</p>
+        <LiveIndicator label="STATIC TV" />
+        <h2>Shows, channels, and music videos.</h2>
+        <p>Video uploads live here instead of Radio.</p>
       </div>
-      <div className="feed-join-card__actions">
-        <Link to="/signup">Create profile <ArrowIcon /></Link>
-        <Link to="/login">Log in</Link>
+      <Link to="/tv">Open TV</Link>
+    </section>
+  )
+}
+
+function SignedOutComposerTeaser() {
+  return (
+    <section className="feed-join-card feed-join-card--composer" id="create-post" aria-label="Join STATIC Social to post">
+      <div className="feed-join-card__entry">
+        <div className="feed-join-card__avatars" aria-hidden="true">
+          {allSeededSocialCreators.slice(0, 1).map((creator) => <CreatorAvatar creator={creator} size="small" key={creator.id} />)}
+        </div>
+        <label className="feed-join-card__prompt" htmlFor="signed-out-post-preview">
+          <span>Post AI-made work</span>
+          <textarea
+            id="signed-out-post-preview"
+            rows="2"
+            placeholder="What did you make with AI?"
+            aria-describedby="signed-out-post-note"
+          />
+        </label>
+        <div className="feed-join-card__actions">
+          <Link to="/signup">Post</Link>
+        </div>
       </div>
-      <div className="feed-join-card__rules">
-        <b>+100 Post</b>
-        <b>+100 Follow</b>
-        <b>+10 Comment</b>
-        <b>+20 Share</b>
+      <div className="feed-join-card__toolbar">
+        <div className="feed-join-card__rules" aria-label="Supported post formats">
+          <Link to="/signup"><b>Image</b></Link>
+          <Link to="/signup"><b>Video</b></Link>
+          <Link to="/signup"><b>Audio</b></Link>
+          <Link to="/signup"><b>Signal</b></Link>
+        </div>
+        <Link className="feed-join-card__live" to="/login"><LiveIndicator label="Go Live" /></Link>
       </div>
+      <p className="feed-join-card__note" id="signed-out-post-note">Create an account to publish, earn Signal, go live, and save your work.</p>
     </section>
   )
 }
@@ -728,7 +815,7 @@ function SignedOutComposerTeaser() {
 function SocialStoryRail() {
   return (
     <section className="social-story-rail" aria-label="Creator stories">
-      {socialBotCreators.slice(0, 14).map((creator) => (
+      {allSeededSocialCreators.slice(0, 14).map((creator) => (
         <Link to={`/profile/${normalizeHandle(creator.handle)}`} key={creator.id}>
           <CreatorAvatar creator={creator} size="small" />
           <b>{creator.displayName.split(' ')[0]}</b>

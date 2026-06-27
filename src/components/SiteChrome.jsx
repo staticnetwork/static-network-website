@@ -20,6 +20,14 @@ const productDirectory = [
       ['Profile', '/profile', 'Live', 'Your public identity, posts, Signal, and saved work.'],
     ],
   },
+  {
+    label: 'STATIC Media Apps',
+    links: [
+      ['STATIC Radio', '/radio', 'Live', 'Audio-first creator music, uploads, and station rotation.'],
+      ['STATIC TV', '/tv', 'Live', 'Creator shows, premieres, channels, and music videos.'],
+      ['STATIC Studio', '/studio', 'Soon', 'Create tools that feed Social, TV, Radio, and the future game client.'],
+    ],
+  },
 ]
 
 const desktopNav = [
@@ -30,11 +38,10 @@ const desktopNav = [
 ]
 
 const appNav = [
+  ['Feed', '/feed', 'feed'],
   ['Search', '/search', 'search'],
-  ['Following', '/my-signal', 'following'],
   ['Post', '/feed#create-post', 'post'],
   ['Messages', '/messages', 'messages'],
-  ['Notifications', '/notifications', 'notifications'],
   ['Profile', '/profile', 'profile'],
 ]
 
@@ -154,8 +161,9 @@ export function SiteHeader() {
   const { path } = useRouter()
   const { configured, user, profile, signOut, cloudSync } = useAuth()
   const syncLabel = cloudSyncLabel({ configured, user, cloudSync })
-  const socialRoutes = ['/feed', '/profile', '/search', '/my-signal', '/friends', '/messages', '/notifications']
-  const productLabel = socialRoutes.includes(path) ? 'SOCIAL' : 'NETWORK'
+  const socialRoutes = ['/feed', '/profile', '/search', '/my-signal', '/friends', '/messages', '/notifications', '/tv']
+  const socialRouteActive = socialRoutes.some((route) => path === route || path.startsWith(`${route}/`))
+  const productLabel = socialRouteActive ? 'APP' : 'NETWORK'
 
   useEffect(() => {
     setOpen(false)
@@ -190,7 +198,7 @@ export function SiteHeader() {
     <header className="site-header">
       <Link className="wordmark" to="/feed" aria-label="STATIC Network feed">
         <StaticBrandMark animated />
-        <span>STATIC</span>
+        <span>{socialRouteActive ? 'STATIC Social' : 'STATIC'}</span>
         <small>{productLabel}</small>
       </Link>
 
@@ -308,7 +316,7 @@ export function SiteFooter() {
         {navGroups.map((group) => (
           <div className="footer-links" key={group.label}>
             <p>{group.label}</p>
-            {group.links.slice(0, 6).map(([label, to]) => (
+            {group.links.filter(([, to]) => to !== '/contact' && to !== '/provider-status').slice(0, 6).map(([label, to]) => (
               <Link key={to} to={to}>{label}</Link>
             ))}
           </div>

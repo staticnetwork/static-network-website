@@ -80,7 +80,8 @@ function isMusicVideoSignal(signal = {}) {
 
 function isRadioMediaSignal(signal = {}) {
   const type = String(signal.postType || signal.type || '').toLowerCase()
-  return type.includes('music') || type.includes('audio') || isMusicVideoSignal(signal)
+  if (isMusicVideoSignal(signal) || type.includes('video') || type.includes('show')) return false
+  return type.includes('music') || type.includes('audio')
 }
 
 function mediaKindForRadioSignal(signal = {}, index = 0, url = '') {
@@ -103,18 +104,19 @@ function radioTracksFromSignals(signals = []) {
         const mediaRef = refs[index] || ''
         if (!mediaUrl && !mediaRef) return null
         const mediaKind = mediaKindForRadioSignal(signal, index, mediaUrl)
+        if (mediaKind === 'video') return null
         const creatorName = signal.entityName || signal.creator || 'STATIC Creator'
         return {
           id: `creator-media-${signal.id}-${index}`,
-          name: mediaKind === 'video' ? 'STATIC MUSIC VIDEO' : 'STATIC RADIO',
-          frequency: mediaKind === 'video' ? 'MV' : 'LIVE',
-          genre: mediaKind === 'video' ? 'MUSIC VIDEO / CREATOR UPLOAD' : 'MUSIC / CREATOR UPLOAD',
+          name: 'STATIC RADIO',
+          frequency: 'LIVE',
+          genre: 'MUSIC / CREATOR UPLOAD',
           listeners: signal.previewReactionCount ? `${signal.previewReactionCount}` : 'QUEUE',
           host: 'STATIC Social',
           track: signal.title || signal.fileNames?.[index] || signal.fileName || 'Untitled upload',
           artist: creatorName,
           next: signal.text || signal.caption || 'Creator media from STATIC Social.',
-          visual: mediaKind === 'video' ? 'station--drive' : 'station--one',
+          visual: 'station--one',
           mediaKind,
           mediaUrl,
           mediaRef,
@@ -155,7 +157,7 @@ function cloudRadioTrackToStation(row = {}, index = 0) {
   const mediaUrl = track.audio_url || mediaAsset.public_url || trackData.mediaUrl || trackData.publicUrl || ''
   const mediaKind = cloudRadioMediaKind(track, mediaUrl)
   const genres = normalizeRadioGenres(track.genres)
-  const stationName = stationRow.name || trackData.stationName || (mediaKind === 'video' ? 'STATIC Music Video' : 'STATIC Radio')
+  const stationName = stationRow.name || trackData.stationName || 'STATIC Radio'
   const artist = track.artist || trackData.artist || trackData.creator || 'STATIC Creator'
 
   return {
@@ -163,14 +165,14 @@ function cloudRadioTrackToStation(row = {}, index = 0) {
     stationId: stationRow.station_id || stationRow.id || 'static-radio',
     trackId: track.id,
     name: stationName,
-    frequency: stationRow.frequency || trackData.frequency || (mediaKind === 'video' ? 'MV' : '24/7'),
-    genre: genres.length ? genres.join(' / ').toUpperCase() : mediaKind === 'video' ? 'MUSIC VIDEO / APPROVED' : 'MUSIC / APPROVED',
+    frequency: stationRow.frequency || trackData.frequency || '24/7',
+    genre: genres.length ? genres.join(' / ').toUpperCase() : 'MUSIC / APPROVED',
     listeners: trackData.listeners || 'APPROVED',
     host: stationRow.data?.host || trackData.host || 'STATIC Radio',
     track: track.title || mediaAsset.file_name || 'Untitled track',
     artist,
     next: stationRow.description || trackData.description || trackData.caption || 'Approved creator media in STATIC rotation.',
-    visual: mediaKind === 'video' ? 'station--drive' : 'station--one',
+    visual: 'station--one',
     mediaKind,
     mediaUrl,
     mediaRef: '',
@@ -556,7 +558,7 @@ export function RadioPlayer({ mini = false }) {
         const scheduled = await getCloudRadioStationSchedule('static-radio').catch(() => [])
         const rows = scheduled.length ? scheduled : await getCloudApprovedRadioTracks(60)
         if (!active) return
-        setApprovedCloudTracks(rows.map((row, index) => cloudRadioTrackToStation(row, index)).filter((item) => item.mediaUrl))
+        setApprovedCloudTracks(rows.map((row, index) => cloudRadioTrackToStation(row, index)).filter((item) => item.mediaUrl && item.mediaKind !== 'video'))
         setRadioSource(rows.length ? (scheduled.length ? 'station-schedule' : 'approved-library') : 'empty')
       } catch {
         if (!active) return

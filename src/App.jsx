@@ -17,7 +17,7 @@ import {
   EntityCreatePage,
   EntityProfilePage,
 } from './pages/EntityPages'
-import { AvatarPage, ChannelCustomizePage, FeedPage, ProfilePage, SocialUtilityPage } from './pages/NetworkOSPages'
+import { AvatarPage, ChannelCustomizePage, FeedPage, ProfilePage, SocialUtilityPage, StaticTvPage } from './pages/NetworkOSPages'
 import {
   ContactPage,
   DirectoryPage,
@@ -89,6 +89,8 @@ function RouteView({ ownerAccess }) {
       return <EntityChannelPage />
     case '/radio':
       return <RadioPage />
+    case '/tv':
+      return <StaticTvPage />
     case '/play':
       return <PlayPage />
     case '/live':
@@ -172,7 +174,7 @@ export default function App() {
     const timer = window.setTimeout(() => {
       document.documentElement.classList.remove('static-gate-fade')
       sessionStorage.removeItem('static_gate_transition')
-    }, 1100)
+    }, 520)
     return () => {
       window.clearTimeout(timer)
       document.documentElement.classList.remove('static-gate-fade')

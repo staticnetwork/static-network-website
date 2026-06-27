@@ -6699,3 +6699,97 @@ h2,
     animation: none !important;
   }
 }
+
+/* Public route mobile QA guardrails. */
+@media (max-width: 760px) {
+  html,
+  body,
+  #root,
+  .app-shell,
+  .site-main {
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .page-frame {
+    width: min(100% - 24px, var(--frame));
+    max-width: calc(100vw - 24px);
+  }
+
+  .page-hero--image,
+  .page-hero--compact.page-hero--image {
+    padding-top: calc(var(--header) + 6px);
+  }
+
+  .page-hero--image .page-hero__media {
+    min-height: 206px;
+    max-height: min(54vw, 360px);
+  }
+
+  .page-hero--image .page-hero__layout,
+  .page-hero--compact.page-hero--image .page-hero__layout,
+  .page-hero--signals-boulevard .page-hero__layout,
+  .page-hero--compact.page-hero--signals-boulevard .page-hero__layout,
+  .page-hero--channels-district .page-hero__layout,
+  .page-hero--radio-rooftop .page-hero__layout,
+  .page-hero--compact.page-hero--radio-rooftop .page-hero__layout,
+  .page-hero--play-world-gate .page-hero__layout {
+    padding-top: 12px;
+    padding-bottom: 24px;
+  }
+
+  .button-row,
+  .creator-profile-actions,
+  .social-feed-topbar__actions,
+  .feed-join-card__actions {
+    flex-wrap: wrap;
+    min-width: 0;
+  }
+
+  .button-row > *,
+  .creator-profile-actions > *,
+  .social-feed-topbar__actions > *,
+  .feed-join-card__actions > * {
+    min-width: min(100%, 180px);
+  }
+
+  .section-row,
+  .platform-action-surface,
+  .channel-premiere-calendar,
+  .channel-premiere-calendar > div,
+  .labs-console,
+  .labs-console__stage,
+  .labs-console__nav,
+  .studio-coming-soon,
+  .studio-coming-soon__grid,
+  .membership-grid,
+  .membership-card,
+  .play-generator,
+  .play-reaction-kiosk,
+  .radio-player,
+  .contact-form,
+  .form-page-grid,
+  .footer-grid,
+  .site-footer {
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
+  }
+
+  .labs-console__nav,
+  .studio-coming-soon__grid,
+  .membership-grid,
+  .form-page-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .labs-console__nav button,
+  .radio-player__stations > button,
+  .channel-premiere-calendar a,
+  .membership-card,
+  .play-generator,
+  .contact-form {
+    width: 100%;
+    min-width: 0;
+  }
+}

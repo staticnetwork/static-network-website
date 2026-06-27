@@ -168,11 +168,34 @@ The first public AI feature is the **AI Post Assistant**: improve a draft
 caption, suggest tags, categorize the post, and confirm whether the post is
 clear enough to qualify as AI-made or AI-assisted.
 
+## STATIC Product Family
+
+STATIC Network is the brand house and canonical web home. Individual product
+surfaces should be designed so they can live together on the website now and
+stand alone as native apps later:
+
+1. STATIC Social: AI-made and AI-assisted posts, profiles, follows, Signal,
+   comments, saves, live rooms, creator discovery, and social identity.
+2. STATIC Radio: audio-first creator music, stations, uploads, queues, and
+   always-on listening.
+3. STATIC TV: creator shows, channels, premieres, music videos, and video
+   uploads.
+4. STATIC Studio: creation tools that feed Social, Radio, TV, Store, and the
+   future game client.
+5. STATIC Store: assets, drops, Static Coins, subscriptions, and future
+   creator commerce.
+6. STATIC City / STATIC Game: the future Unreal-powered world where profiles,
+   Signal, media, assets, and blueprints become playable.
+
+Implementation rule: a standalone product may be promoted before its full
+native-app version exists, but the site must not imply unavailable backend
+features are already live. Use present-tense only for shipped web behavior.
+
 ## Eight Systems
 
 1. STATIC Signals: AI-made and AI-assisted mixed-media discovery feed.
 2. STATIC Channels: creator-owned profiles, worlds, and destinations.
-3. STATIC Radio: always-on stations and creator broadcasts.
+3. STATIC Radio: always-on audio stations and creator broadcasts.
 4. STATIC PLAY: prompted, remixable games and interactive worlds.
 5. STATIC LIVE: premieres, performances, events, and watch parties.
 6. STATIC Originals: shows, films, animation, documentaries, and franchises.
@@ -196,6 +219,9 @@ backbone for public 24/7 stations; it can only be considered later as an
 optional personal account/taste/metadata integration if its terms allow the
 specific use case.
 
+STATIC Radio is audio-first. Music videos, shows, premieres, episodes, and
+video channels belong to STATIC TV.
+
 Radio V1 architecture:
 
 1. Tracks enter STATIC through upload, STATIC Originals, approved AI generation,
@@ -207,6 +233,25 @@ Radio V1 architecture:
    Direct browser inserts are reserved for signed-in owner/listener actions.
 5. Provider jobs for music generation are queued as backend work and must remain
    pending until a server-side adapter, cost approval, and rights policy exist.
+
+## STATIC TV Direction
+
+STATIC TV is the video network surface for creator shows, music videos,
+episodes, premieres, channels, and future originals. On the current web build,
+Video, Music Video, and Show posts can appear in STATIC TV. Full Netflix-style
+rows, adaptive transcoding, channel pages, seasons, recommendations, content
+moderation, rights workflow, and native TV/mobile apps are future backend and
+product work.
+
+V1 behavior:
+
+1. Video-class posts stay out of STATIC Radio.
+2. Video, Music Video, and Show posts are eligible for STATIC TV.
+3. The TV page acts as a public player and queue, not a fake streaming service.
+4. Any future upload pipeline must add server-side moderation, transcoding,
+   thumbnails, rights declarations, and storage lifecycle rules.
+5. STATIC TV should share account identity, Signal, follows, and creator
+   profiles with STATIC Social.
 
 Current radio SQL path:
 

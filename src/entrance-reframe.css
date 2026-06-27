@@ -172,7 +172,7 @@
   height: 100vh;
   background: #fff;
   transform: none;
-  animation: static-gate-whiteout 1.22s cubic-bezier(.7, 0, .14, 1) both;
+  animation: static-gate-whiteout .72s cubic-bezier(.7, 0, .14, 1) both;
 }
 
 html.static-gate-fade body::before {
@@ -182,7 +182,7 @@ html.static-gate-fade body::before {
   pointer-events: none;
   content: '';
   background: #fff;
-  animation: static-feed-white-fade 1.05s ease both;
+  animation: static-feed-white-fade .52s ease both;
 }
 
 @keyframes static-gate-breathe {

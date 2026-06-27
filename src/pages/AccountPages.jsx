@@ -700,7 +700,7 @@ function OwnerRadioPanel({ radioAdmin, onRefresh, onReview }) {
         <div>
           <LiveIndicator label="STATIC RADIO OPS" />
           <h2>Radio review and rotation.</h2>
-          <p>Approve creator-owned songs and music videos into public STATIC Radio. Rejected tracks are blocked from rotation. Pending tracks stay private until reviewed.</p>
+          <p>Approve creator-owned songs and audio uploads into public STATIC Radio. Music videos belong to STATIC TV. Rejected tracks are blocked from rotation. Pending tracks stay private until reviewed.</p>
         </div>
         <button className="button button--glass" type="button" onClick={onRefresh} disabled={radioAdmin.loading}>{radioAdmin.loading ? 'Syncing...' : 'Refresh Queue'}</button>
       </div>

@@ -142,12 +142,11 @@ export default function PortalGatePage({ requestedPath = '' }) {
 
   function enterStatic() {
     if (portalOpening || portalEntered) return
-    playPortalCharge()
     sessionStorage.setItem('static_gate_entered', '1')
     sessionStorage.setItem('static_gate_transition', '1')
     setPortalOpening(true)
-    window.setTimeout(() => setPortalEntered(true), 820)
-    window.setTimeout(() => navigate('/feed'), 1240)
+    window.setTimeout(() => setPortalEntered(true), 560)
+    window.setTimeout(() => navigate('/feed'), 760)
   }
 
   function completeVenueTravel() {
@@ -841,64 +840,6 @@ function DistrictAmbience() {
       <small>{audioState === 'armed' ? 'Starts on first tap' : 'Synthetic street bed'}</small>
     </button>
   )
-}
-
-function playPortalCharge() {
-  try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext
-    if (!AudioContext) return
-    const context = new AudioContext()
-    const master = context.createGain()
-    const hum = context.createOscillator()
-    const spark = createNoiseSource(context, 1.2)
-    const sparkFilter = context.createBiquadFilter()
-    const sparkGain = context.createGain()
-    const overtone = context.createOscillator()
-    const overtoneGain = context.createGain()
-
-    master.gain.setValueAtTime(0.0001, context.currentTime)
-    master.gain.exponentialRampToValueAtTime(0.18, context.currentTime + 0.05)
-    master.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 1.35)
-    master.connect(context.destination)
-
-    hum.type = 'sawtooth'
-    hum.frequency.setValueAtTime(52, context.currentTime)
-    hum.frequency.exponentialRampToValueAtTime(122, context.currentTime + 0.72)
-    hum.connect(master)
-
-    overtone.type = 'triangle'
-    overtone.frequency.setValueAtTime(210, context.currentTime)
-    overtone.frequency.exponentialRampToValueAtTime(680, context.currentTime + 0.5)
-    overtoneGain.gain.setValueAtTime(0.0001, context.currentTime)
-    overtoneGain.gain.exponentialRampToValueAtTime(0.045, context.currentTime + 0.12)
-    overtoneGain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 1.05)
-    overtone.connect(overtoneGain).connect(master)
-
-    sparkFilter.type = 'bandpass'
-    sparkFilter.frequency.setValueAtTime(2100, context.currentTime)
-    sparkFilter.frequency.exponentialRampToValueAtTime(5200, context.currentTime + 0.72)
-    sparkFilter.Q.setValueAtTime(3.6, context.currentTime)
-    sparkGain.gain.setValueAtTime(0.0001, context.currentTime)
-    sparkGain.gain.exponentialRampToValueAtTime(0.08, context.currentTime + 0.2)
-    sparkGain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 1.08)
-    spark.connect(sparkFilter).connect(sparkGain).connect(master)
-
-    hum.start()
-    overtone.start()
-    spark.start()
-    window.setTimeout(() => {
-      ;[hum, overtone, spark].forEach((node) => {
-        try {
-          node.stop()
-        } catch {
-          // Short one-shot sound; nodes may already be stopped.
-        }
-      })
-      context.close().catch(() => {})
-    }, 1450)
-  } catch {
-    // Portal entry still works without Web Audio support.
-  }
 }
 
 function createDistrictAmbience() {

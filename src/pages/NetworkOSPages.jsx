@@ -6,11 +6,11 @@ import { LiveSignalFeed, RadioPlayer } from '../components/NetworkDemos'
 import { Link, RouteSEO, useRouter } from '../components/Router'
 import { ArrowIcon, ButtonLink, LiveIndicator, PageHero, SignalMark, StaticBrandMark } from '../components/UI'
 import { useAuth } from '../context/AuthContext'
-import { officialFounderPosts, officialFounderProfile, previewSocialSignals, socialBotCreators } from '../data/socialBots'
+import { allSeededSocialCreators, dexCreatorPosts, dexCreatorProfile, officialFounderPosts, officialFounderProfile, previewSocialSignals, socialBotCreators } from '../data/socialBots'
 import { unlockedSignalMilestones } from '../data/signalMilestones'
 import { getCreatorAnalytics, getTrendingTokens, recordSearchQuery } from '../lib/launchSystems'
 import { addCreatorSignalPoints, addSocialNotification, getCreatorProfile, getCurrentEntity, getFollow, getFollows, getNetworkStats, getSignals, getSocialNotifications, markSocialNotificationsRead, normalizeHandle, subscribeToNetworkUpdates } from '../lib/staticStore'
-import { getActiveSocialPresence, getSocialActivityNotifications, getSocialMessageThreads, getSocialThreadMessages, markSocialActivityRead, markSocialThreadRead, recordSocialActivity, saveSocialPushSubscription, searchSocialProfiles, sendSocialMessage, toggleSocialFollow } from '../lib/socialActions'
+import { getSocialActivityNotifications, getSocialMessageThreads, getSocialThreadMessages, markSocialActivityRead, markSocialThreadRead, recordSocialActivity, saveSocialPushSubscription, searchSocialProfiles, sendSocialMessage, toggleSocialFollow } from '../lib/socialActions'
 
 function creatorFallbackFromAuth(profile, user) {
   return {
@@ -50,7 +50,7 @@ function isMrStoneAccount(user, profile) {
 export function FeedPage({ signalsMode = false, followedOnly = false }) {
   const [stats, setStats] = useState(() => getNetworkStats())
   const { user, profile } = useAuth()
-  const creator = getCreatorProfile(creatorFallbackFromAuth(profile, user))
+  const creator = user ? getCreatorProfile(creatorFallbackFromAuth(profile, user)) : dexCreatorProfile
   useEffect(() => subscribeToNetworkUpdates(() => setStats(getNetworkStats())), [])
   if (followedOnly) return <FollowingPage />
   const path = followedOnly ? '/my-signal' : signalsMode ? '/signals' : '/feed'
@@ -108,10 +108,12 @@ export function FeedPage({ signalsMode = false, followedOnly = false }) {
             <LiveSignalFeed searchable followedOnly={followedOnly} />
           ) : (
             <>
-              <SocialFeedTopBar stats={stats} creator={creator} user={user} />
-              <SocialRadioCard mobile />
-              <div className="ai-social-workspace">
-                <EntityFeed showComposer={Boolean(user)} />
+              <div className="ai-social-workspace ai-social-workspace--northstar">
+                <SocialDesktopRail stats={stats} creator={creator} user={user} />
+                <main className="ai-social-main-column" aria-label="STATIC Social feed">
+                  <SocialFeedTopBar stats={stats} creator={creator} user={user} />
+                  <EntityFeed showComposer={Boolean(user)} />
+                </main>
                 <AiSocialSideRail stats={stats} creator={creator} user={user} />
               </div>
             </>
@@ -157,71 +159,79 @@ function SignalsBillboardWall() {
 }
 
 function SocialFeedTopBar({ stats, creator, user }) {
-  const [activePresence, setActivePresence] = useState([])
-
-  useEffect(() => {
-    let mounted = true
-    function loadPresence() {
-      getActiveSocialPresence(18)
-        .then((rows) => {
-          if (mounted) setActivePresence(rows)
-        })
-        .catch(() => {
-          if (mounted) setActivePresence([])
-        })
-    }
-    loadPresence()
-    const interval = window.setInterval(loadPresence, 45_000)
-    return () => {
-      mounted = false
-      window.clearInterval(interval)
-    }
-  }, [])
-
-  const activeSeedCreators = socialBotCreators.slice(0, 7).map((bot, index) => ({
-    ...bot,
-    status: index % 3 === 0 ? 'live' : 'online',
-    route: index % 3 === 0 ? '/live' : index % 3 === 1 ? '/feed' : `/profile/${normalizeHandle(bot.handle)}`,
-    lastSeenAt: new Date(Date.now() - index * 65_000).toISOString(),
-  }))
-  const activeCreators = [
-    ...activePresence,
-    ...activeSeedCreators.filter((bot) => !activePresence.some((item) => normalizeHandle(item.handle) === normalizeHandle(bot.handle))),
-  ].slice(0, 10)
-
   return (
     <section className="social-feed-topbar" aria-label="STATIC Social feed controls">
-      <div className="social-feed-topbar__identity">
-        <CreatorAvatar creator={creator} size="small" />
+      <Link className="social-feed-search-bar" to="/search">
+        <span aria-hidden="true" />
+        <b>Search creators, signals, and more...</b>
+      </Link>
+      <nav className="social-feed-quick-actions" aria-label="Social shortcuts">
+        <Link to="/messages" aria-label="Messages">Messages</Link>
+        <Link to="/notifications" aria-label="Notifications">Notifications</Link>
+        <Link to={user ? '/profile' : '/login'} aria-label="Profile"><CreatorAvatar creator={creator} size="small" /></Link>
+      </nav>
+      <div className="social-feed-panel-heading">
         <div>
           <span>STATIC Social</span>
           <h1>Feed</h1>
-          {user && <SignalStrengthBadge score={creator.signalScore} compact />}
         </div>
+        <small>{stats.publicSignals + previewSocialSignals.length + officialFounderPosts.length + dexCreatorPosts.length} posts live</small>
       </div>
       <nav className="social-feed-tabs" aria-label="Feed filters">
         <Link className="is-active" to="/feed">For You</Link>
         <Link to="/my-signal">Following</Link>
         <Link to="/live">Live</Link>
+        <Link to="/tv">STATIC TV</Link>
         <Link to="/marketplace">Store</Link>
       </nav>
-      <div className="social-feed-topbar__actions">
-        <span><b>{stats.publicSignals + previewSocialSignals.length}</b> posts</span>
-        <span><b>{stats.follows}</b> following</span>
-        <Link to={user ? '/feed#create-post' : '/signup'}>{user ? 'Post' : 'Join'}</Link>
-      </div>
-      <div className="social-active-strip" aria-label="Active creators">
-        <span>Active now</span>
-        <div>
-          {activeCreators.map((item) => (
-            <Link className={`social-active-avatar is-${item.status || 'online'}`} to={item.route || `/profile/${normalizeHandle(item.handle)}`} key={`${item.id || item.handle}-${item.route}`}>
-              <CreatorAvatar creator={item} size="small" />
-              <b>{item.displayName?.split(' ')[0] || 'STATIC'}</b>
-            </Link>
-          ))}
-        </div>
-      </div>
     </section>
+  )
+}
+
+function SocialDesktopRail({ creator, user }) {
+  const navItems = [
+    ['Feed', '/feed'],
+    ['Explore', '/discover'],
+    ['Signals', '/signals'],
+    ['TV', '/tv'],
+    ['Messages', '/messages'],
+    ['Notifications', '/notifications'],
+    ['Profile', user ? '/profile' : '/login'],
+    ['Saved', '/my-signal'],
+    ['Library', '/marketplace'],
+  ]
+  const profileRoute = user ? '/profile' : '/profile/dex'
+  const scoreLabel = creator.signalScore || '0'
+
+  return (
+    <aside className="social-desktop-rail" aria-label="STATIC Social navigation">
+      <Link className="social-desktop-rail__brand" to="/feed">
+        <StaticBrandMark className="static-brand-mark" />
+        <span>STATIC <b>Social</b></span>
+      </Link>
+      <Link className="social-desktop-rail__profile" to={profileRoute}>
+        <CreatorAvatar creator={creator} size="large" />
+        <strong>{creator.displayName || 'STATIC Creator'}</strong>
+        <small>{creator.handle || '@static'}</small>
+      </Link>
+      <div className="social-desktop-rail__signal">
+        <b>{scoreLabel}</b>
+        <span>Signal</span>
+        <SignalStrengthBadge score={creator.signalScore} compact />
+      </div>
+      <div className="social-desktop-rail__primary-actions">
+        <Link to={user ? '/feed#create-post' : '/signup'}>Create</Link>
+        <Link to={user ? '/live' : '/login'}>Go Live</Link>
+      </div>
+      <nav className="social-desktop-rail__nav">
+        {navItems.map(([label, route]) => (
+          <Link className={label === 'Feed' ? 'is-active' : ''} to={route} key={label}>
+            <span aria-hidden="true" />
+            {label}
+          </Link>
+        ))}
+      </nav>
+    </aside>
   )
 }
 
@@ -251,23 +261,15 @@ function AiNetworkLaunchPanel() {
   )
 }
 
-function AiSocialSideRail({ stats, creator, user }) {
-  const suggestions = socialBotCreators.slice(14, 19)
-  const trends = ['#STATICSocial', '#AIMade', '#RadioDrops', '#CreatorChannels']
+function AiSocialSideRail({ stats, user }) {
+  const suggestions = [dexCreatorProfile, ...socialBotCreators.slice(14, 18)]
+  const trends = ['#STATICSocial', '#AIMade', '#StaticTV', '#CreatorChannels']
   const liveWatchers = [socialBotCreators[3], socialBotCreators[13], socialBotCreators[24], socialBotCreators[37]]
 
   return (
     <aside className="ai-social-side-rail" aria-label="STATIC Social sidebar">
-      <section className="creator-signal-card">
-        <div className="social-profile-mini">
-          <CreatorAvatar creator={creator} size="small" />
-          <div>
-            <h3>{creator.displayName}</h3>
-            <p>{creator.handle}</p>
-          </div>
-          <SignalStrengthBadge score={creator.signalScore} compact />
-        </div>
-      </section>
+      <SocialRadioCard />
+      <SocialTvCard />
       <section className="social-live-card">
         <LiveIndicator label="Signal Live" />
         <strong>Go live</strong>
@@ -278,7 +280,6 @@ function AiSocialSideRail({ stats, creator, user }) {
         </div>
         <Link to={user ? '/live' : '/login'}>{user ? 'Go live now' : 'Login to start'}</Link>
       </section>
-      <SocialRadioCard />
       <section className="signal-economy-card social-suggestions-card">
         <h3>Suggested creators</h3>
         {suggestions.map((item) => (
@@ -306,9 +307,209 @@ function SocialRadioCard({ mobile = false }) {
       <div className="social-radio-card__header">
         <LiveIndicator label="STATIC RADIO" />
         <h3>Creator music in rotation.</h3>
-        <p>Approved songs and music videos from STATIC creators move into the public station.</p>
+        <p>Approved songs and audio uploads from STATIC creators move into the public station.</p>
       </div>
       <RadioPlayer mini />
+    </section>
+  )
+}
+
+function getStaticTvSignals() {
+  return [
+    ...getSignals().slice().reverse(),
+    ...officialFounderPosts,
+    ...dexCreatorPosts,
+    ...previewSocialSignals,
+  ].filter(isStaticTvSignal)
+}
+
+const staticTvFilters = [
+  ['all', 'All'],
+  ['music-videos', 'Music Videos'],
+  ['shows', 'Shows'],
+  ['premieres', 'Premieres'],
+  ['channels', 'Channels'],
+]
+
+function formatStaticTvCount(value = 0) {
+  const number = Number(value || 0)
+  if (number >= 1_000_000) return `${Number((number / 1_000_000).toFixed(1))}M`
+  if (number >= 1_000) return `${Number((number / 1_000).toFixed(1))}K`
+  return String(number)
+}
+
+function staticTvText(signal = {}) {
+  return [
+    signal.title,
+    signal.text,
+    signal.caption,
+    signal.tags,
+    signal.postType,
+    signal.type,
+  ].map((value) => String(value || '').toLowerCase()).join(' ')
+}
+
+function staticTvKind(signal = {}) {
+  const text = staticTvText(signal)
+  if (text.includes('music video')) return 'Music Video'
+  if (text.includes('show') || text.includes('series') || text.includes('episode')) return 'Show'
+  if (text.includes('premiere') || text.includes('red carpet') || text.includes('theater')) return 'Premiere'
+  if (text.includes('live') || text.includes('performance')) return 'Live Replay'
+  return 'Video'
+}
+
+function staticTvDuration(signal = {}) {
+  if (signal.duration) return signal.duration
+  const durations = ['02:18', '04:44', '08:37', '12:06', '23:47', '01:02:40']
+  const key = String(signal.id || signal.title || '').split('').reduce((sum, letter) => sum + letter.charCodeAt(0), 0)
+  return durations[key % durations.length]
+}
+
+function staticTvCreator(signal = {}) {
+  const handle = signal.entityHandle || signal.handle || signal.creatorHandle || ''
+  const normalized = normalizeHandle(handle)
+  const seeded = allSeededSocialCreators.find((creator) => normalizeHandle(creator.handle) === normalized)
+  if (seeded) return seeded
+  if (normalizeHandle(officialFounderProfile.handle) === normalized) return officialFounderProfile
+  if (normalizeHandle(dexCreatorProfile.handle) === normalized) return dexCreatorProfile
+  return {
+    id: normalized || signal.creatorId || signal.id || 'static-tv-creator',
+    displayName: signal.entityName || signal.creator || 'STATIC Creator',
+    handle: handle || '@static',
+    avatarUrl: signal.profileImageUrl || signal.avatarUrl || '',
+    signalScore: signal.signalScore || 0,
+  }
+}
+
+function staticTvStats(signal = {}) {
+  const reactions = Number(signal.previewReactionCount || signal.reactions?.length || 0)
+  const comments = Number(signal.previewCommentCount || signal.comments?.length || 0)
+  const shares = Number(signal.previewShareCount || signal.shareCount || 0)
+  const views = Number(signal.previewViewCount || (reactions * 6) + (comments * 18) + (shares * 10) + 1240)
+  return {
+    views: formatStaticTvCount(views),
+    reactions: formatStaticTvCount(reactions),
+    comments: formatStaticTvCount(comments),
+    shares: formatStaticTvCount(shares),
+    duration: staticTvDuration(signal),
+  }
+}
+
+function staticTvMatchesFilter(signal, filter) {
+  if (filter === 'all') return true
+  if (filter === 'channels') return true
+  const text = staticTvText(signal)
+  const kind = staticTvKind(signal).toLowerCase()
+  if (filter === 'music-videos') return kind.includes('music') || text.includes('music') || text.includes('song') || text.includes('radio')
+  if (filter === 'shows') return kind.includes('show') || text.includes('series') || text.includes('episode') || text.includes('film')
+  if (filter === 'premieres') return kind.includes('premiere') || text.includes('premiere') || text.includes('red carpet') || text.includes('live')
+  return true
+}
+
+function staticTvCreatorChannels(tvSignals = []) {
+  const channels = new Map()
+  tvSignals.forEach((signal) => {
+    const creator = staticTvCreator(signal)
+    const key = normalizeHandle(creator.handle || creator.displayName || creator.id)
+    if (!channels.has(key)) {
+      channels.set(key, {
+        creator,
+        count: 0,
+        latest: signal,
+        views: 0,
+      })
+    }
+    const channel = channels.get(key)
+    const stats = staticTvStats(signal)
+    channel.count += 1
+    channel.views += Number(String(stats.views).replace(/[^0-9.]/g, '')) || 0
+    channel.latest = signal
+  })
+  return Array.from(channels.values()).slice(0, 8)
+}
+
+function getStaticTvCollections(tvSignals = []) {
+  const byText = (pattern) => tvSignals.filter((signal) => pattern.test(staticTvText(signal)))
+  const fallbackSlice = (start, count) => tvSignals.slice(start, start + count)
+  const featured = tvSignals.slice(0, 8)
+  const musicVideos = byText(/music video|music|song|radio|performance|rooftop/)
+  const shows = byText(/show|series|episode|film|theater|channel|wondercore|arena/)
+  const premieres = byText(/premiere|red carpet|live|launch|official/)
+
+  return [
+    ['featured', 'Featured on STATIC TV', featured],
+    ['music-videos', 'Music Videos', musicVideos.length ? musicVideos.slice(0, 8) : fallbackSlice(0, 6)],
+    ['shows', 'Shows & Episodes', shows.length ? shows.slice(0, 8) : fallbackSlice(2, 6)],
+    ['premieres', 'Premieres & Live Replays', premieres.length ? premieres.slice(0, 8) : fallbackSlice(1, 6)],
+  ].filter(([, , items]) => items.length)
+}
+
+function isStaticTvSignal(signal = {}) {
+  const mediaUrl = signalPrimaryMediaUrl(signal)
+  const mediaTypes = [
+    signal.fileType,
+    signal.file_type,
+    signal.postType,
+    signal.type,
+    ...(Array.isArray(signal.fileTypes) ? signal.fileTypes : []),
+    ...(Array.isArray(signal.file_types) ? signal.file_types : []),
+  ].map((value) => String(value || '').toLowerCase()).join(' ')
+
+  return mediaTypes.includes('music video')
+    || mediaTypes.includes('music-video')
+    || mediaTypes.includes('show')
+    || /\bvideo\b/.test(mediaTypes)
+    || /\.(mp4|mov|webm|m4v)(\?|$)/i.test(mediaUrl)
+}
+
+function StaticTvPreviewMedia({ signal, controls = false }) {
+  const mediaUrl = signalPrimaryMediaUrl(signal)
+  const mediaRef = signal.mediaRefs?.[0] || signal.mediaId || ''
+  const mediaType = String(signal.fileType || signal.file_type || signal.postType || signal.type || '')
+  const isVideo = /^video/i.test(mediaType) || /\.(mp4|mov|webm|m4v)(\?|$)/i.test(mediaUrl) || /music video|show|video/i.test(mediaType)
+  if (mediaRef && isVideo) return <StoredMedia mediaRef={mediaRef} as="video" controls={controls} alt={signal.title || 'STATIC TV'} />
+  if (mediaUrl && /\.(mp4|mov|webm|m4v)(\?|$)/i.test(mediaUrl)) return <video src={mediaUrl} controls={controls} muted={!controls} loop={!controls} playsInline preload="metadata" />
+  if (mediaUrl) return <img src={mediaUrl} alt={signal.title || 'STATIC TV'} />
+  return <div className="static-tv-empty-frame"><StaticBrandMark className="static-brand-mark" /><span>STATIC TV</span></div>
+}
+
+function SocialTvCard() {
+  const [tvSignals, setTvSignals] = useState(() => getStaticTvSignals())
+  const featured = tvSignals[0]
+  const queue = tvSignals.slice(1, 4)
+  const featuredStats = featured ? staticTvStats(featured) : null
+
+  useEffect(() => subscribeToNetworkUpdates(() => setTvSignals(getStaticTvSignals())), [])
+
+  return (
+    <section className="social-tv-card" aria-label="STATIC TV">
+      <div className="social-tv-card__backdrop" aria-hidden="true" />
+      <header className="social-tv-card__header">
+        <LiveIndicator label="STATIC TV" />
+        <h3>Shows, videos, premieres.</h3>
+        <p>The network video player for AI-made shows, music videos, creator channels, and live replays.</p>
+      </header>
+      {featured ? (
+        <Link className="social-tv-card__feature" to="/tv">
+          <span className="social-tv-card__screen"><StaticTvPreviewMedia signal={featured} /></span>
+          <span className="social-tv-card__copy">
+            <b>{featured.title || 'STATIC TV upload'}</b>
+            <small>{featured.entityName || featured.creator || 'STATIC Creator'} / {staticTvKind(featured)} / {featuredStats?.duration}</small>
+          </span>
+        </Link>
+      ) : (
+        <Link className="social-tv-card__feature social-tv-card__feature--empty" to="/feed#create-post">
+          <span className="social-tv-card__screen"><StaticBrandMark className="static-brand-mark" /></span>
+          <span className="social-tv-card__copy">
+            <b>Upload the first STATIC TV drop.</b>
+            <small>Post a Video, Music Video, or Show.</small>
+          </span>
+        </Link>
+      )}
+      <div className="social-tv-card__queue">
+        {queue.map((item) => <Link to={`/feed#${item.id}`} key={item.id}>{item.title || 'Creator video'}<small>{staticTvKind(item)} / {item.entityHandle || item.handle || '@static'}</small></Link>)}
+        <Link to="/tv">Open STATIC TV <ArrowIcon /></Link>
+      </div>
     </section>
   )
 }
@@ -352,6 +553,185 @@ function signalPrimaryMediaUrl(signal) {
     || signal.mediaUrl
     || signal.image
     || ''
+}
+
+export function StaticTvPage() {
+  const [tvSignals, setTvSignals] = useState(() => getStaticTvSignals())
+  const [activeId, setActiveId] = useState(() => getStaticTvSignals()[0]?.id || '')
+  const [filter, setFilter] = useState('all')
+  const filteredSignals = useMemo(
+    () => tvSignals.filter((signal) => staticTvMatchesFilter(signal, filter)),
+    [filter, tvSignals],
+  )
+  const collections = useMemo(
+    () => getStaticTvCollections(filteredSignals.length ? filteredSignals : tvSignals),
+    [filteredSignals, tvSignals],
+  )
+  const channels = useMemo(
+    () => staticTvCreatorChannels(tvSignals),
+    [tvSignals],
+  )
+  const active = tvSignals.find((item) => item.id === activeId) || filteredSignals[0] || tvSignals[0]
+  const activeCreator = active ? staticTvCreator(active) : null
+  const activeStats = active ? staticTvStats(active) : null
+  const queue = (filteredSignals.length ? filteredSignals : tvSignals).filter((item) => item.id !== active?.id).slice(0, 8)
+
+  useEffect(() => subscribeToNetworkUpdates(() => {
+    const next = getStaticTvSignals()
+    setTvSignals(next)
+    setActiveId((current) => current && next.some((item) => item.id === current) ? current : next[0]?.id || '')
+  }), [])
+
+  function chooseFilter(nextFilter) {
+    const nextSignals = tvSignals.filter((signal) => staticTvMatchesFilter(signal, nextFilter))
+    setFilter(nextFilter)
+    setActiveId(nextSignals[0]?.id || tvSignals[0]?.id || '')
+  }
+
+  return (
+    <>
+      <RouteSEO
+        path="/tv"
+        title="STATIC TV | Creator Shows, Channels, and Music Videos"
+        description="Watch creator-uploaded AI videos, shows, premieres, and music videos on STATIC TV."
+      />
+      <section className="section static-tv-page">
+        <div className="page-frame static-tv-shell">
+          <header className="static-tv-hero">
+            <div className="static-tv-hero__kicker">
+              <LiveIndicator label="STATIC TV" />
+              <span>Creator video network</span>
+            </div>
+            <h1>Watch the AI-made channel layer.</h1>
+            <p>STATIC TV collects creator-uploaded videos, shows, music videos, live replays, and channel drops into one premium viewing surface. Post from STATIC Social, then watch it here.</p>
+            <div className="static-tv-hero__stats">
+              <article><b>{tvSignals.length}</b><span>Videos</span></article>
+              <article><b>{channels.length}</b><span>Channels</span></article>
+              <article><b>{collections.length}</b><span>Collections</span></article>
+            </div>
+            <div className="button-row">
+              <ButtonLink to="/feed#create-post">Upload Video <ArrowIcon /></ButtonLink>
+              <ButtonLink to="/feed" variant="glass">Back To Feed</ButtonLink>
+            </div>
+          </header>
+          <nav className="static-tv-tabs" aria-label="STATIC TV categories">
+            {staticTvFilters.map(([id, label]) => (
+              <button className={id === filter ? 'is-active' : ''} type="button" onClick={() => chooseFilter(id)} key={id}>{label}</button>
+            ))}
+          </nav>
+          <div className="static-tv-layout">
+            <article className="static-tv-player">
+              <div className="static-tv-player__screen">
+                {active ? <StaticTvPreviewMedia signal={active} controls /> : <StaticBrandMark className="static-brand-mark" />}
+              </div>
+              <div className="static-tv-player__meta">
+                <div className="static-tv-player__chips">
+                  <span>{active ? staticTvKind(active) : 'STATIC TV'}</span>
+                  {activeStats && <span>{activeStats.duration}</span>}
+                  <span>AI-made / assisted</span>
+                </div>
+                <h2>{active?.title || 'No videos uploaded yet.'}</h2>
+                <p>{active?.text || active?.caption || 'Post a Video, Music Video, or Show from STATIC Social to start the channel.'}</p>
+                {active && (
+                  <>
+                    <Link className="static-tv-player__creator" to={`/profile/${normalizeHandle(activeCreator?.handle)}`}>
+                      <CreatorAvatar creator={activeCreator} size="small" />
+                      <span><b>{activeCreator?.displayName || 'STATIC Creator'}</b><small>{activeCreator?.handle || '@static'}</small></span>
+                      <SignalStrengthBadge score={activeCreator?.signalScore || active?.signalScore || 0} compact />
+                    </Link>
+                    <div className="static-tv-player__stats" aria-label="STATIC TV stats">
+                      <span><b>{activeStats.views}</b> views</span>
+                      <span><b>{activeStats.reactions}</b> likes</span>
+                      <span><b>{activeStats.comments}</b> comments</span>
+                      <span><b>{activeStats.shares}</b> shares</span>
+                    </div>
+                    <div className="static-tv-player__actions">
+                      <Link to={`/feed#${active.id}`}>Open Post <ArrowIcon /></Link>
+                      <Link to={`/profile/${normalizeHandle(activeCreator?.handle)}`}>Open Channel</Link>
+                      <Link to="/feed#create-post">Upload Yours</Link>
+                    </div>
+                  </>
+                )}
+              </div>
+            </article>
+            <aside className="static-tv-queue" aria-label="STATIC TV queue">
+              <div className="console-topbar"><span>Up Next</span><span>{queue.length} videos</span></div>
+              {queue.map((item) => (
+                <button className={item.id === active?.id ? 'is-active' : ''} type="button" onClick={() => setActiveId(item.id)} key={item.id}>
+                  <span><StaticTvPreviewMedia signal={item} /></span>
+                  <b>{item.title || 'Creator video'}</b>
+                  <small>{item.entityName || item.creator || 'STATIC Creator'} / {staticTvKind(item)} / {staticTvDuration(item)}</small>
+                </button>
+              ))}
+              {!queue.length && <p>Video queue is waiting for more creator uploads.</p>}
+            </aside>
+          </div>
+          <section className="static-tv-rails" aria-label="STATIC TV collections">
+            {collections.map(([id, title, items]) => (
+              <StaticTvRail title={title} items={items} activeId={active?.id} onSelect={setActiveId} key={id} />
+            ))}
+          </section>
+          <section className="static-tv-channel-grid" aria-label="STATIC TV creator channels">
+            <div className="static-tv-section-heading">
+              <span>Creator channels</span>
+              <h2>Every video profile becomes a channel.</h2>
+            </div>
+            <div className="static-tv-channel-grid__items">
+              {channels.map((channel) => (
+                <Link className="static-tv-channel-card" to={`/profile/${normalizeHandle(channel.creator.handle)}`} key={channel.creator.id || channel.creator.handle}>
+                  <CreatorAvatar creator={channel.creator} size="small" />
+                  <span><b>{channel.creator.displayName}</b><small>{channel.creator.handle}</small></span>
+                  <em>{channel.count} uploads</em>
+                </Link>
+              ))}
+            </div>
+          </section>
+          <section className="static-tv-upload-guide" aria-label="STATIC TV upload standards">
+            <div>
+              <span>Upload standard</span>
+              <h2>Video posts become television when the work is ready.</h2>
+              <p>Choose Video, Music Video, or Show in the post composer, attach the file, confirm it is AI-made or AI-assisted, then publish. STATIC TV keeps video separate from Radio so music, shows, and creator channels each get the right surface.</p>
+            </div>
+            <div className="static-tv-upload-guide__rules">
+              {[
+                'AI-made or AI-assisted work only',
+                'Own the rights to what you upload',
+                'Video, music video, and show posts route to TV',
+                'Audio and music uploads route to Radio',
+              ].map((rule) => <span key={rule}>{rule}</span>)}
+            </div>
+          </section>
+        </div>
+      </section>
+    </>
+  )
+}
+
+function StaticTvRail({ title, items, activeId, onSelect }) {
+  if (!items.length) return null
+  return (
+    <section className="static-tv-rail">
+      <div className="static-tv-section-heading">
+        <span>STATIC TV</span>
+        <h2>{title}</h2>
+      </div>
+      <div className="static-tv-rail__track">
+        {items.map((item) => {
+          const stats = staticTvStats(item)
+          return (
+            <button className={item.id === activeId ? 'is-active' : ''} type="button" onClick={() => onSelect(item.id)} key={item.id}>
+              <span className="static-tv-rail__poster">
+                <StaticTvPreviewMedia signal={item} />
+                <em>{stats.duration}</em>
+              </span>
+              <b>{item.title || 'STATIC TV upload'}</b>
+              <small>{item.entityName || item.creator || 'STATIC Creator'} / {staticTvKind(item)}</small>
+            </button>
+          )
+        })}
+      </div>
+    </section>
+  )
 }
 
 function ProfilePostCard({ signal }) {
@@ -583,8 +963,8 @@ function SearchPage() {
   const plainNeedle = mentionNeedle || tagNeedle || raw
   const tokenNeedle = normalizeSocialToken(plainNeedle)
   const textNeedle = normalizeSearchText(raw)
-  const networkSignals = [...officialFounderPosts, ...getSignals(), ...previewSocialSignals]
-  const searchableCreators = [officialFounderProfile, ...socialBotCreators]
+  const networkSignals = [...officialFounderPosts, ...dexCreatorPosts, ...getSignals(), ...previewSocialSignals]
+  const searchableCreators = [officialFounderProfile, ...allSeededSocialCreators]
   const searchResults = raw
     ? networkSignals.filter((signal) => {
         const haystack = signalSearchHaystack(signal)
@@ -670,7 +1050,7 @@ function SearchPage() {
               <section>
                 <h2>Creators to watch</h2>
                 <div className="social-list-stack">
-                  {[officialFounderProfile, ...socialBotCreators.slice(0, 5)].map((creator) => <CreatorResultRow creator={creator} note="View" key={creator.id} />)}
+                  {[officialFounderProfile, dexCreatorProfile, ...socialBotCreators.slice(0, 4)].map((creator) => <CreatorResultRow creator={creator} note="View" key={creator.id} />)}
                 </div>
               </section>
             </div>
@@ -688,10 +1068,11 @@ function FollowingPage() {
     .filter((follow) => follow.targetType === 'creator')
     .map((follow) => {
       if (follow.targetId === officialFounderProfile.id) return officialFounderProfile
+      if (follow.targetId === dexCreatorProfile.id) return dexCreatorProfile
       return socialBotCreators.find((creator) => creator.id === follow.targetId)
     })
     .filter(Boolean)
-  const suggestions = followedCreators.length ? followedCreators : [officialFounderProfile, ...socialBotCreators.slice(0, 9)]
+  const suggestions = followedCreators.length ? followedCreators : [officialFounderProfile, dexCreatorProfile, ...socialBotCreators.slice(0, 8)]
 
   return (
     <>
@@ -1058,7 +1439,7 @@ export function ProfilePage({ profileHandle = '' }) {
   const [signals, setSignals] = useState(() => getSignals())
   const normalizedProfileHandle = profileHandle ? normalizeHandle(profileHandle) : ''
   const botProfile = normalizedProfileHandle
-    ? socialBotCreators.find((item) => normalizeHandle(item.handle) === normalizedProfileHandle)
+    ? allSeededSocialCreators.find((item) => normalizeHandle(item.handle) === normalizedProfileHandle)
     : null
   const ownerProfile = isMrStoneAccount(user, profile)
   const showingFounder = normalizedProfileHandle === 'mrstone' || (!profileHandle && (ownerProfile || !user))
@@ -1069,23 +1450,23 @@ export function ProfilePage({ profileHandle = '' }) {
       ? botProfile
       : getCreatorProfile(creatorFallbackFromAuth(profile, user))
   const [profileFollow, setProfileFollow] = useState(() => getFollow(creator.id, 'creator'))
-  const networkSignals = useMemo(() => [...signals, ...previewSocialSignals], [signals])
+  const networkSignals = useMemo(() => [...dexCreatorPosts, ...signals, ...previewSocialSignals], [signals])
   const founderSignals = networkSignals.filter((signal) => signal.creatorId === officialFounderProfile.id || signal.entityHandle === officialFounderProfile.handle)
   const profileSignals = networkSignals.filter((signal) => signal.creatorId === creator.id || signal.entityHandle === creator.handle)
   const taggedSignals = networkSignals.filter((signal) => signal.creatorId !== creator.id && signalMentionsHandle(signal, creator.handle)).slice(0, 6)
   const recentPosts = showingFounder
     ? [...founderSignals, ...officialFounderPosts].slice(0, 6)
     : profileSignals.slice(0, 6)
-  const botIndex = showingBot ? Math.max(0, socialBotCreators.findIndex((item) => item.id === creator.id)) : -1
+  const botIndex = showingBot ? Math.max(0, allSeededSocialCreators.findIndex((item) => item.id === creator.id)) : -1
   const profileFollowerCount = showingFounder
     ? socialBotCreators.length
     : showingBot
-      ? `${(3.2 + botIndex * 0.41).toFixed(1)}K`
+      ? creator.followerCount || `${(3.2 + botIndex * 0.41).toFixed(1)}K`
       : stats.follows
   const profileFollowingCount = showingFounder
     ? 0
     : showingBot
-      ? 1
+      ? creator.following?.length || 1
       : Object.values(getFollows()).length
   const profileHeaderStats = [
     ['Posts', recentPosts.length],
@@ -1104,6 +1485,10 @@ export function ProfilePage({ profileHandle = '' }) {
   const profileBannerRef = showingFounder ? '' : creator.bannerRef
   const milestoneBadges = showingFounder ? unlockedSignalMilestones('1T') : unlockedSignalMilestones(creator.signalScore)
   const profileFrameTier = milestoneBadges.length ? milestoneBadges[milestoneBadges.length - 1].tier : ''
+  const viewerOwnsProfile = Boolean(user) && (
+    (showingFounder && ownerProfile)
+    || (!showingFounder && !showingBot)
+  )
 
   useEffect(() => subscribeToNetworkUpdates(() => {
     setStats(getNetworkStats())
@@ -1194,7 +1579,7 @@ export function ProfilePage({ profileHandle = '' }) {
 	              {milestoneBadges.length > 0 && <SignalMilestoneRack milestones={milestoneBadges} />}
 	            </div>
 	          </div>
-          <CreatorAnalyticsPanel analytics={creatorAnalytics} />
+          {viewerOwnsProfile && <CreatorAnalyticsPanel analytics={creatorAnalytics} />}
           <section className="creator-profile-content" aria-label="Profile posts and tagged posts">
             <div className="creator-profile-tabs" role="tablist" aria-label="Profile content sections">
               <span>Posts <b>{recentPosts.length}</b></span>

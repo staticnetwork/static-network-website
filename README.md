@@ -6,6 +6,8 @@ Key routes:
 
 - `/feed` - STATIC Social feed
 - `/profile` - public/social profile surface
+- `/radio` - STATIC Radio audio-first station/player surface
+- `/tv` - STATIC TV creator videos, shows, premieres, and music videos
 - `/studio` - STATIC Studio creation-suite preview
 - `/marketplace` - Static Store and Static Coins launch surface
 - `/static-plus` - planned `$19.99/month` creator tier
@@ -65,6 +67,12 @@ Netlify uses `public/_redirects` to serve client-side routes from `index.html`.
 ## Current product status
 
 STATIC Social is the current launch path. Public visitors can browse the network shell. Authenticated users can create profiles, post AI-made or AI-assisted work, follow creators, comment, save, upload media, use the AI post assistant when Google AI is configured, and prepare for the Static Store economy.
+
+STATIC Radio and STATIC TV now have separate early product lanes: audio/music
+uploads are eligible for Radio rotation, while Video, Music Video, and Show
+posts feed STATIC TV. Both are web surfaces today and are designed to become
+standalone STATIC apps later without splitting account identity, Signal, or
+creator profiles.
 
 Without Supabase environment variables, creator data stays in local browser
 storage. With Supabase configured, email/password authentication, profile
